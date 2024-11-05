@@ -1,5 +1,5 @@
-import datetime
 from person import Person
+import utils
 
 class Enquete():
 
@@ -10,8 +10,8 @@ class Enquete():
         self.id = Enquete.id
         Enquete.id += 1
         self.nom = nom
-        self.date_de_debut = datetime.datetime.strptime(date_de_debut, '%Y-%m-%d').strftime('%d/%m/%Y')
-        self.date_de_fin = datetime.datetime.strptime(date_de_fin, '%Y-%m-%d').strftime('%d/%m/%Y')
+        self.date_de_debut = utils.convertir_date(date_de_debut)
+        self.date_de_fin = utils.convertir_date(date_de_fin)
         self.listes_preuves = listes_preuves
         self.personne_impliquee = personne_impliquee
         Enquete.enquetes.append(self)
