@@ -23,7 +23,7 @@ class Enquete():
                 f"Début: {self.date_de_debut}, Fin: {self.date_de_fin}, "
                 f"Preuves: {self.listes_preuves}, Personnes impliquées: {personnes}")
 
-    def add_dates_interrogatoires(self, enqueteur, repondant):
+    def afficher_dates_interrogatoires(self, enqueteur, repondant):
         return enqueteur, repondant
 
     def add_personne(self, nomPers, prenPers):
@@ -34,6 +34,9 @@ class Enquete():
 
     def add_evenement(self):
         return self.listes_preuves
+    
+    def generer_rapport():
+        pass
 
     def cloturer_enquete(self) -> None:
         # Supprimer cette instance de la liste d'enquêtes
