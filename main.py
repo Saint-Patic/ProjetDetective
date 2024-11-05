@@ -19,15 +19,16 @@ class Enquete():
     def __str__(self) -> str:
         # Utilisation de `str(personne)` pour chaque personne dans `personne_impliquee`
         personnes = ', '.join(str(personne) for personne in self.personne_impliquee)
-        return (f"Enquête ID: {self.id}, Titre: {self.nom}, "
-                f"Début: {self.date_de_debut}, Fin: {self.date_de_fin}, "
-                f"Preuves: {self.listes_preuves}, Personnes impliquées: {personnes}")
+        return (f"Rapport de l'enquête n°{self.id} concernant un/une {self.nom}, \n"
+                f"Enquête ID: {self.id}, Titre: {self.nom}, \n"
+                f"Début: {self.date_de_debut}, Fin: {self.date_de_fin}, \n"
+                f"Preuves: {self.listes_preuves}, \nPersonnes impliquées: {personnes}\n")
 
     def afficher_dates_interrogatoires(self, enqueteur, repondant):
         return enqueteur, repondant
 
-    def add_personne(self, nomPers, prenPers):
-        return self.personne_impliquee.append(Person(nomPers, prenPers))
+    def add_personne(self, nomPers, prenPers, dateNaissance):
+        return self.personne_impliquee.append(Person(nomPers, prenPers, dateNaissance))
 
     def get_enquetes_liees(self):
         return self.listes_preuves
@@ -35,31 +36,27 @@ class Enquete():
     def add_evenement(self):
         return self.listes_preuves
     
-    def generer_rapport():
-        pass
+    def generer_rapport(self, id):
+        for enquete in Enquete.enquetes:
+            if enquete.id == id:
+                print(enquete)  # Utilise `__str__` pour afficher l'enquête
+                return
+        # Si aucune enquête avec cet ID n'est trouvée
+        print(f"Aucune enquête trouvée avec l'ID {id}.")
 
     def cloturer_enquete(self) -> None:
         # Supprimer cette instance de la liste d'enquêtes
         Enquete.enquetes.remove(self)
-        print(f"L'enquête '{self.nom}' a été clôturée et supprimée.")
-
-    @classmethod
-    def afficher_enquetes(cls) -> None:
-        for enquete in cls.enquetes:
-            print(enquete, "\n")
+        print(f"L'enquête '{self.nom}' a été clôturée et supprimée.\n")
 
 enquete1 = Enquete("Meurtre", "2003-08-04", "2005-02-26", [], [])
 enquete2 = Enquete("Cambriolage", "2010-06-15", "2011-08-01", [], [])
-enquete1.add_personne("David", "Bowie")
-enquete2.add_personne("Marie", "Curie")
-
-# Affichage des enquêtes
-print("Enquêtes avant clôture:")
-Enquete.afficher_enquetes()
+enquete1.add_personne("David", "Bowie", "1990-06-12")
+enquete2.add_personne("Marie", "Curie", "1902-11-26")
 
 # Clôturer une enquête
-enquete1.cloturer_enquete()
+#enquete2.cloturer_enquete()
 
-# Affichage des enquêtes après la clôture
-print("\nEnquêtes après clôture:")
-Enquete.afficher_enquetes()
+#Générer un rapport
+enquete1.generer_rapport(1)
+enquete1.generer_rapport(2)
