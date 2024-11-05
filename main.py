@@ -1,5 +1,5 @@
 import datetime
-from Person import Person
+from person import Person
 
 class Enquete():
 
