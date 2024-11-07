@@ -8,12 +8,12 @@ class Employe(Person):
         self,
         nom,
         prenom,
+        date_de_naissance,
         sexe="pas de sexe précisé",
-        date_de_naissance="9999-12-31",
         grade="gardien de la paix",
         division="pas de division",
     ):
-        super().__init__(nom, prenom, sexe, date_de_naissance)
+        super().__init__(nom, prenom, date_de_naissance, sexe)
         self.grade = grade
         self.division = division
         self.matricule = Employe._matricule_counter

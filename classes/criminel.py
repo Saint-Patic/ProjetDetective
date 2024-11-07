@@ -7,7 +7,7 @@ class Criminel(Person):
         self,
         nom,
         prenom,
-        date_de_naissance="9999-12-31",
+        date_de_naissance,
         sexe="pas de sexe précisé",
         niveau_de_dangerositee=1,
     ):
