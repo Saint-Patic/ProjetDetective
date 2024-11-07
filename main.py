@@ -1,4 +1,8 @@
-from person import Person
+from classes.person import Person
+from classes.criminel import Criminel
+from classes.temoin import Temoin
+from classes.suspect import Suspect
+from classes.employe import Employe
 import utils
 
 class Enquete():
@@ -24,11 +28,11 @@ class Enquete():
                 f"Début: {self.date_de_debut}, Fin: {self.date_de_fin}, \n"
                 f"Preuves: {self.listes_preuves}, \nPersonnes impliquées: {personnes}\n")
 
-    def afficher_dates_interrogatoires(self, enqueteur, repondant):
-        return enqueteur, repondant
+    def afficher_interrogatoires(self, num_enquete):
+        return print(num_enquete)
 
-    def add_personne(self, nomPers, prenPers, dateNaissance):
-        return self.personne_impliquee.append(Person(nomPers, prenPers, dateNaissance))
+    def add_personne(self, personne):
+        return self.personne_impliquee.append(Person(personne.nom, personne.prenom, personne.date_de_naissance))
 
     def get_enquetes_liees(self):
         return self.listes_preuves
@@ -39,7 +43,7 @@ class Enquete():
     def generer_rapport(self, id):
         for enquete in Enquete.enquetes:
             if enquete.id == id:
-                print(enquete)  # Utilise `__str__` pour afficher l'enquête
+                print(enquete)  
                 return
         # Si aucune enquête avec cet ID n'est trouvée
         print(f"Aucune enquête trouvée avec l'ID {id}.")
@@ -49,14 +53,21 @@ class Enquete():
         Enquete.enquetes.remove(self)
         print(f"L'enquête '{self.nom}' a été clôturée et supprimée.\n")
 
-enquete1 = Enquete("Meurtre", "2003-08-04", "2005-02-26", [], [])
-enquete2 = Enquete("Cambriolage", "2010-06-15", "2011-08-01", [], [])
-enquete1.add_personne("David", "Bowie", "1990-06-12")
-enquete2.add_personne("Marie", "Curie", "1902-11-26")
 
-# Clôturer une enquête
-#enquete2.cloturer_enquete()
+if __name__ == "__main__":
 
-#Générer un rapport
-enquete1.generer_rapport(1)
-enquete1.generer_rapport(2)
+    Meurtre = Enquete("Meurtre", "2003-08-04", "2005-02-26", [], [])
+    Cambriolage = Enquete("Cambriolage", "2010-06-15", "2011-08-01", [], [])
+    Alexis = Person("Demarcq", "Alexis", "2003-08-04", "Homme")
+    Nathan = Person("Lemaire", "Nathan", "2003-01-01", "Homme")
+    Meurtre.add_personne(Alexis)
+    Alexis.add_interrogatoire("2004-01-01", Nathan, 1)
+    print(Alexis.interrogatoires[next(iter(Alexis.interrogatoires))])
+    Meurtre.afficher_interrogatoires(Meurtre.id)
+
+    # # Clôturer une enquête
+    # enquete2.cloturer_enquete()
+
+    # #Générer un rapport
+    # enquete1.generer_rapport(1)
+    # enquete1.generer_rapport(2)
