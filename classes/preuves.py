@@ -1,7 +1,7 @@
 from datetime import date, datetime
 class Preuve:
 
-    def __init__(self, id: int = , nom : str,enquete_liee:int,  type = "non spécifié", lieu = "non spécifié", date_preuve = date.today(), heure = "non spécifée"):
+    def __init__(self, id: int, nom : str, enquete_liee:int, type = "non spécifié", lieu = "non spécifié", date_preuve = date.today(), heure = "non spécifée"):
         self.id = id
         self.nom = nom
         self.enquete_liee = enquete_liee
