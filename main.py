@@ -5,7 +5,7 @@ from classes.suspect import Suspect
 from classes.employe import Employe
 import utils
 
-class Enquete():
+class Enquete:
 
     id = 1
     enquetes = []
@@ -29,10 +29,32 @@ class Enquete():
                 f"Preuves: {self.listes_preuves}, \nPersonnes impliquées: {personnes}\n")
 
     def afficher_interrogatoires(self, num_enquete):
-        return print(num_enquete)
+        interrogatoires_trouves = False  # Indicateur pour vérifier si des interrogatoires ont été trouvés
+
+        for personne in self.personne_impliquee:
+            # Vérifier si l'objet `personne` a l'attribut `interrogatoires` et qu'il n'est pas vide
+            if hasattr(personne, 'interrogatoires') and personne.interrogatoires:
+                interrogatoires_personne = [
+                    (date, interrogatoire)  # Conserver la date en même temps que l'interrogatoire
+                    for date, interrogatoires in personne.interrogatoires.items()
+                    for interrogatoire in interrogatoires if interrogatoire['num_enquete'] == num_enquete
+                ]
+
+                if interrogatoires_personne:
+                    print(f"Interrogatoires pour {personne.nom} {personne.prenom}:")
+                    for date, interrogatoire in interrogatoires_personne:  # Utilisation de `date` ici
+                        print(f"  Date: {date}")
+                        print(f"  Enquêteur: {interrogatoire['enqueteur']}")
+                        print(f"  Numéro d'enquête: {interrogatoire['num_enquete']}")
+                        interrogatoires_trouves = True
+            else:
+                print(f"{personne.nom} {personne.prenom} n'a pas d'interrogatoires.")
+
+        if not interrogatoires_trouves:
+            print(f"Aucun interrogatoire trouvé pour l'enquête ID {num_enquete}.")
 
     def add_personne(self, personne):
-        return self.personne_impliquee.append(Person(personne.nom, personne.prenom, personne.date_de_naissance))
+        return self.personne_impliquee.append(personne)
 
     def get_enquetes_liees(self):
         return self.listes_preuves
@@ -60,14 +82,22 @@ if __name__ == "__main__":
     Cambriolage = Enquete("Cambriolage", "2010-06-15", "2011-08-01", [], [])
     Alexis = Person("Demarcq", "Alexis", "2003-08-04", "Homme")
     Nathan = Person("Lemaire", "Nathan", "2003-01-01", "Homme")
+    Quentin = Person("Henrard", "Quentin", "2003-08-04", "Homme")
     Meurtre.add_personne(Alexis)
-    Alexis.add_interrogatoire("2004-01-01", Nathan, 1)
-    print(Alexis.interrogatoires[next(iter(Alexis.interrogatoires))])
+    Meurtre.add_personne(Quentin)
+    Cambriolage.add_personne(Alexis)
+    Cambriolage.add_personne(Quentin)
+
+    Alexis.add_interrogatoire("2004-01-01", Nathan, Meurtre.id)
+    Quentin.add_interrogatoire("2005-11-22", Nathan, Cambriolage.id)
+    Alexis.add_interrogatoire("2004-01-21", Nathan, Cambriolage.id)
+
     Meurtre.afficher_interrogatoires(Meurtre.id)
+    Cambriolage.afficher_interrogatoires(Cambriolage.id)
 
     # # Clôturer une enquête
     # enquete2.cloturer_enquete()
 
     # #Générer un rapport
-    # enquete1.generer_rapport(1)
-    # enquete1.generer_rapport(2)
+    # Meurtre.generer_rapport(1)
+    # Cambriolage.generer_rapport(2)
