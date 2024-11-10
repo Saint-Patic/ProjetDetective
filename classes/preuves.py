@@ -10,3 +10,6 @@ class Preuve:
         self.date_preuve = date_preuve
         self.heure = heure
 
+    def __str__(self):
+        return f"{self.id} - {self.nom}"
+
