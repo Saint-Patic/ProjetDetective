@@ -59,7 +59,7 @@ class Enquete:
         return self.personne_impliquee.append(personne)
 
     def get_enquetes_liees(self):
-        return self.liste_preuves
+        return self.enquetes
 
     def add_evenement(self, nom_evenement):
         return self.liste_evenement.append(Evenement(nom_evenement, self.id))
@@ -76,6 +76,10 @@ class Enquete:
         # Supprimer cette instance de la liste d'enquêtes
         Enquete.enquetes.remove(self)
         print(f"L'enquête '{self.nom}' a été clôturée et supprimée.\n")
+
+    def afficher_enquetes():
+        for enquete in Enquete.enquetes:
+            print(enquete)
 
 
 if __name__ == "__main__":
@@ -94,6 +98,8 @@ if __name__ == "__main__":
     Alexis.add_interrogatoire("2004-01-01", Nathan, Meurtre.id)
     Quentin.add_interrogatoire("2005-11-22", Nathan, Cambriolage.id)
     Alexis.add_interrogatoire("2004-01-21", Nathan, Cambriolage.id)
+
+    Enquete.afficher_enquetes()
 
     # # Afficher les évènements
     # print(Meurtre.liste_evenement)
