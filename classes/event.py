@@ -15,5 +15,8 @@ class Evenement:
     def add_place(self, place) -> None:
         self.place = place
 
+    def __str__(self):
+        return f"{self.nom} - {self.enquete_liee} - {self.date} - {self.lieu}"
+
 if __name__ == "__main__":
    pass
