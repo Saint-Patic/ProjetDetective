@@ -1,8 +1,9 @@
+from classes.event import Evenement
 from classes.person import Person
-from classes.criminel import Criminel
-from classes.temoin import Temoin
-from classes.suspect import Suspect
-from classes.employe import Employe
+# from classes.criminel import Criminel
+# from classes.temoin import Temoin
+# from classes.suspect import Suspect
+# from classes.employe import Employe
 import utils
 
 class Enquete:
@@ -10,14 +11,15 @@ class Enquete:
     id = 1
     enquetes = []
 
-    def __init__(self, nom:str, date_de_debut:str, date_de_fin:str, listes_preuves=[], personne_impliquee=[]) -> None:
+    def __init__(self, nom:str, date_de_debut:str, date_de_fin:str, liste_preuves=[], personne_impliquee=[]) -> None:
         self.id = Enquete.id
         Enquete.id += 1
         self.nom = nom
         self.date_de_debut = utils.convertir_date(date_de_debut)
         self.date_de_fin = utils.convertir_date(date_de_fin)
-        self.listes_preuves = listes_preuves
+        self.liste_preuves = liste_preuves
         self.personne_impliquee = personne_impliquee
+        self.liste_evenement = []
         Enquete.enquetes.append(self)
 
     def __str__(self) -> str:
@@ -26,7 +28,7 @@ class Enquete:
         return (f"Rapport de l'enquête n°{self.id} concernant un/une {self.nom}, \n"
                 f"Enquête ID: {self.id}, Titre: {self.nom}, \n"
                 f"Début: {self.date_de_debut}, Fin: {self.date_de_fin}, \n"
-                f"Preuves: {self.listes_preuves}, \nPersonnes impliquées: {personnes}\n")
+                f"Preuves: {self.liste_preuves}, \nPersonnes impliquées: {personnes}\n")
 
     def afficher_interrogatoires(self, num_enquete):
         interrogatoires_trouves = False  # Indicateur pour vérifier si des interrogatoires ont été trouvés
@@ -57,10 +59,10 @@ class Enquete:
         return self.personne_impliquee.append(personne)
 
     def get_enquetes_liees(self):
-        return self.listes_preuves
+        return self.liste_preuves
 
-    def add_evenement(self):
-        return self.listes_preuves
+    def add_evenement(self, nom_evenement):
+        return self.liste_evenement.append(Evenement(nom_evenement, self.id))
     
     def generer_rapport(self, id):
         for enquete in Enquete.enquetes:
@@ -83,6 +85,7 @@ if __name__ == "__main__":
     Alexis = Person("Demarcq", "Alexis", "2003-08-04", "Homme")
     Nathan = Person("Lemaire", "Nathan", "2003-01-01", "Homme")
     Quentin = Person("Henrard", "Quentin", "2003-08-04", "Homme")
+
     Meurtre.add_personne(Alexis)
     Meurtre.add_personne(Quentin)
     Cambriolage.add_personne(Alexis)
@@ -92,8 +95,14 @@ if __name__ == "__main__":
     Quentin.add_interrogatoire("2005-11-22", Nathan, Cambriolage.id)
     Alexis.add_interrogatoire("2004-01-21", Nathan, Cambriolage.id)
 
-    Meurtre.afficher_interrogatoires(Meurtre.id)
-    Cambriolage.afficher_interrogatoires(Cambriolage.id)
+    # # Afficher les évènements
+    # print(Meurtre.liste_evenement)
+    # Meurtre.add_evenement("Découverte du corps")
+    # print(Meurtre.liste_evenement[0])
+
+    # # Afficher les interrogatoires
+    # Meurtre.afficher_interrogatoires(Meurtre.id)
+    # Cambriolage.afficher_interrogatoires(Cambriolage.id)
 
     # # Clôturer une enquête
     # enquete2.cloturer_enquete()
