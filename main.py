@@ -22,6 +22,7 @@ class Enquete:
         self.personne_impliquee = personne_impliquee
         self.liste_evenement = []
         self.id_preuve = 0
+        self.enquetes_liees = []
         Enquete.enquetes.append(self)
 
     def __str__(self) -> str:
@@ -68,7 +69,14 @@ class Enquete:
         return self.personne_impliquee.append(personne)
 
     def get_enquetes_liees(self):
-        return self.enquetes
+        if self.enquetes_liees == []:
+            print("Aucune enquête liée à cette enquête.")
+        else:
+            for i in self.enquetes_liees:
+                print(i)
+
+    def add_enquetes_liees(self, enquete):
+        return self.enquetes_liees.append(enquete)
 
     def add_evenement(self, nom_evenement):
         return self.liste_evenement.append(Evenement(nom_evenement, self.id))
@@ -111,6 +119,11 @@ if __name__ == "__main__":
     Alexis.add_interrogatoire("2004-01-01", Nathan, Meurtre.id)
     Quentin.add_interrogatoire("2005-11-22", Nathan, Cambriolage.id)
     Alexis.add_interrogatoire("2004-01-21", Nathan, Cambriolage.id)
+
+    # # Afficher les enquêtes liées
+    # Meurtre.get_enquetes_liees()
+    # Meurtre.add_enquetes_liees(Cambriolage)
+    # Meurtre.get_enquetes_liees()
 
     # # Afficher les preuves
     # Meurtre.add_preuves("Arme")
