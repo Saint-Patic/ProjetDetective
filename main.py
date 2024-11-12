@@ -68,23 +68,37 @@ class Enquete:
     def add_personne(self, personne):
         return self.personne_impliquee.append(personne)
 
-    def get_enquetes_liees(self):
-        if self.enquetes_liees == []:
-            print("Aucune enquête liée à cette enquête.")
-        else:
-            for i in self.enquetes_liees:
-                print(i)
-
     def add_enquetes_liees(self, enquete):
         return self.enquetes_liees.append(enquete)
+
+    def afficher_enquetes_liees(self):
+        if self.enquetes_liees == []:
+            return print(f"Aucune enquête liée à l'enquête {self.nom}.\n")
+        print(f"Enquêtes liées pour l'enquête {self.nom}:\n")
+        for i in self.enquetes_liees:
+            print(i)
 
     def add_evenement(self, nom_evenement):
         return self.liste_evenement.append(Evenement(nom_evenement, self.id))
 
+    def afficher_evenements(self):
+        if self.liste_evenement == []:
+            return print(f"Aucun évènements trouvés pour l'enquête {self.nom}.\n")
+        print(f"Evènements pour l'enquête {self.nom}:\n")
+        for evenement in self.liste_evenement:
+            print(evenement)
+
     def add_preuves(self, nom_preuves):
         self.id_preuve += 1
         return self.liste_preuves.append(Preuve(self.id_preuve, nom_preuves, self.id))
-    
+
+    def afficher_preuves(self):
+        if self.liste_preuves == []:
+            return print(f"Aucune preuves trouvées pour l'enquête {self.nom}.\n")
+        print(f"Preuves pour l'enquête {self.nom}:\n")
+        for preuve in self.liste_preuves:
+            print(preuve)
+
     def generer_rapport(id):
         for enquete in Enquete.enquetes:
             if enquete.id == id:
@@ -121,29 +135,31 @@ if __name__ == "__main__":
     Alexis.add_interrogatoire("2004-01-21", Nathan, Cambriolage.id)
 
     # # Afficher les enquêtes liées
-    # Meurtre.get_enquetes_liees()
+    # Meurtre.afficher_enquetes_liees()
     # Meurtre.add_enquetes_liees(Cambriolage)
-    # Meurtre.get_enquetes_liees()
+    # Meurtre.afficher_enquetes_liees()
 
     # # Afficher les preuves
     # Meurtre.add_preuves("Arme")
     # Meurtre.add_preuves("Indice")
     # Cambriolage.add_preuves("Arme")
+    # Meurtre.afficher_preuves()
+    # Cambriolage.afficher_preuves()
 
     # # Afficher les enquêtes existantes
     # Enquete.afficher_enquetes()
 
     # # Afficher les évènements
-    # print(Meurtre.liste_evenement)
     # Meurtre.add_evenement("Découverte du corps")
-    # print(Meurtre.liste_evenement[0])
+    # Meurtre.afficher_evenements()
+    # Cambriolage.afficher_evenements()
 
     # # Afficher les interrogatoires
     # Meurtre.afficher_interrogatoires(Meurtre.id)
     # Cambriolage.afficher_interrogatoires(Cambriolage.id)
 
     # # Clôturer une enquête
-    # enquete2.cloturer_enquete()
+    # Cambriolage.cloturer_enquete()
 
     # #Générer un rapport
     # Enquete.generer_rapport(1)
