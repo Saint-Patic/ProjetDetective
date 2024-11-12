@@ -1,4 +1,4 @@
-from person import Person
+from .person import Person
 
 
 class Suspect(Person):

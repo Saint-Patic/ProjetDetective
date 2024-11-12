@@ -1,14 +1,21 @@
-from classes.preuves import Preuve
-from classes.event import Evenement
-from classes.person import Person
+from classes import Person, Temoin, Suspect, Employe, Criminel, Evenement, Preuve
+
 import utils
+
 
 class Enquete:
 
     id = 1
     enquetes = []
 
-    def __init__(self, nom:str, date_de_debut:str, date_de_fin:str, liste_preuves=[], personne_impliquee=[]) -> None:
+    def __init__(
+        self,
+        nom: str,
+        date_de_debut: str,
+        date_de_fin: str,
+        liste_preuves=[],
+        personne_impliquee=[],
+    ) -> None:
         self.id = Enquete.id
         Enquete.id += 1
         self.nom = nom
@@ -25,32 +32,43 @@ class Enquete:
         if self.liste_preuves == []:
             preuves = "Aucune preuves dans cette enquête."
         else:
-            preuves = ', '.join(str(preuve) for preuve in self.liste_preuves)
+            preuves = ", ".join(str(preuve) for preuve in self.liste_preuves)
         if self.personne_impliquee == []:
             personnes = "Aucune personnes impliquées dans cette enquête."
         else:
-            personnes = ', '.join(str(personne) for personne in self.personne_impliquee)
+            personnes = ", ".join(str(personne) for personne in self.personne_impliquee)
 
-        return (f"Rapport de l'enquête n°{self.id} concernant un/une {self.nom} \n"
-                f"Enquête ID: {self.id} Titre: {self.nom} \n"
-                f"Début: {self.date_de_debut} Fin: {self.date_de_fin} \n"
-                f"Preuves: {preuves} \nPersonnes impliquées: {personnes}\n")
+        return (
+            f"Rapport de l'enquête n°{self.id} concernant un/une {self.nom} \n"
+            f"Enquête ID: {self.id} Titre: {self.nom} \n"
+            f"Début: {self.date_de_debut} Fin: {self.date_de_fin} \n"
+            f"Preuves: {preuves} \nPersonnes impliquées: {personnes}\n"
+        )
 
     def afficher_interrogatoires(self, num_enquete):
-        interrogatoires_trouves = False  # Indicateur pour vérifier si des interrogatoires ont été trouvés
+        interrogatoires_trouves = (
+            False  # Indicateur pour vérifier si des interrogatoires ont été trouvés
+        )
 
         for personne in self.personne_impliquee:
             # Vérifier si l'objet `personne` a l'attribut `interrogatoires` et qu'il n'est pas vide
-            if hasattr(personne, 'interrogatoires') and personne.interrogatoires:
+            if hasattr(personne, "interrogatoires") and personne.interrogatoires:
                 interrogatoires_personne = [
-                    (date, interrogatoire)  # Conserver la date en même temps que l'interrogatoire
+                    (
+                        date,
+                        interrogatoire,
+                    )  # Conserver la date en même temps que l'interrogatoire
                     for date, interrogatoires in personne.interrogatoires.items()
-                    for interrogatoire in interrogatoires if interrogatoire['num_enquete'] == num_enquete
+                    for interrogatoire in interrogatoires
+                    if interrogatoire["num_enquete"] == num_enquete
                 ]
 
                 if interrogatoires_personne:
                     print(f"Interrogatoires pour {personne.nom} {personne.prenom}:")
-                    for date, interrogatoire in interrogatoires_personne:  # Utilisation de `date` ici
+                    for (
+                        date,
+                        interrogatoire,
+                    ) in interrogatoires_personne:  # Utilisation de `date` ici
                         print(f"  Date: {date}")
                         print(f"  Enquêteur: {interrogatoire['enqueteur']}")
                         print(f"  Numéro d'enquête: {interrogatoire['num_enquete']}")
@@ -98,7 +116,7 @@ class Enquete:
     def generer_rapport(id):
         for enquete in Enquete.enquetes:
             if enquete.id == id:
-                print(enquete)  
+                print(enquete)
                 return
         # Si aucune enquête avec cet ID n'est trouvée
         print(f"Aucune enquête trouvée avec l'ID {id}.")
@@ -156,6 +174,6 @@ if __name__ == "__main__":
     # # Clôturer une enquête
     # Cambriolage.cloturer_enquete()
 
-    # #Générer un rapport
-    # Enquete.generer_rapport(1)
-    # Enquete.generer_rapport(2)
+    # Générer un rapport
+    Enquete.generer_rapport(1)
+    Enquete.generer_rapport(2)

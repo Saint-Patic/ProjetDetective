@@ -7,7 +7,7 @@ class Person:
         nom: str,
         prenom: str,
         date_de_naissance: str,
-        sexe="pas de sexe précisé",
+        sexe="'pas de sexe précisé'",
     ):
         self.nom = nom
         self.prenom = prenom
@@ -15,7 +15,7 @@ class Person:
         self._date_de_naissance = datetime.strptime(date_de_naissance, "%Y-%m-%d")
         self._date_de_deces = datetime.strptime("9999-12-31", "%Y-%m-%d")
         self.lieu_de_naissance = ""
-        self.metier = "Pas de métier actuellement"
+        self.metier = "'Pas de métier actuellement'"
         self.interrogatoires = {}
         self.mail = ""
 

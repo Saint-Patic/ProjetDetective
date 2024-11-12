@@ -1,0 +1,17 @@
+[
+  {
+    "nom": "Lemaire",
+    "prenom": "Nathan",
+    "classe:": "Person",
+    "sexe": "Homme",
+    "date_de_naissance": "2003-07-30"
+  },
+  {
+    "nom": "Demarcq",
+    "prenom": "Alexis",
+    "classe:": "Temoin",
+    "sexe": "Homme",
+    "date_de_naissance": "2003-08-04",
+    "metier": "étudiant"
+  }
+]
