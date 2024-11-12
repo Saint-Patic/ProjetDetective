@@ -1,10 +1,6 @@
 from classes.preuves import Preuve
 from classes.event import Evenement
 from classes.person import Person
-# from classes.criminel import Criminel
-# from classes.temoin import Temoin
-# from classes.suspect import Suspect
-# from classes.employe import Employe
 import utils
 
 class Enquete:
@@ -130,10 +126,6 @@ if __name__ == "__main__":
     Cambriolage.add_personne(Alexis)
     Cambriolage.add_personne(Quentin)
 
-    Alexis.add_interrogatoire("2004-01-01", Nathan, Meurtre.id)
-    Quentin.add_interrogatoire("2005-11-22", Nathan, Cambriolage.id)
-    Alexis.add_interrogatoire("2004-01-21", Nathan, Cambriolage.id)
-
     # # Afficher les enquêtes liées
     # Meurtre.afficher_enquetes_liees()
     # Meurtre.add_enquetes_liees(Cambriolage)
@@ -155,6 +147,9 @@ if __name__ == "__main__":
     # Cambriolage.afficher_evenements()
 
     # # Afficher les interrogatoires
+    # Alexis.add_interrogatoire("2004-01-01", Nathan, Meurtre.id)
+    # Quentin.add_interrogatoire("2005-11-22", Nathan, Cambriolage.id)
+    # Alexis.add_interrogatoire("2002-01-21", Nathan, Cambriolage.id)
     # Meurtre.afficher_interrogatoires(Meurtre.id)
     # Cambriolage.afficher_interrogatoires(Cambriolage.id)
 
