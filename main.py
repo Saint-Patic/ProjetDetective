@@ -3,26 +3,26 @@ from classes.event import Evenement
 from classes.person import Person
 import utils
 
-class Enquete:
 
+class Enquete:
     id = 1
     enquetes = []
 
-    def __init__(self, nom:str, date_de_debut:str, date_de_fin:str, liste_preuves=[], personne_impliquee=[]) -> None:
+    def __init__(self, nom: str, date_de_debut: str, date_de_fin: str, liste_preuves=[], personne_impliquee=[]) -> None:
         self.id = Enquete.id
         Enquete.id += 1
         self.nom = nom
         self.date_de_debut = utils.convertir_date(date_de_debut)
         self.date_de_fin = utils.convertir_date(date_de_fin)
-        self.liste_preuves = liste_preuves
+        self.liste_preuves: list = liste_preuves
         self.personne_impliquee = personne_impliquee
         self.liste_evenement = []
         self.id_preuve = 0
-        self.enquetes_liees = []
+        self.enquetes_liees: list = []
         Enquete.enquetes.append(self)
 
     def __str__(self) -> str:
-        if self.liste_preuves == []:
+        if len(self.liste_preuves) == 0:
             preuves = "Aucune preuves dans cette enquête."
         else:
             preuves = ', '.join(str(preuve) for preuve in self.liste_preuves)
@@ -53,7 +53,7 @@ class Enquete:
                     for date, interrogatoire in interrogatoires_personne:  # Utilisation de `date` ici
                         print(f"  Date: {date}")
                         print(f"  Enquêteur: {interrogatoire['enqueteur']}")
-                        print(f"  Numéro d'enquête: {interrogatoire['num_enquete']}")
+                        print(f"  Numéro d'enquête: {interrogatoire['num_enquete']}\n")
                         interrogatoires_trouves = True
             else:
                 print(f"{personne.nom} {personne.prenom} n'a pas d'interrogatoires.")
@@ -98,7 +98,7 @@ class Enquete:
     def generer_rapport(id):
         for enquete in Enquete.enquetes:
             if enquete.id == id:
-                print(enquete)  
+                print(enquete)
                 return
         # Si aucune enquête avec cet ID n'est trouvée
         print(f"Aucune enquête trouvée avec l'ID {id}.")
@@ -114,7 +114,6 @@ class Enquete:
 
 
 if __name__ == "__main__":
-
     Meurtre = Enquete("Meurtre", "2003-08-04", "2005-02-26", [], [])
     Cambriolage = Enquete("Cambriolage", "2010-06-15", "2011-08-01", [], [])
     Alexis = Person("Demarcq", "Alexis", "2003-08-04", "Homme")
@@ -156,6 +155,6 @@ if __name__ == "__main__":
     # # Clôturer une enquête
     # Cambriolage.cloturer_enquete()
 
-    # #Générer un rapport
+    # # Générer un rapport
     # Enquete.generer_rapport(1)
     # Enquete.generer_rapport(2)
