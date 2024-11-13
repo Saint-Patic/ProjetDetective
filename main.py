@@ -73,11 +73,14 @@ class Enquete:
                         print(f"  Enquêteur: {interrogatoire['enqueteur']}")
                         print(f"  Numéro d'enquête: {interrogatoire['num_enquete']}")
                         interrogatoires_trouves = True
+
             else:
                 print(f"{personne.nom} {personne.prenom} n'a pas d'interrogatoires.")
 
         if not interrogatoires_trouves:
             print(f"Aucun interrogatoire trouvé pour l'enquête ID {num_enquete}.")
+
+        print("\n")
 
     def add_personne(self, personne):
         return self.personne_impliquee.append(personne)
@@ -85,33 +88,44 @@ class Enquete:
     def add_enquetes_liees(self, enquete):
         return self.enquetes_liees.append(enquete)
 
-    def afficher_enquetes_liees(self):
-        if self.enquetes_liees == []:
-            return print(f"Aucune enquête liée à l'enquête {self.nom}.\n")
-        print(f"Enquêtes liées pour l'enquête {self.nom}:\n")
-        for i in self.enquetes_liees:
-            print(i)
+    def afficher_enquetes_liees(self, indentation=4):
+        if not self.enquetes_liees:
+            print(f"Aucune enquête liée à l'enquête {self.nom}.\n")
+            return
+
+        print(f"Enquêtes liées pour l'enquête {self.nom}:")
+        for enquete in self.enquetes_liees:
+            enquete_str = str(enquete)
+            print(utils.ajouter_indentation(enquete_str, indentation))
+
+        print("\n")
 
     def add_evenement(self, nom_evenement):
         return self.liste_evenement.append(Evenement(nom_evenement, self.id))
 
-    def afficher_evenements(self):
+    def afficher_evenements(self, indentation=4):
         if self.liste_evenement == []:
             return print(f"Aucun évènements trouvés pour l'enquête {self.nom}.\n")
-        print(f"Evènements pour l'enquête {self.nom}:\n")
+        print(f"Evènements pour l'enquête {self.nom}:")
         for evenement in self.liste_evenement:
-            print(evenement)
+            evenement_str = str(evenement)
+            print(utils.ajouter_indentation(evenement_str, indentation))
+
+        print("\n")
 
     def add_preuves(self, nom_preuves):
         self.id_preuve += 1
         return self.liste_preuves.append(Preuve(self.id_preuve, nom_preuves, self.id))
 
-    def afficher_preuves(self):
+    def afficher_preuves(self, indentation=4):
         if self.liste_preuves == []:
             return print(f"Aucune preuves trouvées pour l'enquête {self.nom}.\n")
-        print(f"Preuves pour l'enquête {self.nom}:\n")
+        print(f"Preuves pour l'enquête {self.nom}:")
         for preuve in self.liste_preuves:
-            print(preuve)
+            preuve_str = str(preuve)
+            print(utils.ajouter_indentation(preuve_str, indentation))
+
+        print("\n")
 
     def generer_rapport(id):
         for enquete in Enquete.enquetes:
@@ -136,13 +150,13 @@ if __name__ == "__main__":
     Meurtre = Enquete("Meurtre", "2003-08-04", "2005-02-26", [], [])
     Cambriolage = Enquete("Cambriolage", "2010-06-15", "2011-08-01", [], [])
     Alexis = Person("Demarcq", "Alexis", "2003-08-04", "Homme")
-    Nathan = Person("Lemaire", "Nathan", "2003-01-01", "Homme")
-    Quentin = Person("Henrard", "Quentin", "2003-08-04", "Homme")
+    Nathan = Employe("Lemaire", "Nathan", "2003-01-01", "Homme")
+    Quentin = Suspect("Henrard", "Quentin", "2003-08-04", "Homme")
 
     Meurtre.add_personne(Alexis)
     Meurtre.add_personne(Quentin)
     Cambriolage.add_personne(Alexis)
-    Cambriolage.add_personne(Quentin)
+    Cambriolage.add_personne(Nathan)
 
     # # Afficher les enquêtes liées
     # Meurtre.afficher_enquetes_liees()
