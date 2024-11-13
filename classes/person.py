@@ -1,13 +1,15 @@
 from datetime import datetime
 
 
-class Person:
+class Personne:
+
     def __init__(
         self,
         nom: str,
         prenom: str,
         date_de_naissance: str,
         sexe="'pas de sexe précisé'",
+        **kwargs,
     ):
         self.nom = nom
         self.prenom = prenom
@@ -18,15 +20,17 @@ class Person:
         self.metier = "'Pas de métier actuellement'"
         self.interrogatoires = {}
         self.mail = ""
+        for cle, valeur in kwargs.items():
+            setattr(self, cle, valeur)
 
     @property
     def date_de_naissance(self):
         return self._date_de_naissance.strftime("%Y-%m-%d")
 
     @date_de_naissance.setter
-    def date_de_naissance(self, value: str) -> None:
+    def date_de_naissance(self, valeur: str) -> None:
         try:
-            date_obj = datetime.strptime(value, "%Y-%m-%d")
+            date_obj = datetime.strptime(valeur, "%Y-%m-%d")
             if date_obj > datetime.now():
                 raise ValueError(
                     "La date de naissance ne peut pas être dans le futur.\n"
@@ -40,9 +44,9 @@ class Person:
         return self._date_de_deces.strftime("%Y-%m-%d")
 
     @date_de_deces.setter
-    def date_de_deces(self, value: str) -> None:
+    def date_de_deces(self, valeur: str) -> None:
         try:
-            date_obj = datetime.strptime(value, "%Y-%m-%d")
+            date_obj = datetime.strptime(valeur, "%Y-%m-%d")
             if date_obj > datetime.now():
                 raise ValueError("La date de décès ne peut pas être dans le futur.\n")
             if date_obj < self._date_de_naissance:
@@ -53,7 +57,7 @@ class Person:
         except ValueError as e:
             print(f"Erreur lors de la définition de la date de décès: {e}\n")
 
-    def add_interrogatoire(self, date: str, enqueteur, num_enquete: int) -> None:
+    def ajouter_interrogatoire(self, date: str, enqueteur, num_enquete: int) -> None:
         try:
             date_modifiee = datetime.strptime(date, "%Y-%m-%d")
             if (
@@ -76,7 +80,7 @@ class Person:
         except ValueError as e:
             print(f"Erreur lors de l'ajout de l'interrogatoire: {e}\n")
 
-    def get_interrogatoires(self, date: str) -> list:
+    def obtenir_interrogatoires(self, date: str) -> list:
         try:
             datetime.strptime(date, "%Y-%m-%d")
             if date not in self.interrogatoires:

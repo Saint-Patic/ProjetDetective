@@ -1,4 +1,4 @@
-from classes import Person, Temoin, Suspect, Employe, Criminel, Evenement, Preuve
+from classes import Personne, Temoin, Suspect, Employe, Criminel, Evenement, Preuve
 
 import utils
 
@@ -149,7 +149,7 @@ if __name__ == "__main__":
 
     Meurtre = Enquete("Meurtre", "2003-08-04", "2005-02-26", [], [])
     Cambriolage = Enquete("Cambriolage", "2010-06-15", "2011-08-01", [], [])
-    Alexis = Person("Demarcq", "Alexis", "2003-08-04", "Homme")
+    Alexis = Personne("Demarcq", "Alexis", "2003-08-04", "Homme")
     Nathan = Employe("Lemaire", "Nathan", "2003-01-01", "Homme")
     Quentin = Suspect("Henrard", "Quentin", "2003-08-04", "Homme")
 
@@ -163,12 +163,12 @@ if __name__ == "__main__":
     # Meurtre.add_enquetes_liees(Cambriolage)
     # Meurtre.afficher_enquetes_liees()
 
-    # # Afficher les preuves
-    # Meurtre.add_preuves("Arme")
-    # Meurtre.add_preuves("Indice")
-    # Cambriolage.add_preuves("Arme")
-    # Meurtre.afficher_preuves()
-    # Cambriolage.afficher_preuves()
+    # Afficher les preuves
+    Meurtre.add_preuves("Arme")
+    Meurtre.add_preuves("Indice")
+    Cambriolage.add_preuves("Arme")
+    Meurtre.afficher_preuves()
+    Cambriolage.afficher_preuves()
 
     # # Afficher les enquêtes existantes
     # Enquete.afficher_enquetes()
@@ -188,6 +188,6 @@ if __name__ == "__main__":
     # # Clôturer une enquête
     # Cambriolage.cloturer_enquete()
 
-    # Générer un rapport
-    Enquete.generer_rapport(1)
-    Enquete.generer_rapport(2)
+    # # Générer un rapport
+    # Enquete.generer_rapport(1)
+    # Enquete.generer_rapport(2)
