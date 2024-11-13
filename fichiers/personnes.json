@@ -1,0 +1,26 @@
+[
+  {
+    "nom": "Lemaire",
+    "prenom": "Nathan",
+    "classe": "Suspect",
+    "sexe": "Homme",
+    "date_de_naissance": "2003-07-30",
+    "mail": "lemaire.nathan@hotmail.com"
+  },
+  {
+    "nom": "Demarcq",
+    "prenom": "Alexis",
+    "classe": "Temoin",
+    "sexe": "Homme",
+    "date_de_naissance": "2003-08-04",
+    "metier": "etudiant"
+  },
+  {
+    "nom": "DeSchutter",
+    "prenom": "Guillaume",
+    "classe": "Person",
+    "sexe": "Homme",
+    "date_de_naissance": "2003-04-29",
+    "niveau_de_dangerosite": 3
+  }
+]

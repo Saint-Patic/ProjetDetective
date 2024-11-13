@@ -1,7 +1,7 @@
-from person import Person
+from .person import Personne
 
 
-class Employe(Person):
+class Employe(Personne):
     _matricule_counter = 1
 
     def __init__(
@@ -12,12 +12,15 @@ class Employe(Person):
         sexe="pas de sexe précisé",
         grade="gardien de la paix",
         division="pas de division",
+        **kwargs,
     ):
-        super().__init__(nom, prenom, date_de_naissance, sexe)
+        super().__init__(nom, prenom, date_de_naissance, sexe, **kwargs)
         self.grade = grade
         self.division = division
         self.matricule = Employe._matricule_counter
         Employe._matricule_counter += 1
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     def __str__(self):
         return (

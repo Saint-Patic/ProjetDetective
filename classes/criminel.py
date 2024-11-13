@@ -1,7 +1,7 @@
-from person import Person
+from .person import Personne
 
 
-class Criminel(Person):
+class Criminel(Personne):
 
     def __init__(
         self,
@@ -9,14 +9,17 @@ class Criminel(Person):
         prenom,
         date_de_naissance,
         sexe="pas de sexe précisé",
-        niveau_de_dangerositee=1,
+        niveau_de_dangerosite=1,
+        **kwargs,
     ):
-        super().__init__(nom, prenom, date_de_naissance, sexe)
-        self.niveau_de_dangerositee = niveau_de_dangerositee
+        super().__init__(nom, prenom, date_de_naissance, sexe, **kwargs)
+        self.niveau_de_dangerosite = niveau_de_dangerosite
         self.apparence = {}
         self.corpulence = {}
         self.dossier_psychologique = {}
         self.lieu_de_detention = ""
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     def add_apparence(self, categorie: str, description: str):
         if categorie not in self.apparence:
@@ -36,11 +39,11 @@ class Criminel(Person):
             f"{categorie}: {', '.join(observations)}"
             for categorie, observations in self.dossier_psychologique.items()
         )
-        return f"{self.prenom} {self.nom}, {self.sexe}, {self.date_de_naissance}, lvl dangereux : {self.niveau_de_dangerositee}, Dossier Psychologique:\n{dossier_psy}"
+        return f"{self.prenom} {self.nom}, {self.sexe}, {self.date_de_naissance}, lvl dangereux : {self.niveau_de_dangerosite}, Dossier Psychologique:\n{dossier_psy}"
 
 
 if __name__ == "__main__":
-    enqueteur1 = Person("Demarcq", "Alexis", "2003-08-04")
+    enqueteur1 = Personne("Demarcq", "Alexis", "2003-08-04")
     criminel1 = Criminel("Dupont", "Jean", "2003-07-30", "homme")
 
     criminel1.add_apparence("Taille", "Petite")
