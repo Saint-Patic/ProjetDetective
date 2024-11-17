@@ -11,6 +11,10 @@ class Personne:
         sexe="'pas de sexe précisé'",
         **kwargs,
     ):
+        """
+        Pré : nom (str), prenom (str), date_de_naissance (str) au format "YYYY-MM-DD", sexe (str) (optionnel), kwargs (dict) (optionnel)
+        Post : Crée un objet Personne avec les attributs spécifiés
+        """
         self.nom = nom
         self.prenom = prenom
         self.sexe = sexe
@@ -25,10 +29,18 @@ class Personne:
 
     @property
     def date_de_naissance(self):
+        """
+        Pré : -
+        Post : Retourne la date de naissance au format "YYYY-MM-DD"
+        """
         return self._date_de_naissance.strftime("%Y-%m-%d")
 
     @date_de_naissance.setter
     def date_de_naissance(self, valeur: str) -> None:
+        """
+        Pré : valeur (str) au format "YYYY-MM-DD"
+        Post : Définit la date de naissance, lève une exception si la date est dans le futur
+        """
         try:
             date_obj = datetime.strptime(valeur, "%Y-%m-%d")
             if date_obj > datetime.now():
@@ -41,10 +53,18 @@ class Personne:
 
     @property
     def date_de_deces(self):
+        """
+        Pré : -
+        Post : Retourne la date de décès au format "YYYY-MM-DD"
+        """
         return self._date_de_deces.strftime("%Y-%m-%d")
 
     @date_de_deces.setter
     def date_de_deces(self, valeur: str) -> None:
+        """
+        Pré : valeur (str) au format "YYYY-MM-DD"
+        Post : Définit la date de décès, lève une exception si la date est dans le futur ou avant la date de naissance
+        """
         try:
             date_obj = datetime.strptime(valeur, "%Y-%m-%d")
             if date_obj > datetime.now():
@@ -58,6 +78,10 @@ class Personne:
             print(f"Erreur lors de la définition de la date de décès: {e}\n")
 
     def ajouter_interrogatoire(self, date: str, enqueteur, num_enquete: int) -> None:
+        """
+        Pré : date (str) au format "YYYY-MM-DD", enqueteur (Personne), num_enquete (int)
+        Post : Ajoute un interrogatoire à la liste des interrogatoires, lève une exception si l'enquêteur ou l'interrogé est né après la date ou est mort
+        """
         try:
             date_modifiee = datetime.strptime(date, "%Y-%m-%d")
             if (
@@ -81,6 +105,10 @@ class Personne:
             print(f"Erreur lors de l'ajout de l'interrogatoire: {e}\n")
 
     def obtenir_interrogatoires(self, date: str) -> list:
+        """
+        Pré : date (str) au format "YYYY-MM-DD"
+        Post : Retourne la liste des interrogatoires pour une date donnée, lève une exception si la date est invalide ou si aucun interrogatoire n'est trouvé
+        """
         try:
             datetime.strptime(date, "%Y-%m-%d")
             if date not in self.interrogatoires:
@@ -91,6 +119,10 @@ class Personne:
             return []
 
     def __str__(self) -> str:
+        """
+        Pré : -
+        Post : Retourne une chaîne décrivant la personne avec son nom, prénom, date de naissance et métier
+        """
         return f"{self.nom} {self.prenom}, né le {self.date_de_naissance}, travaille comme {self.metier}"
 
 

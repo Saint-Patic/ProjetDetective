@@ -5,13 +5,17 @@ class Criminel(Personne):
 
     def __init__(
         self,
-        nom,
-        prenom,
-        date_de_naissance,
-        sexe="pas de sexe précisé",
-        niveau_de_dangerosite=1,
+        nom: str,
+        prenom: str,
+        date_de_naissance: str,
+        sexe: str = "pas de sexe précisé",
+        niveau_de_dangerosite: int = 1,
         **kwargs,
     ):
+        """
+        Pré : nom (str), prenom (str), date_de_naissance (str) au format "YYYY-MM-DD", sexe (str) (optionnel), niveau_de_dangerosite (int) (optionnel), kwargs (dict) (optionnel)
+        Post : Crée une instance de la classe Criminel avec les attributs spécifiés
+        """
         super().__init__(nom, prenom, date_de_naissance, sexe, **kwargs)
         self.niveau_de_dangerosite = niveau_de_dangerosite
         self.apparence = {}
@@ -22,19 +26,36 @@ class Criminel(Personne):
             setattr(self, key, value)
 
     def add_apparence(self, categorie: str, description: str):
+        """
+        Pré : categorie (str), description (str)
+        Post : Ajoute une description d'apparence à la liste des apparences du criminel
+        """
         if categorie not in self.apparence:
             self.apparence[categorie] = []
         self.apparence[categorie].append(description)
 
     def add_corpulence(self, categorie: str, description: str):
+        """
+        Pré : categorie (str), description (str)
+        Post : Ajoute une description de corpulence à la liste des corpulences du criminel
+        """
         self.corpulence[categorie] = description
 
     def add_psychologie(self, categorie: str, observation: str):
+        """
+        Pré : categorie (str), observation (str)
+        Post : Ajoute une observation psychologique à la liste des observations du criminel
+        """
         if categorie not in self.dossier_psychologique:
             self.dossier_psychologique[categorie] = []
         self.dossier_psychologique[categorie].append(observation)
 
     def __str__(self) -> str:
+        """
+        Pré : Aucun
+        Post : Retourne une représentation sous forme de chaîne de caractères de l'objet Criminel,
+               incluant les informations personnelles, le niveau de dangerosité et le dossier psychologique
+        """
         dossier_psy = "\n".join(
             f"{categorie}: {', '.join(observations)}"
             for categorie, observations in self.dossier_psychologique.items()
