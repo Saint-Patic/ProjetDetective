@@ -23,7 +23,7 @@ class Temoin(Personne):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-    def add_temoinage(self, commentaire, date_de_reception):
+    def ajout_temoinage(self, commentaire, date_de_reception):
         """
         Pré : commentaire (str), date_de_reception (str) au format "YYYY-MM-DD"
         Post : Ajoute un témoignage à la liste des témoignages du témoin

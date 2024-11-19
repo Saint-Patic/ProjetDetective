@@ -1,6 +1,7 @@
 from classes import Personne, Temoin, Suspect, Employe, Criminel, Evenement, Preuve
 
 import utils
+import json
 
 
 class Enquete:
@@ -8,12 +9,14 @@ class Enquete:
     id = 1
     enquetes = []
 
-    def __init__(self, nom: str, date_de_debut: str, date_de_fin: str, liste_preuves=[], personne_impliquee=[]) -> None:
-        """
-        Pre : nom(str), date_de_debut(str) "YYYY-MM-DD", date_de_fin(str) "YYYY-MM-DD",
-              liste_preuves(list), personne_impliquee(list),
-        Post : Initialisation d'un objet Enquete
-        """
+    def __init__(
+        self,
+        nom: str,
+        date_de_debut: str,
+        date_de_fin: str,
+        liste_preuves=[],
+        personne_impliquee=[],
+    ) -> None:
         self.id = Enquete.id
         Enquete.id += 1
         self.nom = nom
@@ -23,21 +26,15 @@ class Enquete:
         self.personne_impliquee = personne_impliquee
         self.liste_evenement = []
         self.id_preuve = 0
-        self.id_evenement = 0
         self.enquetes_liees = []
         Enquete.enquetes.append(self)
 
     def __str__(self) -> str:
-        """
-        Pre : /
-        Post : Retourne une chaîne qui donne les différentes informations de l'enquête,
-               son ID, son nom, sa date de début et de fin, les preuves et les personnes impliquées
-        """
-        if len(self.liste_preuves) == 0:
+        if self.liste_preuves == []:
             preuves = "Aucune preuves dans cette enquête."
         else:
             preuves = ", ".join(str(preuve) for preuve in self.liste_preuves)
-        if len(self.personne_impliquee) == 0:
+        if self.personne_impliquee == []:
             personnes = "Aucune personnes impliquées dans cette enquête."
         else:
             personnes = ", ".join(str(personne) for personne in self.personne_impliquee)
@@ -50,10 +47,6 @@ class Enquete:
         )
 
     def afficher_interrogatoires(self, num_enquete):
-        """
-        Pre : num_enquete(int)
-        Post : Affiche les différents interrogatoires qui se sont passés dans l'enquête
-        """
         interrogatoires_trouves = (
             False  # Indicateur pour vérifier si des interrogatoires ont été trouvés
         )
@@ -91,24 +84,63 @@ class Enquete:
         print("\n")
 
     def add_personne(self, personne):
-        """
-        Pre : personne(obj)
-        Post : Ajoute une Personne dans la liste des personnes impliquées dans l'enquête
-        """
-        return self.personne_impliquee.append(personne)
+        try:
+            with open("fichiers/personnes.json", "r", encoding="utf-8") as json_file:
+                donnees_existantes = json.load(json_file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            donnees_existantes = []
+
+        # Convertir l'objet personne en dictionnaire complet
+        dict_personne = {
+            "nom": personne.nom,
+            "prenom": personne.prenom,
+            "classe": personne.__class__.__name__,
+            "sexe": personne.sexe,
+            "date_de_naissance": personne.date_de_naissance,
+            "metier": getattr(personne, "metier", ""),
+            "mail": getattr(personne, "mail", ""),
+            "interrogatoires": getattr(personne, "interrogatoires"),
+        }
+
+        # Ajouter les attributs supplémentaires si disponibles
+        for attr, valeur in personne.__dict__.items():
+            if attr not in [
+                "nom",
+                "prenom",
+                "sexe",
+                "_date_de_naissance",
+                "_date_de_deces",
+                "metier",
+                "mail",
+                "interrogatoires",
+            ]:
+                dict_personne[attr] = valeur
+
+        # Chercher si la personne existe déjà dans les données
+        for index, existing_personne in enumerate(donnees_existantes):
+            if (
+                existing_personne["nom"] == personne.nom
+                and existing_personne["prenom"] == personne.prenom
+                and existing_personne["date_de_naissance"] == personne.date_de_naissance
+            ):
+                # Mettre à jour les informations existantes avec les nouvelles valeurs
+                donnees_existantes[index] = dict_personne
+                break
+        else:
+            # Si la personne n'est pas trouvée, ajouter comme nouvelle
+            donnees_existantes.append(dict_personne)
+
+        # Sauvegarder les données mises à jour dans le fichier
+        with open("fichiers/personnes.json", "w", encoding="utf-8") as json_file:
+            json.dump(donnees_existantes, json_file, indent=4, ensure_ascii=False)
+
+        # Ajouter la personne à la liste des personnes impliquées
+        self.personne_impliquee.append(personne)
 
     def add_enquetes_liees(self, enquete):
-        """
-        Pre : enquete(obj)
-        Post : Créer un lien entre deux enquêtes
-        """
         return self.enquetes_liees.append(enquete)
 
     def afficher_enquetes_liees(self, indentation=4):
-        """
-        Pre : indentation(int)
-        Post : Affiche les différentes enquêtes liées à l'enquête
-        """
         if not self.enquetes_liees:
             print(f"Aucune enquête liée à l'enquête {self.nom}.\n")
             return
@@ -121,18 +153,9 @@ class Enquete:
         print("\n")
 
     def add_evenement(self, nom_evenement):
-        """
-        Pre : nom_evenement(str)
-        Post : Ajoute un évènement à l'enquête
-        """
-        self.id_evenement += 1
-        return self.liste_evenement.append(Evenement(self.id_evenement, nom_evenement, self.id))
+        return self.liste_evenement.append(Evenement(nom_evenement, self.id))
 
     def afficher_evenements(self, indentation=4):
-        """
-        Pre : indentation(int)
-        Post : Affiche les différents évènements de l'enquête
-        """
         if self.liste_evenement == []:
             return print(f"Aucun évènements trouvés pour l'enquête {self.nom}.\n")
         print(f"Evènements pour l'enquête {self.nom}:")
@@ -143,18 +166,10 @@ class Enquete:
         print("\n")
 
     def add_preuves(self, nom_preuves):
-        """
-        Pre : nom_preuves(str)
-        Post : Ajoute une preuve à l'enquête
-        """
         self.id_preuve += 1
-        self.liste_preuves.append(Preuve(self.id_preuve, nom_preuves, self.id))
+        return self.liste_preuves.append(Preuve(self.id_preuve, nom_preuves, self.id))
 
     def afficher_preuves(self, indentation=4):
-        """
-        Pre : indentation(int)
-        Post : Affiche les différentes preuves de l'enquête
-        """
         if self.liste_preuves == []:
             return print(f"Aucune preuves trouvées pour l'enquête {self.nom}.\n")
         print(f"Preuves pour l'enquête {self.nom}:")
@@ -165,10 +180,6 @@ class Enquete:
         print("\n")
 
     def generer_rapport(id):
-        """
-        Pre : id(int)
-        Post : Génère un rapport de l'enquête correspondant à l'ID en question
-        """
         for enquete in Enquete.enquetes:
             if enquete.id == id:
                 print(enquete)
@@ -177,19 +188,11 @@ class Enquete:
         print(f"Aucune enquête trouvée avec l'ID {id}.")
 
     def cloturer_enquete(self) -> None:
-        """
-        Pre : /
-        Post : Supprime une enquête en cours
-        """
         # Supprimer cette instance de la liste d'enquêtes
         Enquete.enquetes.remove(self)
         print(f"L'enquête '{self.nom}' a été clôturée et supprimée.\n")
 
     def afficher_enquetes():
-        """
-        Pre : /
-        Post : Affiche les différentes enquêtes existantes
-        """
         for enquete in Enquete.enquetes:
             print(enquete)
 
@@ -222,11 +225,10 @@ if __name__ == "__main__":
     # # Afficher les enquêtes existantes
     # Enquete.afficher_enquetes()
 
-    # Afficher les évènements
-    Meurtre.add_evenement("Découverte du corps")
-    Meurtre.add_evenement("Arme trouvée")
-    Meurtre.afficher_evenements()
-    Cambriolage.afficher_evenements()
+    # # Afficher les évènements
+    # Meurtre.add_evenement("Découverte du corps")
+    # Meurtre.afficher_evenements()
+    # Cambriolage.afficher_evenements()
 
     # # Afficher les interrogatoires
     # Alexis.add_interrogatoire("2004-01-01", Nathan, Meurtre.id)

@@ -20,7 +20,6 @@ class Personne:
         self.sexe = sexe
         self._date_de_naissance = datetime.strptime(date_de_naissance, "%Y-%m-%d")
         self._date_de_deces = datetime.strptime("9999-12-31", "%Y-%m-%d")
-        self.lieu_de_naissance = ""
         self.metier = "'Pas de métier actuellement'"
         self.interrogatoires = {}
         self.mail = ""
@@ -64,6 +63,7 @@ class Personne:
         """
         Pré : valeur (str) au format "YYYY-MM-DD"
         Post : Définit la date de décès, lève une exception si la date est dans le futur ou avant la date de naissance
+        Raise ValueError: si la date de décès est dans le futur ou avant la date de naissance
         """
         try:
             date_obj = datetime.strptime(valeur, "%Y-%m-%d")
@@ -81,6 +81,7 @@ class Personne:
         """
         Pré : date (str) au format "YYYY-MM-DD", enqueteur (Personne), num_enquete (int)
         Post : Ajoute un interrogatoire à la liste des interrogatoires, lève une exception si l'enquêteur ou l'interrogé est né après la date ou est mort
+        Raise ValueError : si l'interrogatoire se déroule alors qu'un des deux participants n'est pas né ou est décédé
         """
         try:
             date_modifiee = datetime.strptime(date, "%Y-%m-%d")
@@ -108,6 +109,7 @@ class Personne:
         """
         Pré : date (str) au format "YYYY-MM-DD"
         Post : Retourne la liste des interrogatoires pour une date donnée, lève une exception si la date est invalide ou si aucun interrogatoire n'est trouvé
+        Raise KeyError : si aucun interrogatoire trouvé pour la date donnée
         """
         try:
             datetime.strptime(date, "%Y-%m-%d")
