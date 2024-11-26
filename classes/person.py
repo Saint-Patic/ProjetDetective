@@ -120,6 +120,22 @@ class Personne:
             print(f"Erreur lors de la récupération des interrogatoires: {e}\n")
             return []
 
+    def to_dict(self) -> dict:
+        """
+        Pré : -
+        Post : Retourne un dictionnaire contenant les informations de l'objet Personne
+        """
+        return {
+            "nom": self.nom,
+            "prenom": self.prenom,
+            "date_de_naissance": self.date_de_naissance,
+            "date_de_deces": self.date_de_deces,
+            "sexe": self.sexe,
+            "metier": self.metier,
+            "interrogatoires": self.interrogatoires,
+            "mail": self.mail,
+        }
+
     def __str__(self) -> str:
         """
         Pré : -

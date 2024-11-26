@@ -54,14 +54,27 @@ class Preuve:
         """
         self.heure = heure
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "nom": self.nom,
+            "enquete_liee": self.enquete_liee,
+            "type": self.type,
+            "lieu": self.lieu,
+            "date_preuve": self.date_preuve,
+            "heure": self.heure,
+        }
 
     def __str__(self) -> str:
         """
         Pré : -
         Post : return une string contenant les attributs
         """
-        return (f"ID: {self.id}, Nom: {self.nom}, Enquete liée: {self.enquete_liee}, Type: {self.type},"
-                f" Lieu: {self.lieu}, "f" Date: {self.date_preuve}, Heure: {self.heure}")
+        return (
+            f"ID: {self.id}, Nom: {self.nom}, Enquete liée: {self.enquete_liee}, Type: {self.type},"
+            f" Lieu: {self.lieu}, "
+            f" Date: {self.date_preuve}, Heure: {self.heure}"
+        )
 
 
 if __name__ == "__main__":

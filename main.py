@@ -1,5 +1,5 @@
 from classes import Personne, Temoin, Suspect, Employe, Criminel, Evenement, Preuve
-
+from datetime import datetime
 import utils
 import json
 
@@ -28,6 +28,7 @@ class Enquete:
         self.id_preuve = 0
         self.enquetes_liees = []
         Enquete.enquetes.append(self)
+        self.id_event = 0
 
     def __str__(self) -> str:
         if self.liste_preuves == []:
@@ -137,8 +138,29 @@ class Enquete:
         # Ajouter la personne à la liste des personnes impliquées
         self.personne_impliquee.append(personne)
 
+    def sauvegarder_enquete(self):
+        try:
+            with open("enquetes.json", "r", encoding="utf-8") as fichier:
+                donnees = json.load(fichier)
+        except (FileNotFoundError, json.JSONDecodeError):
+            donnees = []
+        enquete_dict = self.to_dict()
+
+        for index, enquete in enumerate(donnees):
+            if enquete["id"] == self.id:
+                donnees[index] = enquete_dict
+                break
+        else:
+            donnees.append(enquete_dict)
+
+        with open("fichiers/enquetes.json", "w", encoding="utf-8") as fichier:
+            json.dump(donnees, fichier, indent=4, ensure_ascii=False)
+
     def add_enquetes_liees(self, enquete):
-        return self.enquetes_liees.append(enquete)
+        """Ajoute une enquête liée et met à jour le fichier enquetes.json."""
+        if enquete not in self.enquetes_liees:
+            self.enquetes_liees.append(enquete)
+            self.sauvegarder_enquete()
 
     def afficher_enquetes_liees(self, indentation=4):
         if not self.enquetes_liees:
@@ -153,7 +175,10 @@ class Enquete:
         print("\n")
 
     def add_evenement(self, nom_evenement):
-        return self.liste_evenement.append(Evenement(nom_evenement, self.id))
+        self.id_event += 1
+        return self.liste_evenement.append(
+            Evenement(self.id_event, nom_evenement, self.id)
+        )
 
     def afficher_evenements(self, indentation=4):
         if self.liste_evenement == []:
@@ -196,9 +221,43 @@ class Enquete:
         for enquete in Enquete.enquetes:
             print(enquete)
 
+    def to_dict(self):
+        if isinstance(self.date_de_debut, str):
+            self.date_de_debut = utils.convertir_date(self.date_de_debut)
+        if isinstance(self.date_de_fin, str):
+            self.date_de_fin = utils.convertir_date(self.date_de_fin)
+        return {
+            "id": self.id,
+            "nom": self.nom,
+            "date_de_debut": utils.convertir_date(self.date_de_debut),
+            "date_de_fin": utils.convertir_date(self.date_de_fin),
+            "liste_preuves": [preuve.to_dict() for preuve in self.liste_preuves],
+            "personne_impliquee": [
+                personne.to_dict() for personne in self.personne_impliquee
+            ],
+            "liste_evenement": [
+                evenement.to_dict() for evenement in self.liste_evenement
+            ],
+            "enquetes_liees": [e.id for e in self.enquetes_liees],
+        }
+
+
+def creer_enquete(nom, date_de_debut, date_de_fin):
+    """Crée une nouvelle enquête et la sauvegarde dans enquetes.json."""
+    try:
+        utils.convertir_date(date_de_debut)
+        utils.convertir_date(date_de_fin)
+    except ValueError:
+        raise ValueError("Les dates doivent être au format YYYY-MM-DD.")
+
+    nouvelle_enquete = Enquete(nom, date_de_debut, date_de_fin)
+    return nouvelle_enquete
+
 
 if __name__ == "__main__":
 
+    enquete1 = creer_enquete("Vol", "2023-01-01", "2023-06-30")
+    enquete2 = creer_enquete("Fraude", "2023-07-01", "2023-12-31")
     Meurtre = Enquete("Meurtre", "2003-08-04", "2005-02-26", [], [])
     Cambriolage = Enquete("Cambriolage", "2010-06-15", "2011-08-01", [], [])
     Alexis = Personne("Demarcq", "Alexis", "2003-08-04", "Homme")
@@ -210,10 +269,12 @@ if __name__ == "__main__":
     Cambriolage.add_personne(Alexis)
     Cambriolage.add_personne(Nathan)
 
-    # # Afficher les enquêtes liées
-    # Meurtre.afficher_enquetes_liees()
-    # Meurtre.add_enquetes_liees(Cambriolage)
-    # Meurtre.afficher_enquetes_liees()
+    # Afficher les enquêtes liées
+    enquete1.add_enquetes_liees(enquete2)
+    Meurtre.afficher_enquetes_liees()
+    Meurtre.add_enquetes_liees(Cambriolage)
+    Meurtre.afficher_enquetes_liees()
+    enquete1.afficher_enquetes_liees()
 
     # # Afficher les preuves
     # Meurtre.add_preuves("Arme")
@@ -225,7 +286,7 @@ if __name__ == "__main__":
     # # Afficher les enquêtes existantes
     # Enquete.afficher_enquetes()
 
-    # # Afficher les évènements
+    # Afficher les évènements
     # Meurtre.add_evenement("Découverte du corps")
     # Meurtre.afficher_evenements()
     # Cambriolage.afficher_evenements()

@@ -1,0 +1,35 @@
+[
+    {
+        "id": 3,
+        "nom": "Meurtre",
+        "date_de_debut": "04/08/2003",
+        "date_de_fin": "26/02/2005",
+        "liste_preuves": [],
+        "personne_impliquee": [
+            {
+                "nom": "Demarcq",
+                "prenom": "Alexis",
+                "date_de_naissance": "2003-08-04",
+                "date_de_deces": "9999-12-31",
+                "sexe": "Homme",
+                "metier": "'Pas de métier actuellement'",
+                "interrogatoires": {},
+                "mail": ""
+            },
+            {
+                "nom": "Henrard",
+                "prenom": "Quentin",
+                "date_de_naissance": "2003-08-04",
+                "date_de_deces": "9999-12-31",
+                "sexe": "Homme",
+                "metier": "'Pas de métier actuellement'",
+                "interrogatoires": {},
+                "mail": ""
+            }
+        ],
+        "liste_evenement": [],
+        "enquetes_liees": [
+            4
+        ]
+    }
+]
