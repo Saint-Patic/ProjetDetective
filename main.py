@@ -13,7 +13,7 @@ class Enquete:
         self,
         nom: str,
         date_de_debut: str,
-        date_de_fin: str,
+        date_de_fin = "Enquête non clôturer",
         liste_preuves=[],
         personne_impliquee=[],
     ) -> None:
@@ -140,7 +140,7 @@ class Enquete:
 
     def sauvegarder_enquete(self):
         try:
-            with open("enquetes.json", "r", encoding="utf-8") as fichier:
+            with open("fichiers/enquetes.json", "r", encoding="utf-8") as fichier:
                 donnees = json.load(fichier)
         except (FileNotFoundError, json.JSONDecodeError):
             donnees = []
@@ -256,13 +256,14 @@ def creer_enquete(nom, date_de_debut, date_de_fin):
 
 if __name__ == "__main__":
 
-    enquete1 = creer_enquete("Vol", "2023-01-01", "2023-06-30")
-    enquete2 = creer_enquete("Fraude", "2023-07-01", "2023-12-31")
+    Vol = creer_enquete("Vol", "2023-01-01", "2023-06-30")
+    Fraude = creer_enquete("Fraude", "2023-07-01", "2023-12-31")
     Meurtre = Enquete("Meurtre", "2003-08-04", "2005-02-26", [], [])
     Cambriolage = Enquete("Cambriolage", "2010-06-15", "2011-08-01", [], [])
     Alexis = Personne("Demarcq", "Alexis", "2003-08-04", "Homme")
     Nathan = Employe("Lemaire", "Nathan", "2003-01-01", "Homme")
     Quentin = Suspect("Henrard", "Quentin", "2003-08-04", "Homme")
+    Tristan = Criminel("Valcke", "Tristan", "2003-08-04", "Homme")
 
     Meurtre.add_personne(Alexis)
     Meurtre.add_personne(Quentin)
@@ -270,11 +271,14 @@ if __name__ == "__main__":
     Cambriolage.add_personne(Nathan)
 
     # Afficher les enquêtes liées
-    enquete1.add_enquetes_liees(enquete2)
+    Vol.add_enquetes_liees(Fraude)
     Meurtre.afficher_enquetes_liees()
     Meurtre.add_enquetes_liees(Cambriolage)
     Meurtre.afficher_enquetes_liees()
-    enquete1.afficher_enquetes_liees()
+    Vol.afficher_enquetes_liees()
+
+    # Sauvegarder les enquêtes
+    Vol.sauvegarder_enquete()
 
     # # Afficher les preuves
     # Meurtre.add_preuves("Arme")
