@@ -176,9 +176,24 @@ class Enquete:
 
     def add_evenement(self, nom_evenement):
         self.id_event += 1
-        return self.liste_evenement.append(
-            Evenement(self.id_event, nom_evenement, self.id)
-        )
+        nouvel_evenement = Evenement(self.id_event, nom_evenement, self.id)
+        try:
+            with open("fichiers/evenement.json", "r", encoding="utf-8") as fichier:
+                donnees = json.load(fichier)
+        except (FileNotFoundError, json.JSONDecodeError):
+            donnees = []
+        evenement_dict = nouvel_evenement.to_dict()
+
+        for index, evenement in enumerate(donnees):
+            if evenement["id"] == self.id_event:
+                donnees[index] = evenement_dict
+                break
+        else:
+            donnees.append(evenement_dict)
+
+        with open("fichiers/evenement.json", "w", encoding="utf-8") as fichier:
+            json.dump(donnees, fichier, indent=4, ensure_ascii=False)
+        self.liste_evenement.append(nouvel_evenement)
 
     def afficher_evenements(self, indentation=4):
         if self.liste_evenement == []:
@@ -336,16 +351,16 @@ if __name__ == "__main__":
     # Enquete.afficher_enquetes()
 
     # Afficher les évènements
-    # Meurtre.add_evenement("Découverte du corps")
-    # Meurtre.afficher_evenements()
-    # Cambriolage.afficher_evenements()
+    Meurtre.add_evenement("Découverte du corps")
+    Meurtre.afficher_evenements()
+    Cambriolage.afficher_evenements()
 
-    # # Afficher les interrogatoires
-    # Alexis.add_interrogatoire("2004-01-01", Nathan, Meurtre.id)
-    # Quentin.add_interrogatoire("2005-11-22", Nathan, Cambriolage.id)
-    # Alexis.add_interrogatoire("2002-01-21", Nathan, Cambriolage.id)
-    # Meurtre.afficher_interrogatoires(Meurtre.id)
-    # Cambriolage.afficher_interrogatoires(Cambriolage.id)
+    # Afficher les interrogatoires
+    Alexis.ajouter_interrogatoire("2004-01-01", Nathan, Meurtre.id)
+    Quentin.ajouter_interrogatoire("2005-11-22", Nathan, Cambriolage.id)
+    Alexis.ajouter_interrogatoire("2002-01-21", Nathan, Cambriolage.id)
+    Meurtre.afficher_interrogatoires(Meurtre.id)
+    Cambriolage.afficher_interrogatoires(Cambriolage.id)
 
     # # Clôturer une enquête
     # Cambriolage.cloturer_enquete()
