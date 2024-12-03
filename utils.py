@@ -1,5 +1,4 @@
 from datetime import datetime
-from main import Enquete
 
 
 def convertir_date(date: str | datetime) -> str:
@@ -20,6 +19,7 @@ def ajouter_indentation(texte, indentation=4):
 
 
 def creer_enquete(nom, date_de_debut, date_de_fin):
+    from main import Enquete
     """Crée une nouvelle enquête et la sauvegarde dans enquetes.json."""
     try:
         convertir_date(date_de_debut)
