@@ -1,5 +1,5 @@
 from datetime import date, datetime
-
+from ProjetDetective import utils
 
 class Preuve:
 
@@ -10,7 +10,7 @@ class Preuve:
         enquete_liee: int,
         type=" Type non spécifié",
         lieu="Lieu non spécifié",
-        date_preuve=date.today(),
+        date_preuve=utils.convertir_date(datetime.today()),
         heure="Heure non spécifée",
     ):
         """
