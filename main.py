@@ -176,9 +176,24 @@ class Enquete:
 
     def add_evenement(self, nom_evenement):
         self.id_event += 1
-        return self.liste_evenement.append(
-            Evenement(self.id_event, nom_evenement, self.id)
-        )
+        nouvel_evenement = Evenement(self.id_event, nom_evenement, self.id)
+        try:
+            with open("fichiers/evenement.json", "r", encoding="utf-8") as fichier:
+                donnees = json.load(fichier)
+        except (FileNotFoundError, json.JSONDecodeError):
+            donnees = []
+        evenement_dict = nouvel_evenement.to_dict()
+
+        for index, evenement in enumerate(donnees):
+            if evenement["id"] == self.id_event:
+                donnees[index] = evenement_dict
+                break
+        else:
+            donnees.append(evenement_dict)
+
+        with open("fichiers/evenement.json", "w", encoding="utf-8") as fichier:
+            json.dump(donnees, fichier, indent=4, ensure_ascii=False)
+        self.liste_evenement.append(nouvel_evenement)
 
     def afficher_evenements(self, indentation=4):
         if self.liste_evenement == []:
@@ -190,9 +205,50 @@ class Enquete:
 
         print("\n")
 
-    def add_preuves(self, nom_preuves):
+    def add_preuves(self, nom_preuve):
         self.id_preuve += 1
-        return self.liste_preuves.append(Preuve(self.id_preuve, nom_preuves, self.id))
+        preuve = Preuve(self.id_preuve, nom_preuve, self.id)
+        try:
+            with open("fichiers/preuves.json", "r", encoding="utf-8") as json_file:
+                donnees_existantes = json.load(json_file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            donnees_existantes = []
+
+        # Convertir l'objet personne en dictionnaire complet
+        dict_preuves = preuve.to_dict()
+        print(dict_preuves)
+
+        # Ajouter les attributs supplémentaires si disponibles
+        for attr, valeur in preuve.__dict__.items():
+            if attr not in [
+                "id",
+                "nom",
+                "enquete_liee",
+                "type",
+                "lieu",
+                "date_preuve",
+                "heure",
+            ]:
+                dict_preuves[attr] = valeur
+
+        # Chercher si la personne existe déjà dans les données
+        for index, existing_preuve in enumerate(donnees_existantes):
+            if (
+                existing_preuve["nom"] == preuve.nom
+            ):
+                # Mettre à jour les informations existantes avec les nouvelles valeurs
+                donnees_existantes[index] = dict_preuves
+                break
+        else:
+            # Si la personne n'est pas trouvée, ajouter comme nouvelle
+            donnees_existantes.append(dict_preuves)
+
+        # Sauvegarder les données mises à jour dans le fichier
+        with open("fichiers/preuves.json", "w", encoding="utf-8") as json_file:
+            json.dump(donnees_existantes, json_file, indent=4, ensure_ascii=False)
+
+        # Ajouter la personne à la liste des personnes impliquées
+        self.liste_preuves.append(preuve)
 
     def afficher_preuves(self, indentation=4):
         if self.liste_preuves == []:
@@ -272,39 +328,39 @@ if __name__ == "__main__":
     Cambriolage.add_personne(Nathan)
 
     # Afficher les enquêtes liées
-    Vol.add_enquetes_liees(Fraude)
-    Meurtre.afficher_enquetes_liees()
-    Meurtre.add_enquetes_liees(Cambriolage)
-    Meurtre.afficher_enquetes_liees()
-    Vol.afficher_enquetes_liees()
+    # Vol.add_enquetes_liees(Fraude)
+    # Meurtre.afficher_enquetes_liees()
+    # Meurtre.add_enquetes_liees(Cambriolage)
+    # Meurtre.afficher_enquetes_liees()
+    # Vol.afficher_enquetes_liees()
 
     # Sauvegarder les enquêtes
-    Vol.sauvegarder_enquete()
-    Fraude.sauvegarder_enquete()
-    Meurtre.sauvegarder_enquete()
-    Cambriolage.sauvegarder_enquete()
+    # Vol.sauvegarder_enquete()
+    # Fraude.sauvegarder_enquete()
+    # Meurtre.sauvegarder_enquete()
+    # Cambriolage.sauvegarder_enquete()
 
-    # # Afficher les preuves
-    # Meurtre.add_preuves("Arme")
-    # Meurtre.add_preuves("Indice")
-    # Cambriolage.add_preuves("Arme")
-    # Meurtre.afficher_preuves()
-    # Cambriolage.afficher_preuves()
+    # Afficher les preuves
+    Meurtre.add_preuves("Arme")
+    Meurtre.add_preuves("Indice")
+    Cambriolage.add_preuves("Arme")
+    Meurtre.afficher_preuves()
+    Cambriolage.afficher_preuves()
 
     # # Afficher les enquêtes existantes
     # Enquete.afficher_enquetes()
 
     # Afficher les évènements
-    # Meurtre.add_evenement("Découverte du corps")
-    # Meurtre.afficher_evenements()
-    # Cambriolage.afficher_evenements()
+    Meurtre.add_evenement("Découverte du corps")
+    Meurtre.afficher_evenements()
+    Cambriolage.afficher_evenements()
 
-    # # Afficher les interrogatoires
-    # Alexis.add_interrogatoire("2004-01-01", Nathan, Meurtre.id)
-    # Quentin.add_interrogatoire("2005-11-22", Nathan, Cambriolage.id)
-    # Alexis.add_interrogatoire("2002-01-21", Nathan, Cambriolage.id)
-    # Meurtre.afficher_interrogatoires(Meurtre.id)
-    # Cambriolage.afficher_interrogatoires(Cambriolage.id)
+    # Afficher les interrogatoires
+    Alexis.ajouter_interrogatoire("2004-01-01", Nathan, Meurtre.id)
+    Quentin.ajouter_interrogatoire("2005-11-22", Nathan, Cambriolage.id)
+    Alexis.ajouter_interrogatoire("2002-01-21", Nathan, Cambriolage.id)
+    Meurtre.afficher_interrogatoires(Meurtre.id)
+    Cambriolage.afficher_interrogatoires(Cambriolage.id)
 
     # # Clôturer une enquête
     # Cambriolage.cloturer_enquete()

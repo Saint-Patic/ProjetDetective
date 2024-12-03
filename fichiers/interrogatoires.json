@@ -1,0 +1,26 @@
+[
+    {
+        "date": "2004-01-01",
+        "enqueteur": "Nathan",
+        "interroge": "Alexis",
+        "num_enquete": 3
+    },
+    {
+        "date": "2005-11-22",
+        "enqueteur": "Nathan",
+        "interroge": "Quentin",
+        "num_enquete": 4
+    },
+    {
+        "date": "2004-01-01",
+        "enqueteur": "Nathan",
+        "interroge": "Alexis",
+        "num_enquete": 3
+    },
+    {
+        "date": "2005-11-22",
+        "enqueteur": "Nathan",
+        "interroge": "Quentin",
+        "num_enquete": 4
+    }
+]

@@ -1,4 +1,6 @@
+import uuid  # Import pour générer un identifiant unique
 from datetime import datetime
+import json
 
 
 class Personne:
@@ -77,33 +79,66 @@ class Personne:
         except ValueError as e:
             print(f"Erreur lors de la définition de la date de décès: {e}\n")
 
-    def ajouter_interrogatoire(self, date: str, enqueteur, num_enquete: int) -> None:
-        """
-        Pré : date (str) au format "YYYY-MM-DD", enqueteur (Personne), num_enquete (int)
-        Post : Ajoute un interrogatoire à la liste des interrogatoires, lève une exception si l'enquêteur ou l'interrogé est né après la date ou est mort
-        Raise ValueError : si l'interrogatoire se déroule alors qu'un des deux participants n'est pas né ou est décédé
-        """
-        try:
-            date_modifiee = datetime.strptime(date, "%Y-%m-%d")
-            if (
-                enqueteur._date_de_naissance > date_modifiee
-                or self._date_de_naissance > date_modifiee
-            ):
-                raise ValueError("L'enquêteur ou l'interrogé n'est pas encore né.\n")
-            if (
-                enqueteur._date_de_deces < date_modifiee
-                or self._date_de_deces < date_modifiee
-            ):
-                raise ValueError(
-                    "L'enquêteur ou l'interrogé est mort. Il ne peut pas participer à l'interrogatoire.\n"
-                )
-            interrogatoires_date = self.interrogatoires.get(date, [])
-            interrogatoires_date.append(
-                {"enqueteur": enqueteur.prenom, "num_enquete": num_enquete}
+
+def ajouter_interrogatoire(self, date: str, enqueteur, num_enquete: int) -> None:
+    """
+    Ajoute un interrogatoire à la liste des interrogatoires et le sauvegarde dans un fichier JSON avec un ID unique.
+    """
+    try:
+        date_modifiee = datetime.strptime(date, "%Y-%m-%d")
+        if (
+            enqueteur._date_de_naissance > date_modifiee
+            or self._date_de_naissance > date_modifiee
+        ):
+            raise ValueError("L'enquêteur ou l'interrogé n'est pas encore né.\n")
+        if (
+            enqueteur._date_de_deces < date_modifiee
+            or self._date_de_deces < date_modifiee
+        ):
+            raise ValueError(
+                "L'enquêteur ou l'interrogé est mort. Il ne peut pas participer à l'interrogatoire.\n"
             )
-            self.interrogatoires[date] = interrogatoires_date
-        except ValueError as e:
-            print(f"Erreur lors de l'ajout de l'interrogatoire: {e}\n")
+
+        # Génération de l'ID unique
+        interrogatoire_id = str(uuid.uuid4())
+
+        # Ajout à la liste des interrogatoires
+        interrogatoires_date = self.interrogatoires.get(date, [])
+        interrogatoires_date.append(
+            {
+                "id": interrogatoire_id,
+                "enqueteur": enqueteur.prenom,
+                "num_enquete": num_enquete,
+            }
+        )
+        self.interrogatoires[date] = interrogatoires_date
+
+        # Sauvegarde dans le fichier JSON
+        try:
+            with open(
+                "fichiers/interrogatoires.json", "r", encoding="utf-8"
+            ) as fichier:
+                donnees_existantes = json.load(fichier)
+        except (FileNotFoundError, json.JSONDecodeError):
+            donnees_existantes = []
+
+        nouvel_interrogatoire = {
+            "id": interrogatoire_id,
+            "date": date,
+            "enqueteur": enqueteur.prenom,
+            "interroge": self.prenom,
+            "num_enquete": num_enquete,
+        }
+
+        # Éviter les doublons
+        if nouvel_interrogatoire not in donnees_existantes:
+            donnees_existantes.append(nouvel_interrogatoire)
+
+        with open("fichiers/interrogatoires.json", "w", encoding="utf-8") as fichier:
+            json.dump(donnees_existantes, fichier, indent=4, ensure_ascii=False)
+
+    except ValueError as e:
+        print(f"Erreur lors de l'ajout de l'interrogatoire: {e}\n")
 
     def obtenir_interrogatoires(self, date: str) -> list:
         """
