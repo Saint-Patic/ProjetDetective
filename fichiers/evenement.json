@@ -1,0 +1,9 @@
+[
+    {
+        "id": 1,
+        "nom": "Découverte du corps",
+        "enquete_liee": 3,
+        "date_event": "2024-12-03",
+        "lieu": "Lieu pas précisé"
+    }
+]
