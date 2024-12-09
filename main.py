@@ -1,10 +1,11 @@
-from classes import Personne, Temoin, Suspect, Employe, Criminel, Evenement, Preuve
-from datetime import datetime
-import utils
 import json
+import utils
+from classes import Personne, Temoin, Suspect, Employe, Criminel, Evenement, Preuve
+
 
 
 class Enquete:
+    """Classe représentant une enquête avec des preuves, personnes impliquées, etc."""
 
     id = 1
     enquetes = []
@@ -13,10 +14,20 @@ class Enquete:
         self,
         nom: str,
         date_de_debut: str,
-        date_de_fin="Enquête non clôturer",
-        liste_preuves=[],
-        personne_impliquee=[],
+        date_de_fin: str = "Enquête non clôturée",
+        liste_preuves=None,
+        personne_impliquee=None,
     ) -> None:
+        """
+        Initialise une nouvelle enquête.
+
+        PRE: `date_de_debut` doit être une chaîne au format YYYY-MM-DD.
+        """
+        if liste_preuves is None:
+            liste_preuves = []
+        if personne_impliquee is None:
+            personne_impliquee = []
+
         self.id = Enquete.id
         Enquete.id += 1
         self.nom = nom
@@ -25,24 +36,27 @@ class Enquete:
         self.liste_preuves = liste_preuves
         self.personne_impliquee = personne_impliquee
         self.liste_evenement = []
-        self.id_preuve = 0
         self.enquetes_liees = []
+        self.id_preuve = 0
+        self.id_evenement = 0
+
         Enquete.enquetes.append(self)
-        self.id_event = 0
 
     def __str__(self) -> str:
-        if self.liste_preuves == []:
-            preuves = "Aucune preuves dans cette enquête."
-        else:
-            preuves = ", ".join(str(preuve) for preuve in self.liste_preuves)
-        if self.personne_impliquee == []:
-            personnes = "Aucune personnes impliquées dans cette enquête."
-        else:
-            personnes = ", ".join(str(personne) for personne in self.personne_impliquee)
+        """Retourne une représentation textuelle de l'enquête."""
+        preuves = (
+            ", ".join(str(preuve) for preuve in self.liste_preuves)
+            if self.liste_preuves
+            else "Aucune preuve dans cette enquête."
+        )
+        personnes = (
+            ", ".join(str(personne) for personne in self.personne_impliquee)
+            if self.personne_impliquee
+            else "Aucune personne impliquée dans cette enquête."
+        )
 
         return (
             f"Rapport de l'enquête n°{self.id} concernant un/une {self.nom} \n"
-            f"Enquête ID: {self.id} Titre: {self.nom} \n"
             f"Début: {self.date_de_debut} Fin: {self.date_de_fin} \n"
             f"Preuves: {preuves} \nPersonnes impliquées: {personnes}\n"
         )
@@ -84,7 +98,7 @@ class Enquete:
 
         print("\n")
 
-    def add_personne(self, personne):
+    def ajouter_personne(self, personne):
         try:
             with open("fichiers/personnes.json", "r", encoding="utf-8") as json_file:
                 donnees_existantes = json.load(json_file)
@@ -118,11 +132,11 @@ class Enquete:
                 dict_personne[attr] = valeur
 
         # Chercher si la personne existe déjà dans les données
-        for index, existing_personne in enumerate(donnees_existantes):
+        for index, personne_existante in enumerate(donnees_existantes):
             if (
-                existing_personne["nom"] == personne.nom
-                and existing_personne["prenom"] == personne.prenom
-                and existing_personne["date_de_naissance"] == personne.date_de_naissance
+                personne_existante["nom"] == personne.nom
+                and personne_existante["prenom"] == personne.prenom
+                and personne_existante["date_de_naissance"] == personne.date_de_naissance
             ):
                 # Mettre à jour les informations existantes avec les nouvelles valeurs
                 donnees_existantes[index] = dict_personne
@@ -138,12 +152,14 @@ class Enquete:
         # Ajouter la personne à la liste des personnes impliquées
         self.personne_impliquee.append(personne)
 
-    def sauvegarder_enquete(self):
+    def sauvegarder_enquete(self) -> None:
+        """Sauvegarde l'enquête dans un fichier JSON."""
         try:
             with open("fichiers/enquetes.json", "r", encoding="utf-8") as fichier:
                 donnees = json.load(fichier)
         except (FileNotFoundError, json.JSONDecodeError):
             donnees = []
+
         enquete_dict = self.to_dict()
 
         for index, enquete in enumerate(donnees):
@@ -156,7 +172,10 @@ class Enquete:
         with open("fichiers/enquetes.json", "w", encoding="utf-8") as fichier:
             json.dump(donnees, fichier, indent=4, ensure_ascii=False)
 
-    def add_enquetes_liees(self, enquete):
+        with open("fichiers/enquetes.json", "w", encoding="utf-8") as fichier:
+            json.dump(donnees, fichier, indent=4, ensure_ascii=False)
+
+    def ajouter_enquetes_liees(self, enquete):
         """Ajoute une enquête liée et met à jour le fichier enquetes.json."""
         if enquete not in self.enquetes_liees:
             self.enquetes_liees.append(enquete)
@@ -174,9 +193,9 @@ class Enquete:
 
         print("\n")
 
-    def add_evenement(self, nom_evenement):
-        self.id_event += 1
-        nouvel_evenement = Evenement(self.id_event, nom_evenement, self.id)
+    def ajouter_evenement(self, nom_evenement):
+        self.id_evenement += 1
+        nouvel_evenement = Evenement(self.id_evenement, nom_evenement, self.id)
         try:
             with open("fichiers/evenement.json", "r", encoding="utf-8") as fichier:
                 donnees = json.load(fichier)
@@ -185,7 +204,7 @@ class Enquete:
         evenement_dict = nouvel_evenement.to_dict()
 
         for index, evenement in enumerate(donnees):
-            if evenement["id"] == self.id_event:
+            if evenement["id"] == self.id_evenement:
                 donnees[index] = evenement_dict
                 break
         else:
@@ -205,7 +224,7 @@ class Enquete:
 
         print("\n")
 
-    def add_preuves(self, nom_preuve):
+    def ajouter_preuves(self, nom_preuve):
         self.id_preuve += 1
         preuve = Preuve(self.id_preuve, nom_preuve, self.id)
         try:
@@ -216,7 +235,6 @@ class Enquete:
 
         # Convertir l'objet personne en dictionnaire complet
         dict_preuves = preuve.to_dict()
-        print(dict_preuves)
 
         # Ajouter les attributs supplémentaires si disponibles
         for attr, valeur in preuve.__dict__.items():
@@ -232,9 +250,9 @@ class Enquete:
                 dict_preuves[attr] = valeur
 
         # Chercher si la personne existe déjà dans les données
-        for index, existing_preuve in enumerate(donnees_existantes):
+        for index, preuve_existante in enumerate(donnees_existantes):
             if (
-                existing_preuve["nom"] == preuve.nom
+                preuve_existante["nom"] == preuve.nom
             ):
                 # Mettre à jour les informations existantes avec les nouvelles valeurs
                 donnees_existantes[index] = dict_preuves
@@ -277,11 +295,8 @@ class Enquete:
         for enquete in Enquete.enquetes:
             print(enquete)
 
-    def to_dict(self):
-        if isinstance(self.date_de_debut, str):
-            self.date_de_debut = utils.convertir_date(self.date_de_debut)
-        if isinstance(self.date_de_fin, str):
-            self.date_de_fin = utils.convertir_date(self.date_de_fin)
+    def to_dict(self) -> dict:
+        """Convertit l'enquête en dictionnaire."""
         return {
             "id": self.id,
             "nom": self.nom,
@@ -322,15 +337,15 @@ if __name__ == "__main__":
     Quentin = Suspect("Henrard", "Quentin", "2003-08-04", "Homme")
     Tristan = Criminel("Valcke", "Tristan", "2003-08-04", "Homme")
 
-    Meurtre.add_personne(Alexis)
-    Meurtre.add_personne(Quentin)
-    Cambriolage.add_personne(Alexis)
-    Cambriolage.add_personne(Nathan)
+    Meurtre.ajouter_personne(Alexis)
+    Meurtre.ajouter_personne(Quentin)
+    Cambriolage.ajouter_personne(Alexis)
+    Cambriolage.ajouter_personne(Nathan)
 
     # Afficher les enquêtes liées
-    # Vol.add_enquetes_liees(Fraude)
+    # Vol.ajouter_enquetes_liees(Fraude)
     # Meurtre.afficher_enquetes_liees()
-    # Meurtre.add_enquetes_liees(Cambriolage)
+    # Meurtre.ajouter_enquetes_liees(Cambriolage)
     # Meurtre.afficher_enquetes_liees()
     # Vol.afficher_enquetes_liees()
 
@@ -341,30 +356,30 @@ if __name__ == "__main__":
     # Cambriolage.sauvegarder_enquete()
 
     # Afficher les preuves
-    Meurtre.add_preuves("Arme")
-    Meurtre.add_preuves("Indice")
-    Cambriolage.add_preuves("Arme")
-    Meurtre.afficher_preuves()
-    Cambriolage.afficher_preuves()
+    # Meurtre.ajouter_preuves("Arme")
+    # Meurtre.ajouter_preuves("Indice")
+    # Cambriolage.ajouter_preuves("Arme")
+    # Meurtre.afficher_preuves()
+    # Cambriolage.afficher_preuves()
 
-    # # Afficher les enquêtes existantes
+    # Afficher les enquêtes existantes
     # Enquete.afficher_enquetes()
 
     # Afficher les évènements
-    Meurtre.add_evenement("Découverte du corps")
-    Meurtre.afficher_evenements()
-    Cambriolage.afficher_evenements()
+    # Meurtre.ajouter_evenement("Découverte du corps")
+    # Meurtre.afficher_evenements()
+    # Cambriolage.afficher_evenements()
 
     # Afficher les interrogatoires
-    Alexis.ajouter_interrogatoire("2004-01-01", Nathan, Meurtre.id)
-    Quentin.ajouter_interrogatoire("2005-11-22", Nathan, Cambriolage.id)
-    Alexis.ajouter_interrogatoire("2002-01-21", Nathan, Cambriolage.id)
-    Meurtre.afficher_interrogatoires(Meurtre.id)
-    Cambriolage.afficher_interrogatoires(Cambriolage.id)
+    # Alexis.ajouter_interrogatoire("2004-01-01", Nathan, Meurtre.id)
+    # Quentin.ajouter_interrogatoire("2005-11-22", Nathan, Cambriolage.id)
+    # Alexis.ajouter_interrogatoire("2002-01-21", Nathan, Cambriolage.id)
+    # Meurtre.afficher_interrogatoires(Meurtre.id)
+    # Cambriolage.afficher_interrogatoires(Cambriolage.id)
 
-    # # Clôturer une enquête
+    # Clôturer une enquête
     # Cambriolage.cloturer_enquete()
 
-    # # Générer un rapport
+    # Générer un rapport
     # Enquete.generer_rapport(1)
     # Enquete.generer_rapport(2)
