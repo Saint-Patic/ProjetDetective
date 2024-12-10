@@ -31,8 +31,11 @@ class Enquete:
         self.id = Enquete.id
         Enquete.id += 1
         self.nom = nom
-        self.date_de_debut = utils.convertir_date(date_de_debut)
-        self.date_de_fin = utils.convertir_date(date_de_fin)
+        try:
+            self.date_de_debut = utils.convertir_date(date_de_debut)
+            self.date_de_fin = utils.convertir_date(date_de_fin)
+        except ValueError as e:
+            raise ValueError(f"Erreur dans le format de date: {e}")
         self.liste_preuves = liste_preuves
         self.personne_impliquee = personne_impliquee
         self.liste_evenement = []
@@ -177,9 +180,10 @@ class Enquete:
 
     def ajouter_enquetes_liees(self, enquete):
         """Ajoute une enquête liée et met à jour le fichier enquetes.json."""
-        if enquete not in self.enquetes_liees:
-            self.enquetes_liees.append(enquete)
-            self.sauvegarder_enquete()
+        if enquete in self.enquetes_liees:
+            raise ValueError(f"L'enquête {enquete.nom} est déjà liée à {self.nom}.")
+        self.enquetes_liees.append(enquete)
+        self.sauvegarder_enquete()
 
     def afficher_enquetes_liees(self, indentation=4):
         if not self.enquetes_liees:
@@ -287,7 +291,8 @@ class Enquete:
         print(f"Aucune enquête trouvée avec l'ID {id}.")
 
     def cloturer_enquete(self) -> None:
-        # Supprimer cette instance de la liste d'enquêtes
+        if self not in Enquete.enquetes:
+            raise ValueError(f"L'enquête {self.nom} n'existe pas ou a déjà été clôturée.")
         Enquete.enquetes.remove(self)
         print(f"L'enquête '{self.nom}' a été clôturée et supprimée.\n")
 
@@ -296,21 +301,19 @@ class Enquete:
             print(enquete)
 
     def to_dict(self) -> dict:
-        """Convertit l'enquête en dictionnaire."""
-        return {
-            "id": self.id,
-            "nom": self.nom,
-            "date_de_debut": utils.convertir_date(self.date_de_debut),
-            "date_de_fin": utils.convertir_date(self.date_de_fin),
-            "liste_preuves": [preuve.to_dict() for preuve in self.liste_preuves],
-            "personne_impliquee": [
-                personne.to_dict() for personne in self.personne_impliquee
-            ],
-            "liste_evenement": [
-                evenement.to_dict() for evenement in self.liste_evenement
-            ],
-            "enquetes_liees": [e.id for e in self.enquetes_liees],
-        }
+        try:
+            return {
+                "id": self.id,
+                "nom": self.nom,
+                "date_de_debut": utils.convertir_date(self.date_de_debut),
+                "date_de_fin": utils.convertir_date(self.date_de_fin),
+                "liste_preuves": [preuve.to_dict() for preuve in self.liste_preuves],
+                "personne_impliquee": [personne.to_dict() for personne in self.personne_impliquee],
+                "liste_evenement": [evenement.to_dict() for evenement in self.liste_evenement],
+                "enquetes_liees": [e.id for e in self.enquetes_liees],
+            }
+        except AttributeError as e:
+            raise AttributeError(f"Erreur lors de la conversion en dictionnaire: {e}")
 
 
 def creer_enquete(nom, date_de_debut, date_de_fin):
