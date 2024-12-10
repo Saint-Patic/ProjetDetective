@@ -282,7 +282,7 @@ class Enquete:
 
         print("\n")
 
-    def generer_rapport(id):
+    def generer_rapport(self, id):
         for enquete in Enquete.enquetes:
             if enquete.id == id:
                 print(enquete)
