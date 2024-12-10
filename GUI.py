@@ -11,13 +11,13 @@ class MenuPrincipalScreen(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
+        layout = BoxLayout(orientation="vertical", spacing=10, padding=10)
 
         # Section des enquêtes
         layout.add_widget(Label(text="Choisissez une enquête", size_hint=(1, 0.1)))
         scroll = ScrollView(size_hint=(1, 0.5))
-        scroll_content = BoxLayout(orientation='vertical', size_hint_y=None, spacing=10)
-        scroll_content.bind(minimum_height=scroll_content.setter('height'))
+        scroll_content = BoxLayout(orientation="vertical", size_hint_y=None, spacing=10)
+        scroll_content.bind(minimum_height=scroll_content.setter("height"))
 
         # Exemples d'enquêtes
         for i in range(10):
@@ -30,7 +30,7 @@ class MenuPrincipalScreen(Screen):
 
         # Accès global (Employés, Criminels, etc.)
         buttons_layout = BoxLayout(size_hint=(1, 0.2), spacing=10)
-        sections = ['Employés', 'Criminels', 'Suspects', 'Témoins', 'Preuves']
+        sections = ["Employés", "Criminels", "Suspects", "Témoins", "Preuves"]
         for section in sections:
             btn = Button(text=section)
             btn.bind(on_release=self.switch_to_global_section)
@@ -57,13 +57,13 @@ class EnqueteScreen(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
+        self.layout = BoxLayout(orientation="vertical", spacing=10, padding=10)
         self.enquete_label = Label(text="Enquête : ", size_hint=(1, 0.1))
         self.layout.add_widget(self.enquete_label)
 
         # Boutons pour les sous-sections (Employés, Criminels, etc.)
         buttons_layout = BoxLayout(size_hint=(1, 0.1), spacing=10)
-        self.sections = ['Employés', 'Criminels', 'Suspects', 'Témoins', 'Preuves']
+        self.sections = ["Employés", "Criminels", "Suspects", "Témoins", "Preuves"]
         for section in self.sections:
             btn = Button(text=section)
             btn.bind(on_release=self.show_section)
@@ -71,12 +71,19 @@ class EnqueteScreen(Screen):
         self.layout.add_widget(buttons_layout)
 
         # Contenu de la section affichée
-        self.content_label = Label(text="Détails spécifiques à l'enquête...", size_hint=(1, 0.7))
+        self.content_label = Label(
+            text="Détails spécifiques à l'enquête...", size_hint=(1, 0.7)
+        )
         self.layout.add_widget(self.content_label)
 
         # Bouton de retour
-        self.layout.add_widget(Button(text="Retour au menu principal", size_hint=(1, 0.1),
-                                      on_release=self.go_back_to_menu))
+        self.layout.add_widget(
+            Button(
+                text="Retour au menu principal",
+                size_hint=(1, 0.1),
+                on_release=self.go_back_to_menu,
+            )
+        )
 
         self.add_widget(self.layout)
 
@@ -86,7 +93,9 @@ class EnqueteScreen(Screen):
 
     def show_section(self, instance):
         """Affiche une section spécifique (Employés, Criminels, etc.)."""
-        self.content_label.text = f"Section {instance.text} de l'enquête sélectionnée.\n(Données ici...)"
+        self.content_label.text = (
+            f"Section {instance.text} de l'enquête sélectionnée.\n(Données ici...)"
+        )
 
     def go_back_to_menu(self, instance):
         """Retourne au menu principal."""
@@ -99,7 +108,7 @@ class GlobalScreen(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
+        self.layout = BoxLayout(orientation="vertical", spacing=10, padding=10)
         self.section_label = Label(text="Section globale : ", size_hint=(1, 0.1))
         self.layout.add_widget(self.section_label)
 
@@ -108,8 +117,13 @@ class GlobalScreen(Screen):
         self.layout.add_widget(self.content_label)
 
         # Bouton de retour
-        self.layout.add_widget(Button(text="Retour au menu principal", size_hint=(1, 0.1),
-                                      on_release=self.go_back_to_menu))
+        self.layout.add_widget(
+            Button(
+                text="Retour au menu principal",
+                size_hint=(1, 0.1),
+                on_release=self.go_back_to_menu,
+            )
+        )
 
         self.add_widget(self.layout)
 

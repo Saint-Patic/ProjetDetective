@@ -46,7 +46,7 @@ class Preuve:
         Pré : date au format YYYY-MM-DD
         Post : Définit la date de quand la preuve a été trouvée
         """
-        self.date_evenement = nouvelle_date
+        self.date_preuve = nouvelle_date
 
     def ajouter_heure(self, heure):
         """
