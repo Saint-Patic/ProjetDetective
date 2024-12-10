@@ -5,3 +5,4 @@ from .employe import Employe
 from .criminel import Criminel
 from .event import Evenement
 from .preuves import Preuve
+from .enquete import Enquete
