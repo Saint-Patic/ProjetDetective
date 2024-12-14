@@ -35,5 +35,21 @@
     "grade": "gardien de la paix",
     "division": "pas de division",
     "matricule": 1
+  },
+  {
+    "nom": "Mertens",
+    "prenom": "Corentin",
+    "classe": "Temoin",
+    "sexe": "Homme",
+    "date_de_naissance": "2003-09-20",
+    "metier": "'Pas de métier actuellement'",
+    "mail": "",
+    "interrogatoires": {},
+    "temoignage": {
+      "2024-12-14": ["J'étais en train de travailler sur mon projet d'OS2"]
+    },
+    "fiabilite": 0,
+    "protection": false,
+    "disponibilite": false
   }
 ]

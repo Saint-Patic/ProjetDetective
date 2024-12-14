@@ -115,16 +115,17 @@ class Enquete:
             donnees_existantes = []
 
         # Convertir l'objet personne en dictionnaire complet
-        dict_personne = {
-            "nom": personne.nom,
-            "prenom": personne.prenom,
-            "classe": personne.__class__.__name__,
-            "sexe": personne.sexe,
-            "date_de_naissance": personne.date_de_naissance,
-            "metier": getattr(personne, "metier", ""),
-            "mail": getattr(personne, "mail", ""),
-            "interrogatoires": getattr(personne, "interrogatoires"),
-        }
+        if type(personne) != dict:
+            dict_personne = {
+                "nom": personne.nom,
+                "prenom": personne.prenom,
+                "classe": personne.__class__.__name__,
+                "sexe": personne.sexe,
+                "date_de_naissance": personne.date_de_naissance,
+                "metier": getattr(personne, "metier", ""),
+                "mail": getattr(personne, "mail", ""),
+                "interrogatoires": getattr(personne, "interrogatoires"),
+            }
 
         # Ajouter les attributs supplémentaires si disponibles
         for attr, valeur in personne.__dict__.items():
