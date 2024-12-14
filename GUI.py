@@ -8,18 +8,18 @@ from kivy.uix.popup import Popup
 import json
 
 
-def charger_donnees_personnes(chemin_fichier):
+def charger_donnees(chemin_fichier):
     with open(chemin_fichier, "r", encoding="utf-8") as fichier:
         return json.load(fichier)
 
 
-def organiser_par_section(donnees):
+def organiser_par_section(donnees, chemin_preuves=None):
     sections = {
         "Employés": [],
         "Criminels": [],
         "Suspects": [],
         "Témoins": [],
-        "Preuves": [],  # Préparer des sections vides si nécessaire
+        "Preuves": [],
     }
     for personne in donnees:
         classe = personne.get("classe", "Inconnu")
@@ -27,11 +27,13 @@ def organiser_par_section(donnees):
             sections["Employés"].append(personne)
         elif classe == "Suspect":
             sections["Suspects"].append(personne)
-        elif classe == "Criminel":  # Exemple, si une autre classe est définie
+        elif classe == "Criminel":
             sections["Criminels"].append(personne)
-        elif classe == "Temoin":
-            sections["Témoins"].append(personne)
-        # Ajoutez d'autres conditions ici si besoin
+
+    if chemin_preuves:
+        preuves = charger_donnees(chemin_preuves)
+        sections["Preuves"].extend(preuves)
+
     return sections
 
 
@@ -48,7 +50,6 @@ class MenuPrincipalScreen(Screen):
         scroll_content = BoxLayout(orientation="vertical", size_hint_y=None, spacing=10)
         scroll_content.bind(minimum_height=scroll_content.setter("height"))
 
-        # Exemples d'enquêtes
         for i in range(10):
             btn = Button(text=f"Enquête {i + 1}", size_hint_y=None, height=40)
             btn.bind(on_release=self.switch_to_enquete_screen)
@@ -57,7 +58,7 @@ class MenuPrincipalScreen(Screen):
         scroll.add_widget(scroll_content)
         layout.add_widget(scroll)
 
-        # Accès global (Employés, Criminels, etc.)
+        # Accès global
         buttons_layout = BoxLayout(size_hint=(1, 0.2), spacing=10)
         sections = ["Employés", "Criminels", "Suspects", "Témoins", "Preuves"]
         for section in sections:
@@ -69,28 +70,23 @@ class MenuPrincipalScreen(Screen):
         self.add_widget(layout)
 
     def switch_to_enquete_screen(self, instance):
-        """Passe à l'écran de gestion d'une enquête."""
         app = App.get_running_app()
         app.root.current = "enquete"
         app.enquete_screen.set_enquete(instance.text)
 
     def switch_to_global_section(self, instance):
-        """Passe à une section globale (Employés, Criminels, etc.)."""
         app = App.get_running_app()
         app.global_screen.set_section(instance.text)
         app.root.current = "global"
 
 
 class EnqueteScreen(Screen):
-    """Écran de gestion d'une enquête spécifique."""
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.layout = BoxLayout(orientation="vertical", spacing=10, padding=10)
         self.enquete_label = Label(text="Enquête : ", size_hint=(1, 0.1))
         self.layout.add_widget(self.enquete_label)
 
-        # Boutons pour les sous-sections (Employés, Criminels, etc.)
         buttons_layout = BoxLayout(size_hint=(1, 0.1), spacing=10)
         self.sections = ["Employés", "Criminels", "Suspects", "Témoins", "Preuves"]
         for section in self.sections:
@@ -99,13 +95,11 @@ class EnqueteScreen(Screen):
             buttons_layout.add_widget(btn)
         self.layout.add_widget(buttons_layout)
 
-        # Contenu de la section affichée
         self.content_label = Label(
             text="Détails spécifiques à l'enquête...", size_hint=(1, 0.7)
         )
         self.layout.add_widget(self.content_label)
 
-        # Bouton de retour
         self.layout.add_widget(
             Button(
                 text="Retour au menu principal",
@@ -117,33 +111,24 @@ class EnqueteScreen(Screen):
         self.add_widget(self.layout)
 
     def set_enquete(self, enquete_name):
-        """Met à jour l'écran avec l'enquête sélectionnée."""
         self.enquete_label.text = f"Enquête : {enquete_name}"
 
     def show_section(self, instance):
-        """Affiche une section spécifique (Employés, Criminels, etc.)."""
-        self.content_label.text = (
-            f"Section {instance.text} de l'enquête sélectionnée.\n(Données ici...)"
-        )
+        self.content_label.text = f"Section {instance.text} de l'enquête sélectionnée."
 
     def go_back_to_menu(self, instance):
-        """Retourne au menu principal."""
         app = App.get_running_app()
         app.root.current = "menu_principal"
 
 
 class GlobalScreen(Screen):
-    """Écran global pour les listes (Employés, Criminels, etc.)."""
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.layout = BoxLayout(orientation="vertical", spacing=10, padding=10)
 
-        # Section globale
         self.section_label = Label(text="Section globale : ", size_hint=(1, 0.1))
         self.layout.add_widget(self.section_label)
 
-        # Placeholder pour les boutons des personnes
         self.scroll_view = ScrollView(size_hint=(1, 0.8))
         self.content_layout = BoxLayout(
             orientation="vertical", size_hint_y=None, spacing=10, padding=10
@@ -152,7 +137,6 @@ class GlobalScreen(Screen):
         self.scroll_view.add_widget(self.content_layout)
         self.layout.add_widget(self.scroll_view)
 
-        # Bande en bas pour le bouton de retour
         bottom_bar = BoxLayout(size_hint=(1, 0.1))
         retour_btn = Button(text="Retour au menu principal", size_hint=(1, 1))
         retour_btn.bind(on_release=self.go_back_to_menu)
@@ -161,13 +145,13 @@ class GlobalScreen(Screen):
 
         self.add_widget(self.layout)
 
-    def afficher_details_personne(self, personne):
-        """Affiche un pop-up contenant les détails d'une personne sélectionnée."""
+    def afficher_details_item(self, item):
+        """Affiche un pop-up contenant les détails d'un item sélectionné (personne ou preuve)."""
         # Construire les détails sous forme de texte
-        details = "\n".join([f"{k}: {v}" for k, v in personne.items()])
+        details = "\n".join([f"{k}: {v}" for k, v in item.items()])
 
         # Contenu principal du pop-up
-        content = BoxLayout(orientation="vertical", spacing=20, padding=20)
+        content = BoxLayout(orientation="vertical", spacing=10, padding=10)
 
         # Ajouter un scrollview pour afficher les détails
         scroll = ScrollView(size_hint=(1, 0.8))
@@ -191,62 +175,61 @@ class GlobalScreen(Screen):
 
         # Création du pop-up
         popup = Popup(
-            title=f"Détails de {personne['prenom']} {personne['nom']}",
+            title=(
+                f"Détails de {item['nom']}" if "nom" in item else "Détails de l'élément"
+            ),
             content=content,
             size_hint=(0.8, 0.8),
             auto_dismiss=True,
         )
-
-        # Affichage du pop-up
         popup.open()
 
     def set_section(self, section_name):
         """Met à jour l'écran pour afficher une section globale."""
         self.section_label.text = f"Section globale : {section_name}"
 
-        # Charger les données JSON et les organiser
-        personnes = charger_donnees_personnes("fichiers/personnes.json")
-        sections = organiser_par_section(personnes)
+        # Charger les données des personnes et des preuves
+        personnes = charger_donnees("fichiers/personnes.json")
+        sections = organiser_par_section(
+            personnes, chemin_preuves="fichiers/preuves.json"
+        )
 
         # Effacer l'ancien contenu
         self.content_layout.clear_widgets()
 
-        # Ajouter les personnes en boutons
-        for personne in sections[section_name]:
+        # Ajouter les items (personnes ou preuves) en boutons
+        for item in sections[section_name]:
+            # Si l'élément est une preuve, afficher son nom
+            texte = (
+                item["nom"]
+                if section_name == "Preuves"
+                else f"{item['prenom']} {item['nom']}"
+            )
             btn = Button(
-                text=f"{personne['prenom']} {personne['nom']}",
+                text=texte,
                 size_hint=(1, None),
                 height=40,  # Petit rectangle
                 background_normal="",
                 background_color=(0.7, 0.7, 0.7, 1),  # Gris clair
             )
-            btn.bind(
-                on_release=lambda instance, p=personne: self.afficher_details_personne(
-                    p
-                )
-            )
+            btn.bind(on_release=lambda instance, i=item: self.afficher_details_item(i))
             self.content_layout.add_widget(btn)
 
     def go_back_to_menu(self, instance):
-        """Retourne au menu principal."""
         app = App.get_running_app()
         app.root.current = "menu_principal"
 
 
 class PoliceManagementApp(App):
     def build(self):
-        # Gestion des écrans
         self.screen_manager = ScreenManager()
 
-        # Écran principal
         self.menu_principal_screen = MenuPrincipalScreen(name="menu_principal")
         self.screen_manager.add_widget(self.menu_principal_screen)
 
-        # Écran de gestion d'une enquête
         self.enquete_screen = EnqueteScreen(name="enquete")
         self.screen_manager.add_widget(self.enquete_screen)
 
-        # Écran pour les sections globales
         self.global_screen = GlobalScreen(name="global")
         self.screen_manager.add_widget(self.global_screen)
 
