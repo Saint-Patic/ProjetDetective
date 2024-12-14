@@ -163,7 +163,7 @@ class GlobalScreen(BaseScreen):
         content.add_widget(close_button)
 
         popup = Popup(
-            title=f"Détails de {item.get('nom', "l'élément")}",
+            title=f"Détails de {item.get('nom', 'élément')}",
             content=content,
             size_hint=(0.8, 0.8),
             auto_dismiss=True,
