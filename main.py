@@ -127,77 +127,111 @@ def modifier_personne(personne):
     Args:
         personne (Personne): L'instance de Personne à modifier.
     """
-    if not isinstance(personne, Personne):
-        print(
-            "L'objet fourni n'est pas une instance de Personne ou de ses classes dérivées."
-        )
+    if not type(personne) == dict:
+        print("L'objet fourni n'est pas un dictionnaire")
         return
-
-    print(f"Modification des données pour : {personne}")
-    continuer = True
-
-    while continuer:
-        print("\nListe des attributs modifiables :")
-        for attribut, valeur in vars(personne).items():
-            print(f"- {attribut} : {valeur}")
-
-        choix = (
-            input(
-                "\nEntrez le nom de l'attribut à modifier ou 'ajouter' pour des informations supplémentaires : "
-            )
-            .strip()
-            .lower()
+    if (
+        input(
+            f"Modifier les données de : {personne['nom']} {personne['prenom']} (oui/non) ? "
         )
-
-        if choix in vars(personne):
-            nouvelle_valeur = input(f"Entrez la nouvelle valeur pour '{choix}' : ")
-            # Convertir au bon type si nécessaire
-            valeur_actuelle = getattr(personne, choix)
+        .strip()
+        .lower()
+        == "non"
+    ):
+        # Transformer le dictionnaire en objet de la classe correspondante
+        classe_mapping = {
+            "Temoin": Temoin,
+            "Suspect": Suspect,
+            "Criminel": Criminel,
+            "Employe": Employe,
+        }
+        classe_courante = personne["classe"]
+        if classe_courante in classe_mapping:
+            classe = classe_mapping[classe_courante]
             try:
-                if isinstance(valeur_actuelle, int):
-                    nouvelle_valeur = int(nouvelle_valeur)
-                elif isinstance(valeur_actuelle, float):
-                    nouvelle_valeur = float(nouvelle_valeur)
-            except ValueError:
-                print("Type invalide. L'attribut sera traité comme une chaîne.")
-            setattr(personne, choix, nouvelle_valeur)
-            print(f"L'attribut '{choix}' a été modifié avec succès.")
-        elif choix == "ajouter":
-            # Ajouter des informations spécifiques en fonction du type de l'instance
-            if isinstance(personne, Temoin):
-                commentaire = input("Entrez un commentaire pour le témoignage : ")
-                date_reception = input("Entrez la date de réception (YYYY-MM-DD) : ")
-                personne.ajout_temoinage(commentaire, date_reception)
-                print("Témoignage ajouté avec succès.")
-            elif isinstance(personne, Suspect):
-                alibi = input("Entrez un nouvel alibi (optionnel) : ")
-                suspection = input("Entrez une nouvelle suspection (optionnel) : ")
-                if alibi:
-                    personne.alibi = alibi
-                if suspection:
-                    personne.suspection = suspection
-                print("Informations du suspect mises à jour avec succès.")
-            elif isinstance(personne, Criminel):
-                categorie = input(
-                    "Entrez une catégorie (ex: tatouage, vêtements, etc.) : "
+                personne = classe(
+                    **personne
+                )  # Crée une instance en passant le dictionnaire comme arguments
+                print(
+                    f"Transformation réussie : l'objet est maintenant de type {classe_courante}."
                 )
-                description = input("Entrez la description : ")
-                personne.ajouter_apparence(categorie, description)
-                print("Description d'apparence ajoutée avec succès.")
-            elif isinstance(personne, Employe):
-                mail = input("Entrez un nouvel e-mail (optionnel) : ")
-                if mail:
-                    personne.mail = mail
-                print("Informations de l'employé mises à jour avec succès.")
-        else:
-            print("Attribut non reconnu ou action non valide.")
 
-        continuer = (
-            input("Voulez-vous continuer à modifier cette personne ? (oui/non) : ")
-            .strip()
-            .lower()
-            == "oui"
-        )
+            except TypeError as e:
+                print(f"Erreur lors de la transformation : {e}")
+                return
+        else:
+            print("Classe inconnue. Aucune modification n'a été effectuée.")
+            return
+    else:
+
+        print(f"Modification des données pour : {personne}")
+        continuer = True
+
+        while continuer:
+            print("\nListe des attributs modifiables :")
+            for attribut, valeur in vars(personne).items():
+                print(f"- {attribut} : {valeur}")
+
+            choix = (
+                input(
+                    "\nEntrez le nom de l'attribut à modifier ou 'ajouter' pour des informations supplémentaires : "
+                )
+                .strip()
+                .lower()
+            )
+
+            if choix in vars(personne):
+                nouvelle_valeur = input(f"Entrez la nouvelle valeur pour '{choix}' : ")
+                # Convertir au bon type si nécessaire
+                valeur_actuelle = getattr(personne, choix)
+                try:
+                    if isinstance(valeur_actuelle, int):
+                        nouvelle_valeur = int(nouvelle_valeur)
+                    elif isinstance(valeur_actuelle, float):
+                        nouvelle_valeur = float(nouvelle_valeur)
+                except ValueError:
+                    print("Type invalide. L'attribut sera traité comme une chaîne.")
+                setattr(personne, choix, nouvelle_valeur)
+                print(f"L'attribut '{choix}' a été modifié avec succès.")
+            elif choix == "ajouter":
+                # Ajouter des informations spécifiques en fonction du type de l'instance
+                if isinstance(personne, Temoin):
+                    commentaire = input("Entrez un commentaire pour le témoignage : ")
+                    date_reception = input(
+                        "Entrez la date de réception (YYYY-MM-DD) : "
+                    )
+                    personne.ajout_temoinage(commentaire, date_reception)
+                    print("Témoignage ajouté avec succès.")
+                elif isinstance(personne, Suspect):
+                    alibi = input("Entrez un nouvel alibi (optionnel) : ")
+                    suspection = input("Entrez une nouvelle suspection (optionnel) : ")
+                    if alibi:
+                        personne.alibi = alibi
+                    if suspection:
+                        personne.suspection = suspection
+                    print("Informations du suspect mises à jour avec succès.")
+                elif isinstance(personne, Criminel):
+                    categorie = input(
+                        "Entrez une catégorie (ex: tatouage, vêtements, etc.) : "
+                    )
+                    description = input("Entrez la description : ")
+                    personne.ajouter_apparence(categorie, description)
+                    print("Description d'apparence ajoutée avec succès.")
+                elif isinstance(personne, Employe):
+                    mail = input("Entrez un nouvel e-mail (optionnel) : ")
+                    if mail:
+                        personne.mail = mail
+                    print("Informations de l'employé mises à jour avec succès.")
+            else:
+                print("Attribut non reconnu ou action non valide.")
+
+            continuer = (
+                input("Voulez-vous continuer à modifier cette personne ? (oui/non) : ")
+                .strip()
+                .lower()
+                == "oui"
+            )
+    return personne
 
 
 def creer_enquete(nom, date_de_debut, date_de_fin):
@@ -319,13 +353,7 @@ if __name__ == "__main__":
                             choix_personne < taille_pers_brut + 1
                         ):  # si personne déjà dans la base de données
                             personne_ajoute = pers_brut[choix_personne - 1]
-                            if (
-                                input(
-                                    f"Modifier les données de : {personne_ajoute["nom"]} {personne_ajoute["prenom"]} (oui/non) ? "
-                                )
-                                == "oui"
-                            ):
-                                modifier_personne(personne_ajoute)
+                            personne_ajoute = modifier_personne(personne_ajoute)
                         else:
                             personne_ajoute = creer_personne()
                         enquete_choisie.ajouter_personne(personne_ajoute)
@@ -337,6 +365,7 @@ if __name__ == "__main__":
                         enquete_choisie.afficher_preuves()
                     elif choix_ajout == "5":
                         ajout = False
+                    enquete_choisie.sauvegarder_enquete()
 
         elif choix == "3":
             GUI.PoliceManagementApp().run()

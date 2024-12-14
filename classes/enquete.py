@@ -115,18 +115,16 @@ class Enquete:
             donnees_existantes = []
 
         # Convertir l'objet personne en dictionnaire complet
-        if type(personne) != dict:
-            dict_personne = {
-                "nom": personne.nom,
-                "prenom": personne.prenom,
-                "classe": personne.__class__.__name__,
-                "sexe": personne.sexe,
-                "date_de_naissance": personne.date_de_naissance,
-                "metier": getattr(personne, "metier", ""),
-                "mail": getattr(personne, "mail", ""),
-                "interrogatoires": getattr(personne, "interrogatoires"),
-            }
-
+        dict_personne = {
+            "nom": personne.nom,
+            "prenom": personne.prenom,
+            "classe": personne.__class__.__name__,
+            "sexe": personne.sexe,
+            "date_de_naissance": personne.date_de_naissance,
+            "metier": getattr(personne, "metier", ""),
+            "mail": getattr(personne, "mail", ""),
+            "interrogatoires": getattr(personne, "interrogatoires"),
+        }
         # Ajouter les attributs supplémentaires si disponibles
         for attr, valeur in personne.__dict__.items():
             if attr not in [
@@ -161,10 +159,11 @@ class Enquete:
             json.dump(donnees_existantes, json_file, indent=4, ensure_ascii=False)
 
         # Ajouter la personne à la liste des personnes impliquées
-        self.personne_impliquee.append(personne)
+        print(f"{personne = }")
+        self.personne_impliquee.append(dict_personne)
 
     def sauvegarder_enquete(self) -> None:
-        """Sauvegarde l'enquête dans un fichier JSON."""
+        """Sauvegarde l'enquête dans un fichier JSON en remplaçant les enquêtes ayant le même nom et la même date de début."""
         try:
             with open("fichiers/enquetes.json", "r", encoding="utf-8") as fichier:
                 donnees = json.load(fichier)
@@ -173,15 +172,26 @@ class Enquete:
 
         enquete_dict = self.to_dict()
 
+        # Rechercher l'index de l'enquête avec le même nom ET la même date de début
         for index, enquete in enumerate(donnees):
-            if enquete["id"] == self.id:
-                donnees[index] = enquete_dict
+            if enquete["nom"] == self.nom and enquete[
+                "date_de_debut"
+            ] == utils.convertir_date(self.date_de_debut):
+                print(
+                    f"Remplacement de l'enquête existante avec le nom '{self.nom}' et la date de début '{self.date_de_debut}'."
+                )
+                donnees[index] = enquete_dict  # Écrase les données existantes
                 break
         else:
+            # Si aucun nom et date de début ne correspondent, ajouter la nouvelle enquête
+            print(f"Ajout d'une nouvelle enquête avec le nom '{self.nom}'.")
             donnees.append(enquete_dict)
 
+        # Sauvegarder les données mises à jour dans le fichier
         with open("fichiers/enquetes.json", "w", encoding="utf-8") as fichier:
             json.dump(donnees, fichier, indent=4, ensure_ascii=False)
+
+        print(f"L'enquête '{self.nom}' a été sauvegardée avec succès.")
 
     def ajouter_enquetes_liees(self, enquete):
         """Ajoute une enquête liée et met à jour le fichier enquetes.json."""
@@ -304,18 +314,39 @@ class Enquete:
             print(enquete)
 
     def to_dict(self) -> dict:
+        """
+        Convertit l'objet en dictionnaire, sauf s'il est déjà un dictionnaire.
+
+        Returns:
+            dict: Représentation de l'objet sous forme de dictionnaire.
+
+        Raises:
+            AttributeError: En cas d'erreur lors de la conversion.
+        """
+        if isinstance(self, dict):
+            return self  # Retourne directement si c'est déjà un dictionnaire
+
         try:
             return {
                 "id": self.id,
                 "nom": self.nom,
                 "date_de_debut": utils.convertir_date(self.date_de_debut),
                 "date_de_fin": utils.convertir_date(self.date_de_fin),
-                "liste_preuves": [preuve.to_dict() for preuve in self.liste_preuves],
+                "liste_preuves": [
+                    preuve.to_dict() if not isinstance(preuve, dict) else preuve
+                    for preuve in self.liste_preuves
+                ],
                 "personne_impliquee": [
-                    personne.to_dict() for personne in self.personne_impliquee
+                    personne.to_dict() if not isinstance(personne, dict) else personne
+                    for personne in self.personne_impliquee
                 ],
                 "liste_evenement": [
-                    evenement.to_dict() for evenement in self.liste_evenement
+                    (
+                        evenement.to_dict()
+                        if not isinstance(evenement, dict)
+                        else evenement
+                    )
+                    for evenement in self.liste_evenement
                 ],
                 "enquetes_liees": [e.id for e in self.enquetes_liees],
             }
