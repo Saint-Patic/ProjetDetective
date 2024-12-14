@@ -8,7 +8,7 @@ class Evenement:
         id: int,
         nom: str,
         enquete_liee: int,
-        date_event=date.today(),
+        date_evenement=date.today(),
         lieu="Lieu pas précisé",
     ):
         """
@@ -19,7 +19,7 @@ class Evenement:
         self.id = id
         self.nom = nom
         self.enquete_liee = enquete_liee
-        self.date_event = date_event
+        self.date_evenement = date_evenement
         self.lieu = lieu
 
     def ajouter_date(self, nouvelle_date):
@@ -27,7 +27,7 @@ class Evenement:
         Pré : date au format YYYY-MM-DD
         Post : Définit la date ou l'évenement s'est passé
         """
-        self.date_event = nouvelle_date
+        self.date_evenement = nouvelle_date
 
     def ajouter_lieu(self, lieu):
         """
@@ -45,10 +45,10 @@ class Evenement:
             "id": self.id,
             "nom": self.nom,
             "enquete_liee": self.enquete_liee,
-            "date_event": (
-                self.date_event.strftime("%Y-%m-%d")
-                if isinstance(self.date_event, date)
-                else self.date_event
+            "date_evenement": (
+                self.date_evenement.strftime("%Y-%m-%d")
+                if isinstance(self.date_evenement, date)
+                else self.date_evenement
             ),
             "lieu": self.lieu,
         }
@@ -59,7 +59,7 @@ class Evenement:
         Post : return une string contenant les attributs
         """
         return (
-            f"ID: {self.id}, Nom: {self.nom}, Enquete liée: {self.enquete_liee}, Date: {self.date_event},"
+            f"ID: {self.id}, Nom: {self.nom}, Enquete liée: {self.enquete_liee}, Date: {self.date_evenement},"
             f"Lieu: {self.lieu}"
         )
 

@@ -1,5 +1,6 @@
 from datetime import date, datetime
-from ProjetDetective import utils
+from utilitaire import utils
+
 
 class Preuve:
 
@@ -43,14 +44,14 @@ class Preuve:
     def ajouter_date(self, nouvelle_date):
         """
         Pré : date au format YYYY-MM-DD
-        Post : Définit la date ou la preuve à été trouvée
+        Post : Définit la date de quand la preuve a été trouvée
         """
-        self.date_event = nouvelle_date
+        self.date_preuve = nouvelle_date
 
     def ajouter_heure(self, heure):
         """
         Pré : date au format YYYY-MM-DD
-        Post : Définit l'heure ou la preuve à été trouvée
+        Post : Définit l'heure à laquelle la preuve a été trouvée
         """
         self.heure = heure
 
