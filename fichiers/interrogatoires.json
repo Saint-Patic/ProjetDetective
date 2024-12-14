@@ -1,23 +1,13 @@
 [
     {
+        "id": "c3b20001-084c-4e43-a89d-408ead6d1936",
         "date": "2004-01-01",
         "enqueteur": "Nathan",
         "interroge": "Alexis",
         "num_enquete": 3
     },
     {
-        "date": "2005-11-22",
-        "enqueteur": "Nathan",
-        "interroge": "Quentin",
-        "num_enquete": 4
-    },
-    {
-        "date": "2004-01-01",
-        "enqueteur": "Nathan",
-        "interroge": "Alexis",
-        "num_enquete": 3
-    },
-    {
+        "id": "7a388f9f-5082-4f73-8b0a-db7b94585478",
         "date": "2005-11-22",
         "enqueteur": "Nathan",
         "interroge": "Quentin",

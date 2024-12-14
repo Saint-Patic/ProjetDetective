@@ -25,7 +25,7 @@ class Criminel(Personne):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-    def add_apparence(self, categorie: str, description: str):
+    def ajouter_apparence(self, categorie: str, description: str):
         """
         Pré : categorie (str), description (str)
         Post : Ajoute une description d'apparence à la liste des apparences du criminel
@@ -34,14 +34,14 @@ class Criminel(Personne):
             self.apparence[categorie] = []
         self.apparence[categorie].append(description)
 
-    def add_corpulence(self, categorie: str, description: str):
+    def ajouter_corpulence(self, categorie: str, description: str):
         """
         Pré : categorie (str), description (str)
         Post : Ajoute une description de corpulence à la liste des corpulences du criminel
         """
         self.corpulence[categorie] = description
 
-    def add_psychologie(self, categorie: str, observation: str):
+    def ajouter_psychologie(self, categorie: str, observation: str):
         """
         Pré : categorie (str), observation (str)
         Post : Ajoute une observation psychologique à la liste des observations du criminel
@@ -67,11 +67,11 @@ if __name__ == "__main__":
     enqueteur1 = Personne("Demarcq", "Alexis", "2003-08-04")
     criminel1 = Criminel("Dupont", "Jean", "2003-07-30", "homme")
 
-    criminel1.add_apparence("Taille", "Petite")
-    criminel1.add_apparence("Taille", "1m60")
+    criminel1.ajouter_apparence("Taille", "Petite")
+    criminel1.ajouter_apparence("Taille", "1m60")
 
-    criminel1.add_corpulence("Poids", "Sous poids")
-    criminel1.add_corpulence("Poids", "50kg")
+    criminel1.ajouter_corpulence("Poids", "Sous poids")
+    criminel1.ajouter_corpulence("Poids", "50kg")
 
     print(f"{criminel1.apparence = }")
     print(f"{criminel1.corpulence = }")
