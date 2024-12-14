@@ -2,12 +2,12 @@ import json
 from utilitaire import utils
 from .preuves import Preuve
 from .event import Evenement
+import uuid
 
 
 class Enquete:
     """Classe représentant une enquête avec des preuves, personnes impliquées, etc."""
 
-    id = 1
     enquetes = []
 
     def __init__(
@@ -28,8 +28,7 @@ class Enquete:
         if personne_impliquee is None:
             personne_impliquee = []
 
-        self.id = Enquete.id
-        Enquete.id += 1
+        self.id = str(uuid.uuid4())
         self.nom = nom
         try:
             self.date_de_debut = utils.convertir_date(date_de_debut)
@@ -63,6 +62,13 @@ class Enquete:
             f"Début: {self.date_de_debut} Fin: {self.date_de_fin} \n"
             f"Preuves: {preuves} \nPersonnes impliquées: {personnes}\n"
         )
+
+    def afficher_personne(self, indentation=4):
+        if not self.personne_impliquee:
+            print("Aucune personne impliquée dans cette enquête.")
+            return
+        for idx, personne in enumerate(self.personne_impliquee, 1):
+            print(f"{idx}. {personne['prenom']} {personne['nom']}")
 
     def afficher_interrogatoires(self, num_enquete):
         interrogatoires_trouves = (
@@ -176,9 +182,6 @@ class Enquete:
         with open("fichiers/enquetes.json", "w", encoding="utf-8") as fichier:
             json.dump(donnees, fichier, indent=4, ensure_ascii=False)
 
-        with open("fichiers/enquetes.json", "w", encoding="utf-8") as fichier:
-            json.dump(donnees, fichier, indent=4, ensure_ascii=False)
-
     def ajouter_enquetes_liees(self, enquete):
         """Ajoute une enquête liée et met à jour le fichier enquetes.json."""
         if enquete in self.enquetes_liees:
@@ -192,11 +195,9 @@ class Enquete:
             return
 
         print(f"Enquêtes liées pour l'enquête {self.nom}:")
-        for enquete in self.enquetes_liees:
+        for idx, enquete in enumerate(self.enquetes_liees, 1):
             enquete_str = str(enquete)
-            print(utils.ajouter_indentation(enquete_str, indentation))
-
-        print("\n")
+            print(f"{idx}. {enquete_str}")
 
     def ajouter_evenement(self, nom_evenement):
         self.id_evenement += 1
