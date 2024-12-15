@@ -251,23 +251,21 @@ def creer_enquete(nom, date_de_debut, date_de_fin):
 
 def afficher_enquete():
     """Affiche les enquêtes existantes et retourne une liste d'enquêtes."""
-    vide = " "
     with open("fichiers/enquetes.json", "r", encoding="utf-8") as f:
         enquetes = json.load(f)
         for idx, enquete in enumerate(enquetes, 1):
             print(
-                f"{8*vide}{idx}. {enquete['nom']} ({enquete['date_de_debut']} - {enquete['date_de_fin']})"
+                f"{idx}. {enquete['nom']} ({enquete['date_de_debut']} - {enquete['date_de_fin']})"
             )
     return enquetes
 
 
 def choisir_enquete(enquetes):
     """Permet de choisir une enquête parmi celles listées."""
-    vide = " "
     try:
         num_enquete = int(input("        Choisir un numéro d'enquête: "))
         if num_enquete < 1 or num_enquete > len(enquetes):
-            print(f"{8*vide}Numéro invalide.")
+            print(f"Numéro invalide.")
             return None
         # Convertir l'enquête en une instance de la classe Enquete
         enquete_choisie = enquetes[num_enquete - 1]
@@ -275,7 +273,7 @@ def choisir_enquete(enquetes):
         return dict_vers_enquete(enquete_choisie)
 
     except ValueError:
-        print(f"{8*vide}Veuillez entrer un numéro valide.")
+        print(f"Veuillez entrer un numéro valide.")
         return None
 
 
@@ -299,3 +297,34 @@ def dict_vers_enquete(dict_enquete):
     enquete.id_evenement = dict_enquete.get("id_evenement", 0)
 
     return enquete
+
+
+def dict_vers_evenement(dict_evenement):
+    """Convertit un dictionnaire en une instance de la classe Evenement."""
+    evenement = Evenement(
+        id=dict_evenement["id"],
+        nom=dict_evenement["nom"],
+        enquete_liee=dict_evenement["enquete_liee"],
+        date_evenement=utils.convertir_date(
+            dict_evenement.get("date_evenement", datetime.date.today())
+        ),
+        lieu=dict_evenement.get("lieu", "Lieu pas précisé"),
+    )
+
+    return evenement
+
+
+def creer_evenement(enquete_liee):
+    """Crée un nouvel événement et sauvegarde dans evenements.json."""
+    id = str(uuid.uuid4())
+    nom = input("        Entrez le nom de l'événement : ")
+    id_enquete = enquete_liee.id
+    date_evenement = input("Entrez le date_evenement (YYYY-MM-DD) : ")
+    lieu = input("Entrez le lieu : ")
+
+    try:
+        utils.convertir_date(date_evenement)
+    except ValueError:
+        raise ValueError("La date doit être au format YYYY-MM-DD.")
+
+    return Evenement(id, nom, id_enquete, date_evenement, lieu)

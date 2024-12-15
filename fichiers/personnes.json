@@ -41,9 +41,9 @@
         "metier": "'Pas de métier actuellement'",
         "mail": "",
         "interrogatoires": {},
+        "matricule": 1,
         "grade": "gardien de la paix",
-        "division": "pas de division",
-        "matricule": 1
+        "division": "pas de division"
     },
     {
         "nom": "Mertens",

@@ -214,9 +214,7 @@ class Enquete:
             enquete_str = str(enquete)
             print(f"{idx}. {enquete_str}")
 
-    def ajouter_evenement(self, nom_evenement):
-        self.id_evenement += 1
-        nouvel_evenement = Evenement(self.id_evenement, nom_evenement, self.id)
+    def ajouter_evenement(self, nouvel_evenement):
         try:
             with open("fichiers/evenement.json", "r", encoding="utf-8") as fichier:
                 donnees = json.load(fichier)

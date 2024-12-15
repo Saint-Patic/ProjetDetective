@@ -1,6 +1,7 @@
 from utilitaire import utils
 import json
 import datetime
+from colorama import Fore, Style, init
 from classes import (
     Personne,
     Temoin,
@@ -14,6 +15,17 @@ from classes import (
 import GUI
 from commandes_terminale import *
 
+init(autoreset=True)
+
+
+def afficher_menu():
+    print(Fore.CYAN + "\nMenu:")
+    print(Fore.YELLOW + f"{4 * ' '}1. Créer une nouvelle enquête")
+    print(Fore.YELLOW + f"{4 * ' '}2. Choisir une enquête")
+    print(Fore.YELLOW + f"{4 * ' '}3. Afficher les enquêtes existantes")
+    print(Fore.YELLOW + f"{4 * ' '}4. Quitter")
+
+
 if __name__ == "__main__":
     vide = " "
     sortie = False
@@ -25,24 +37,21 @@ if __name__ == "__main__":
     preuve_brut = charger_donnees(f"{nom_dossier}preuves.json")
 
     while not sortie:
-        print("\nMenu:")
-        print(f"{4 * vide}1. Créer une nouvelle enquête")
-        print(f"{4 * vide}2. Choisir une enquête")
-        print(f"{4 * vide}3. Afficher les enquêtes existantes")
-        print(f"{4 * vide}4. Quitter")
-        choix = input(f"{4 * vide}Votre choix: ")
+        afficher_menu()
+        choix = input(Fore.GREEN + f"{4 * ' '}Votre choix: ")
 
         if choix == "1":
-            nom = input(f"{8 * vide}Nom de l'enquête: ")
-            date_de_debut = input(f"{8 * vide}Date de début (YYYY-MM-DD): ")
+            nom = input(Fore.GREEN + f"{8 * ' '}Nom de l'enquête: ")
+            date_de_debut = input(Fore.GREEN + f"{8 * ' '}Date de début (YYYY-MM-DD): ")
             date_de_fin = input(
-                f"{8 * vide}Date de fin (YYYY-MM-DD) (9999-12-31 si enquete non finie): "
+                Fore.GREEN
+                + f"{8 * ' '}Date de fin (YYYY-MM-DD) (9999-12-31 si enquête non finie): "
             )
             try:
                 nouvelle_enquete = creer_enquete(nom, date_de_debut, date_de_fin)
-                print(f"{8 * vide}Enquête créée: {nouvelle_enquete}")
+                print(Fore.BLUE + f"{8 * ' '}Enquête créée: {nouvelle_enquete}")
             except ValueError as e:
-                print(f"{8 * vide}Erreur: {e}")
+                print(Fore.RED + f"{8 * ' '}Erreur: {e}")
 
         elif choix == "2":
             enquetes = afficher_enquete()
@@ -51,27 +60,31 @@ if __name__ == "__main__":
             if enquete_choisie:
                 ajout = True
                 while ajout:
-                    print(f"{12 * vide}1. Ajouter une personne")
-                    print(f"{12 * vide}2. Lier une enquête")
-                    print(f"{12 * vide}3. Ajouter un évènement")
-                    print(f"{12 * vide}4. Ajouter une preuve")
-                    print(f"{12 * vide}5. Retour au menu")
-                    choix_ajout = input(f"{12 * vide}Votre choix: ")
+                    print(Fore.CYAN + f"{12 * ' '}Menu Enquête:")
+                    print(Fore.YELLOW + f"{12 * ' '}1. Ajouter une personne")
+                    print(Fore.YELLOW + f"{12 * ' '}2. Lier une enquête")
+                    print(Fore.YELLOW + f"{12 * ' '}3. Créer un événement")
+                    print(Fore.YELLOW + f"{12 * ' '}4. Afficher les preuves")
+                    print(Fore.YELLOW + f"{12 * ' '}5. Retour au menu principal")
+                    choix_ajout = input(Fore.GREEN + f"{12 * ' '}Votre choix: ")
 
                     if choix_ajout == "1":
                         taille_pers_brut = len(pers_brut)
                         for i in range(taille_pers_brut):
                             print(
-                                f"{16 * vide}{i + 1}. {pers_brut[i]['nom']} {pers_brut[i]['prenom']}"
+                                Fore.BLUE
+                                + f"{16 * ' '}{i + 1}. {pers_brut[i]['nom']} {pers_brut[i]['prenom']}"
                             )
                         print(
-                            f"{16 * vide}{taille_pers_brut + 1}. Créer une nouvelle personne"
+                            Fore.YELLOW
+                            + f"{16 * ' '}{taille_pers_brut + 1}. Créer une nouvelle personne"
                         )
 
                         try:
                             choix_personne = int(
                                 input(
-                                    f"{16 * vide}Votre choix (1 - {taille_pers_brut + 1}): "
+                                    Fore.GREEN
+                                    + f"{16 * ' '}Votre choix (1 - {taille_pers_brut + 1}): "
                                 )
                             )
 
@@ -84,20 +97,26 @@ if __name__ == "__main__":
                                 raise ValueError("Choix invalide.")
 
                             enquete_choisie.ajouter_personne(personne_ajoutee)
-                            print(f"{16 * vide}Personne ajoutée avec succès.")
+                            print(
+                                Fore.BLUE + f"{16 * ' '}Personne ajoutée avec succès."
+                            )
 
                         except (ValueError, IndexError) as e:
-                            print(f"{16 * vide}Erreur: {e}")
+                            print(Fore.RED + f"{16 * ' '}Erreur: {e}")
 
                     elif choix_ajout == "2":
                         taille_enquete_brut = len(enquete_brut)
                         for i in range(taille_enquete_brut):
-                            print(f"{16 * vide}{i + 1}. {enquete_brut[i]['nom']}")
+                            print(
+                                Fore.BLUE
+                                + f"{16 * ' '}{i + 1}. {enquete_brut[i]['nom']}"
+                            )
 
                         try:
                             choix_enquete = int(
                                 input(
-                                    f"{16 * vide}Votre choix (1 - {taille_enquete_brut}): "
+                                    Fore.GREEN
+                                    + f"{16 * ' '}Votre choix (1 - {taille_enquete_brut}): "
                                 )
                             )
                             if 1 <= choix_enquete <= taille_enquete_brut:
@@ -105,15 +124,20 @@ if __name__ == "__main__":
                                     enquete_brut[choix_enquete - 1]
                                 )
                                 enquete_choisie.ajouter_enquetes_liees(enquete_a_lier)
-                                print(f"{16 * vide}Enquête liée avec succès.")
+                                print(
+                                    Fore.BLUE + f"{16 * ' '}Enquête liée avec succès."
+                                )
                             else:
                                 raise ValueError("Choix invalide.")
 
                         except (ValueError, IndexError) as e:
-                            print(f"{16 * vide}Erreur: {e}")
+                            print(Fore.RED + f"{16 * ' '}Erreur: {e}")
 
                     elif choix_ajout == "3":
-                        enquete_choisie.afficher_evenements()
+                        evenement_a_lier = creer_evenement(enquete_choisie)
+                        enquete_choisie.ajouter_evenement(evenement_a_lier)
+                        print(Fore.BLUE + f"{16 * ' '}Événement ajouté avec succès.")
+
                     elif choix_ajout == "4":
                         enquete_choisie.afficher_preuves()
                     elif choix_ajout == "5":
@@ -123,10 +147,14 @@ if __name__ == "__main__":
 
         elif choix == "3":
             GUI.PoliceManagementApp().run()
-            break
+            sortie = True
 
         elif choix == "4":
-            break
+            sortie = True
 
-        rep = input("    Quitter (oui/non) ? ").lower()
-        sortie = rep == "oui"
+        else:
+            print(Fore.RED + "Choix invalide. Veuillez réessayer.")
+
+        if not sortie:
+            rep = input(Fore.GREEN + "    Quitter (oui/non) ? ").lower()
+            sortie = rep == "oui"
