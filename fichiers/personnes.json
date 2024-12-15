@@ -2,17 +2,21 @@
     {
         "nom": "Demarcq",
         "prenom": "Alexis",
-        "classe": "Personne",
+        "classe": "Suspect",
         "sexe": "Homme",
         "date_de_naissance": "2003-08-04",
         "metier": "'Pas de métier actuellement'",
-        "mail": "",
-        "interrogatoires": {}
+        "mail": "a.demarcq@students.ephec.be",
+        "interrogatoires": {},
+        "innocent": false,
+        "statut_legal": false,
+        "suspection": "",
+        "alibi": ""
     },
     {
         "nom": "Henrard",
         "prenom": "Quentin",
-        "classe": "Suspect",
+        "classe": "Criminel",
         "sexe": "Homme",
         "date_de_naissance": "2003-08-04",
         "metier": "'Pas de métier actuellement'",
@@ -21,7 +25,12 @@
         "innocent": false,
         "statut_legal": false,
         "suspection": "",
-        "alibi": ""
+        "alibi": "",
+        "apparence": {},
+        "corpulence": {},
+        "dossier_psychologique": {},
+        "lieu_de_detention": "",
+        "niveau_de_dangerosite": 1
     },
     {
         "nom": "Lemaire",
@@ -32,8 +41,39 @@
         "metier": "'Pas de métier actuellement'",
         "mail": "",
         "interrogatoires": {},
+        "matricule": 1,
         "grade": "gardien de la paix",
-        "division": "pas de division",
+        "division": "pas de division"
+    },
+    {
+        "nom": "Mertens",
+        "prenom": "Corentin",
+        "classe": "Temoin",
+        "sexe": "Homme",
+        "date_de_naissance": "2003-09-20",
+        "metier": "'Pas de métier actuellement'",
+        "mail": "",
+        "interrogatoires": {},
+        "temoignage": {
+            "2024-12-14": [
+                "J'étais en train de travailler sur mon projet d'OS2"
+            ]
+        },
+        "fiabilite": 0,
+        "protection": false,
+        "disponibilite": false
+    },
+    {
+        "nom": "Goffart",
+        "prenom": "Ralph",
+        "classe": "Employe",
+        "sexe": "Homme",
+        "date_de_naissance": "2003-09-21",
+        "metier": "'Pas de métier actuellement'",
+        "mail": "ralphgoffar@gmail.com",
+        "interrogatoires": {},
+        "grade": "mage noir",
+        "division": "2",
         "matricule": 1
     }
 ]
