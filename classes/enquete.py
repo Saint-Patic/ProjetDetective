@@ -175,9 +175,6 @@ class Enquete:
             if enquete["nom"] == self.nom and enquete[
                 "date_de_debut"
             ] == utils.convertir_date(self.date_de_debut):
-                print(
-                    f"Remplacement de l'enquête existante avec le nom '{self.nom}' et la date de début '{self.date_de_debut}'."
-                )
                 donnees[index] = enquete_dict  # Écrase les données existantes
                 break
         else:
@@ -202,7 +199,7 @@ class Enquete:
             raise ValueError("Impossible de lier une enquête à elle-même.")
 
         # Ajouter l'enquête liée
-        self.enquetes_liees.append(enquete)
+        self.enquetes_liees.append(enquete.to_dict())
 
     def afficher_enquetes_liees(self, indentation=4):
         if not self.enquetes_liees:

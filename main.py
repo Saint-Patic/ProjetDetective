@@ -64,7 +64,7 @@ if __name__ == "__main__":
                     print(Fore.YELLOW + f"{12 * ' '}1. Ajouter une personne")
                     print(Fore.YELLOW + f"{12 * ' '}2. Lier une enquête")
                     print(Fore.YELLOW + f"{12 * ' '}3. Créer un événement")
-                    print(Fore.YELLOW + f"{12 * ' '}4. Afficher les preuves")
+                    print(Fore.YELLOW + f"{12 * ' '}4. Ajouter une preuve")
                     print(Fore.YELLOW + f"{12 * ' '}5. Retour au menu principal")
                     choix_ajout = input(Fore.GREEN + f"{12 * ' '}Votre choix: ")
 
