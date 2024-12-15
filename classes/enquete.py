@@ -243,9 +243,7 @@ class Enquete:
 
         print("\n")
 
-    def ajouter_preuves(self, nom_preuve):
-        self.id_preuve += 1
-        preuve = Preuve(self.id_preuve, nom_preuve, self.id)
+    def ajouter_preuves(self, preuve):
         try:
             with open("fichiers/preuves.json", "r", encoding="utf-8") as json_file:
                 donnees_existantes = json.load(json_file)

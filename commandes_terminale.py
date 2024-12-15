@@ -326,3 +326,14 @@ def creer_evenement(enquete_liee):
         raise ValueError("La date doit être au format YYYY-MM-DD.")
 
     return Evenement(id, nom, id_enquete, date_evenement, lieu)
+
+
+def creer_preuve(enquete_liee):
+    """Crée une nouvelle preuve et sauvegarde dans preuves.json."""
+    id = str(uuid.uuid4())
+    nom = input("        Entrez le nom de la preuve : ")
+    type_preuve = input("Entrez le type de preuve (ex: photo, document, etc.) : ")
+    id_enquete = enquete_liee.id
+    lieu_preuve = input("Entrez le lieu où la preuve a été trouvée : ")
+
+    return Preuve(id, nom, id_enquete, type_preuve, lieu_preuve)

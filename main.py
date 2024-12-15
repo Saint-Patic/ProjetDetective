@@ -139,7 +139,9 @@ if __name__ == "__main__":
                         print(Fore.BLUE + f"{16 * ' '}Événement ajouté avec succès.")
 
                     elif choix_ajout == "4":
-                        enquete_choisie.afficher_preuves()
+                        preuve_a_lier = creer_preuve(enquete_choisie)
+                        enquete_choisie.ajouter_preuves(preuve_a_lier)
+                        print(Fore.BLUE + f"{16 * ' '}Preuve ajoutée avec succès.")
                     elif choix_ajout == "5":
                         ajout = False
 

@@ -91,7 +91,17 @@
         "nom": "Zizi prout",
         "date_de_debut": "21/09/2003",
         "date_de_fin": "22/09/2003",
-        "liste_preuves": [],
+        "liste_preuves": [
+            {
+                "id": "e9c4ff52-a8fd-4296-af58-10ccd4da5dfe",
+                "nom": "couteau de cuisine",
+                "enquete_liee": "def473d2-8b0a-4f93-84e4-3143ea1c40b8",
+                "type": "arme blanche",
+                "lieu": "chambre d'alexis",
+                "date_preuve": "15/12/2024",
+                "heure": "Heure non spécifée"
+            }
+        ],
         "personne_impliquee": [
             {
                 "nom": "Goffart",
@@ -107,7 +117,15 @@
                 "matricule": 1
             }
         ],
-        "liste_evenement": [],
+        "liste_evenement": [
+            {
+                "id": "e6181494-1fac-4360-8b7d-e36571ce06cb",
+                "nom": "travail à l'usine",
+                "enquete_liee": "def473d2-8b0a-4f93-84e4-3143ea1c40b8",
+                "date_evenement": "2003-09-21",
+                "lieu": "au kot de ralph"
+            }
+        ],
         "enquetes_liees": []
     }
 ]
