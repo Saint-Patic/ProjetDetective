@@ -6,7 +6,7 @@
         "sexe": "Homme",
         "date_de_naissance": "2003-08-04",
         "metier": "'Pas de métier actuellement'",
-        "mail": "",
+        "mail": "a.demarcq@students.ephec.be",
         "interrogatoires": {},
         "innocent": false,
         "statut_legal": false,
@@ -62,5 +62,18 @@
         "fiabilite": 0,
         "protection": false,
         "disponibilite": false
+    },
+    {
+        "nom": "Goffart",
+        "prenom": "Ralph",
+        "classe": "Employe",
+        "sexe": "Homme",
+        "date_de_naissance": "2003-09-21",
+        "metier": "'Pas de métier actuellement'",
+        "mail": "ralphgoffar@gmail.com",
+        "interrogatoires": {},
+        "grade": "mage noir",
+        "division": "2",
+        "matricule": 1
     }
 ]

@@ -328,29 +328,22 @@ class Enquete:
         if isinstance(self, dict):
             return self  # Retourne directement si c'est déjà un dictionnaire
 
-        try:
-            return {
-                "id": self.id,
-                "nom": self.nom,
-                "date_de_debut": utils.convertir_date(self.date_de_debut),
-                "date_de_fin": utils.convertir_date(self.date_de_fin),
-                "liste_preuves": [
-                    preuve.to_dict() if not isinstance(preuve, dict) else preuve
-                    for preuve in self.liste_preuves
-                ],
-                "personne_impliquee": [
-                    personne.to_dict() if not isinstance(personne, dict) else personne
-                    for personne in self.personne_impliquee
-                ],
-                "liste_evenement": [
-                    (
-                        evenement.to_dict()
-                        if not isinstance(evenement, dict)
-                        else evenement
-                    )
-                    for evenement in self.liste_evenement
-                ],
-                "enquetes_liees": [e.id for e in self.enquetes_liees],
-            }
-        except AttributeError as e:
-            raise AttributeError(f"Erreur lors de la conversion en dictionnaire: {e}")
+        return {
+            "id": self.id,
+            "nom": self.nom,
+            "date_de_debut": utils.convertir_date(self.date_de_debut),
+            "date_de_fin": utils.convertir_date(self.date_de_fin),
+            "liste_preuves": [
+                preuve.to_dict() if not isinstance(preuve, dict) else preuve
+                for preuve in self.liste_preuves
+            ],
+            "personne_impliquee": [
+                personne.to_dict() if not isinstance(personne, dict) else personne
+                for personne in self.personne_impliquee
+            ],
+            "liste_evenement": [
+                (evenement.to_dict() if not isinstance(evenement, dict) else evenement)
+                for evenement in self.liste_evenement
+            ],
+            "enquetes_liees": [e for e in self.enquetes_liees],
+        }

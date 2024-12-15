@@ -136,37 +136,14 @@ def modifier_personne(personne):
         )
         .strip()
         .lower()
-        == "non"
+        == "oui"
     ):
-        # Transformer le dictionnaire en objet de la classe correspondante
-        classe_mapping = {
-            "Temoin": Temoin,
-            "Suspect": Suspect,
-            "Criminel": Criminel,
-            "Employe": Employe,
-        }
-        classe_courante = personne["classe"]
-        if classe_courante in classe_mapping:
-            classe = classe_mapping[classe_courante]
-            try:
-                personne = classe(
-                    **personne
-                )  # Crée une instance en passant le dictionnaire comme arguments
-
-            except TypeError as e:
-                print(f"Erreur lors de la transformation : {e}")
-                return
-        else:
-            print("Classe inconnue. Aucune modification n'a été effectuée.")
-            return
-    else:
-
         print(f"Modification des données pour : {personne}")
         continuer = True
 
         while continuer:
             print("\nListe des attributs modifiables :")
-            for attribut, valeur in vars(personne).items():
+            for attribut, valeur in personne.items():
                 print(f"- {attribut} : {valeur}")
 
             choix = (
@@ -177,10 +154,10 @@ def modifier_personne(personne):
                 .lower()
             )
 
-            if choix in vars(personne):
+            if choix in personne:
                 nouvelle_valeur = input(f"Entrez la nouvelle valeur pour '{choix}' : ")
                 # Convertir au bon type si nécessaire
-                valeur_actuelle = getattr(personne, choix)
+                valeur_actuelle = personne[choix]
                 try:
                     if isinstance(valeur_actuelle, int):
                         nouvelle_valeur = int(nouvelle_valeur)
@@ -188,8 +165,7 @@ def modifier_personne(personne):
                         nouvelle_valeur = float(nouvelle_valeur)
                 except ValueError:
                     print("Type invalide. L'attribut sera traité comme une chaîne.")
-                setattr(personne, choix, nouvelle_valeur)
-                print(f"L'attribut '{choix}' a été modifié avec succès.")
+                personne[choix] = nouvelle_valeur
             elif choix == "ajouter":
                 # Ajouter des informations spécifiques en fonction du type de l'instance
                 if isinstance(personne, Temoin):
@@ -228,6 +204,28 @@ def modifier_personne(personne):
                 .lower()
                 == "oui"
             )
+    # Transformer le dictionnaire en objet de la classe correspondante
+    classe_mapping = {
+        "Temoin": Temoin,
+        "Suspect": Suspect,
+        "Criminel": Criminel,
+        "Employe": Employe,
+    }
+    classe_courante = personne["classe"]
+    if classe_courante in classe_mapping:
+        classe = classe_mapping[classe_courante]
+        try:
+            personne = classe(
+                **personne
+            )  # Crée une instance en passant le dictionnaire comme arguments
+
+        except TypeError as e:
+            print(f"Erreur lors de la transformation : {e}")
+            return
+    else:
+        print("Classe inconnue. Aucune modification n'a été effectuée.")
+        return
+
     return personne
 
 
