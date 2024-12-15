@@ -130,33 +130,6 @@ class EnqueteScreen(BaseScreen):
         )
         layout.add_widget(self.details_label)
 
-        buttons_layout = BoxLayout(size_hint=(1, 0.1), spacing=10)
-        personnes_btn = Button(
-            text="Voir Personnes Impliquées",
-            size_hint=(1, 0.1),
-            height=40,  # Fixe la hauteur du bouton
-        )
-        personnes_btn.bind(on_release=self.afficher_personnes)
-        buttons_layout.add_widget(personnes_btn)
-
-        preuves_btn = Button(
-            text="Voir Preuves",
-            size_hint=(1, 0.1),
-            height=40,
-        )
-        preuves_btn.bind(on_release=self.afficher_preuves)
-        buttons_layout.add_widget(preuves_btn)
-
-        layout.add_widget(buttons_layout)
-
-        layout.add_widget(
-            Button(
-                text="Retour au menu principal",
-                size_hint=(1, 0.1),
-                on_release=self.go_back_to_menu,
-            )
-        )
-
         self.add_widget(layout)
         self.enquete = None
 
@@ -225,6 +198,25 @@ class EnqueteScreen(BaseScreen):
             height=40
         ))
 
+        # Nombre d'évènnement
+        content_layout.add_widget(Label(
+            text=f"[b]Liste d'évènnement :[/b] {len(enquete.get('liste_evenement', []))}",
+            markup=True,
+            font_size=18,
+            size_hint_y=None,
+            height=40
+        ))
+
+        # Nombre d'enquêtes liées
+        linked_enquete_ids = ", ".join(str(id_) for id_ in enquete.get('enquetes_liees', []))
+        content_layout.add_widget(Label(
+            text=f"[b]Enquêtes liées :[/b] {linked_enquete_ids}",
+            markup=True,
+            font_size=18,
+            size_hint_y=None,
+            height=40
+        ))
+
         # Création d'une ScrollView, uniquement si nécessaire
         if content_layout.height > self.height * 0.7:  # Vérifie si le contenu dépasse
             scroll = ScrollView(size_hint=(1, 0.7))
@@ -238,26 +230,35 @@ class EnqueteScreen(BaseScreen):
 
         personnes_btn = Button(
             text="Voir Personnes Impliquées",
-            size_hint=(1, 0.1),
-            height=40,  # Fixe la hauteur du bouton
+            size_hint=(1, None),
+            height=45,
+            on_release=self.afficher_personnes
         )
-        personnes_btn.bind(on_release=self.afficher_personnes)
         buttons_layout.add_widget(personnes_btn)
 
         preuves_btn = Button(
             text="Voir Preuves",
-            size_hint=(1, 0.1),
-            height=40,  # Fixe la hauteur du bouton
+            size_hint=(1, None),
+            height=45,
+            on_release=self.afficher_preuves
         )
-        preuves_btn.bind(on_release=self.afficher_preuves)
         buttons_layout.add_widget(preuves_btn)
+
+        enquete_liee_btn = Button(
+            text="Voir Enquêtes Liées",
+            size_hint=(1, None),
+            height=45,
+            on_release=self.afficher_enquete_liee
+        )
+        buttons_layout.add_widget(enquete_liee_btn)
 
         layout.add_widget(buttons_layout)
 
         # Bouton pour retourner au menu principal
         retour_btn = Button(
             text="Retour au menu principal",
-            size_hint=(1, 0.1),
+            size_hint=(1, None),
+            height=75,
             on_release=self.go_back_to_menu
         )
         layout.add_widget(retour_btn)
@@ -271,6 +272,62 @@ class EnqueteScreen(BaseScreen):
         if not self.enquete.get("liste_preuves"):
             self.afficher_popup("Preuves", "Aucune preuve disponible.")
             return
+
+    def afficher_enquete_liee(self, instance):
+        """Affiche les enquêtes liées sous forme de boutons."""
+        if not self.enquete or not self.enquete.get("enquetes_liees"):
+            self.afficher_popup("Enquêtes Liées", "Aucune enquête liée disponible.")
+            return
+
+        # Conteneur principal pour le contenu du Popup
+        content = BoxLayout(orientation="vertical", spacing=10, padding=10)
+
+        # ScrollView pour afficher les enquêtes liées
+        scroll = ScrollView(size_hint=(1, 0.8))
+        layout = BoxLayout(orientation="vertical", size_hint_y=None, spacing=10)
+        layout.bind(minimum_height=layout.setter("height"))
+
+        # Ajouter un bouton pour chaque enquête liée
+        for lien_id in self.enquete["enquetes_liees"]:
+            # Chercher l'enquête liée par son ID
+            enquete = self.trouver_enquete_par_id(lien_id) if hasattr(self,
+                                                                      'trouver_enquete_par_id') else self.enquete.get(
+                lien_id)
+            if enquete and 'nom' in enquete:
+                # Capture de l'enquête liée dans une variable locale pour éviter la fermeture du programme
+                lien_copie = enquete
+                btn = Button(
+                    text=lien_copie.get("nom", "Inconnu"),
+                    size_hint_y=None,
+                    height=50,
+                    background_normal="",
+                    background_color=(0.2, 0.6, 0.8, 1),
+                )
+                # Utilisation de functools.partial pour lier les arguments correctement
+                btn.bind(on_release=functools.partial(self.afficher_details_enquete_liee, lien=lien_copie))
+                layout.add_widget(btn)
+
+        scroll.add_widget(layout)
+        content.add_widget(scroll)
+
+        # Bouton pour fermer le Popup
+        close_button = Button(
+            text="Fermer",
+            size_hint=(1, 0.2),
+            background_normal="",
+            background_color=(0.9, 0.2, 0.2, 1),
+        )
+        close_button.bind(on_release=lambda instance: popup.dismiss())
+        content.add_widget(close_button)
+
+        # Création et affichage du Popup
+        popup = Popup(
+            title="Enquêtes Liées",
+            content=content,
+            size_hint=(0.8, 0.8),
+            auto_dismiss=True,
+        )
+        popup.open()
 
     def afficher_personnes(self, instance):
         """Affiche les personnes impliquées dans un Popup."""
