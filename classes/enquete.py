@@ -158,8 +158,6 @@ class Enquete:
         with open("fichiers/personnes.json", "w", encoding="utf-8") as json_file:
             json.dump(donnees_existantes, json_file, indent=4, ensure_ascii=False)
 
-        # Ajouter la personne à la liste des personnes impliquées
-        print(f"{personne = }")
         self.personne_impliquee.append(dict_personne)
 
     def sauvegarder_enquete(self) -> None:
@@ -195,10 +193,16 @@ class Enquete:
 
     def ajouter_enquetes_liees(self, enquete):
         """Ajoute une enquête liée et met à jour le fichier enquetes.json."""
-        if enquete in self.enquetes_liees:
+        # Vérifier si l'ID de l'enquête est déjà présent dans les enquêtes liées
+        if any(enquete_liee.id == enquete.id for enquete_liee in self.enquetes_liees):
             raise ValueError(f"L'enquête {enquete.nom} est déjà liée à {self.nom}.")
+
+        # Vérifier que l'ID de l'enquête à ajouter n'est pas celui de l'enquête de base
+        if enquete.id == self.id:
+            raise ValueError("Impossible de lier une enquête à elle-même.")
+
+        # Ajouter l'enquête liée
         self.enquetes_liees.append(enquete)
-        self.sauvegarder_enquete()
 
     def afficher_enquetes_liees(self, indentation=4):
         if not self.enquetes_liees:
