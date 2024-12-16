@@ -16,12 +16,9 @@ def afficher_menu():
 if __name__ == "__main__":
     vide = " "
     sortie = False
-    nom_dossier = "fichiers/"
-    evenement_brut = charger_donnees(f"{nom_dossier}evenement.json")
-    interro_brut = charger_donnees(f"{nom_dossier}interrogatoires.json")
-    enquete_brut = charger_donnees(f"{nom_dossier}enquetes.json")
-    pers_brut = charger_donnees(f"{nom_dossier}personnes.json")
-    preuve_brut = charger_donnees(f"{nom_dossier}preuves.json")
+    evenement_brut, interro_brut, enquete_brut, pers_brut, preuve_brut = (
+        chargement_donnees()
+    )
 
     while not sortie:
         afficher_menu()
@@ -47,6 +44,13 @@ if __name__ == "__main__":
             if enquete_choisie:
                 ajout = True
                 while ajout:
+                    (
+                        evenement_brut,
+                        interro_brut,
+                        enquete_brut,
+                        pers_brut,
+                        preuve_brut,
+                    ) = chargement_donnees()
                     print(Fore.CYAN + f"{12 * ' '}Menu Enquête:")
                     print(Fore.YELLOW + f"{12 * ' '}1. Ajouter une personne")
                     print(Fore.YELLOW + f"{12 * ' '}2. Lier une enquête")
