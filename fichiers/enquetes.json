@@ -1,171 +1,189 @@
 [
-  {
-    "id": "f0043918-317f-44f9-9bf3-c7e73b8b53a2",
-    "nom": "meurtre",
-    "date_de_debut": "28/06/2005",
-    "date_de_fin": "28/06/2025",
-    "liste_preuves": [],
-    "personne_impliquee": [
-      {
-        "nom": "Demarcq",
-        "prenom": "Alexis",
-        "classe": "Suspect",
-        "sexe": "Homme",
-        "date_de_naissance": "2003-08-04",
-        "metier": "'Pas de métier actuellement'",
-        "mail": "",
-        "interrogatoires": {},
-        "innocent": false,
-        "statut_legal": false,
-        "suspection": "",
-        "alibi": ""
-      },
-      {
-        "nom": "Mertens",
-        "prenom": "Corentin",
-        "classe": "Temoin",
-        "sexe": "Homme",
-        "date_de_naissance": "2003-09-20",
-        "metier": "'Pas de métier actuellement'",
-        "mail": "",
-        "interrogatoires": {},
-        "temoignage": {
-          "2024-12-14": ["J'étais en train de travailler sur mon projet d'OS2"]
-        },
-        "fiabilite": 0,
-        "protection": false,
-        "disponibilite": false
-      }
-    ],
-    "liste_evenement": [],
-    "enquetes_liees": []
-  },
-  {
-    "id": "fddc9710-62c2-442a-839c-f29c0cdab8e6",
-    "nom": "trolley",
-    "date_de_debut": "13/04/1546",
-    "date_de_fin": "31/12/9999",
-    "liste_preuves": [],
-    "personne_impliquee": [],
-    "liste_evenement": [],
-    "enquetes_liees": ["6ed1d9dd-2682-4d54-afb4-4636f1d4ad43"]
-  },
-  {
-    "id": "6ed1d9dd-2682-4d54-afb4-4636f1d4ad43",
-    "nom": "Vol au marché",
-    "date_de_debut": "30/03/1654",
-    "date_de_fin": "31/12/9999",
-    "liste_preuves": [],
-    "personne_impliquee": [
-      {
-        "nom": "Lemaire",
-        "prenom": "Nathan",
-        "classe": "Employe",
-        "sexe": "Homme",
-        "date_de_naissance": "2003-01-01",
-        "metier": "'Pas de métier actuellement'",
-        "mail": "",
-        "interrogatoires": {},
-        "matricule": 1,
-        "grade": "gardien de la paix",
-        "division": "pas de division"
-      }
-    ],
-    "liste_evenement": [
-      {
-        "id": "9ed732b0-ee57-4485-a4aa-17aca35072db",
-        "nom": "vin chaud volé",
-        "enquete_liee": "6ed1d9dd-2682-4d54-afb4-4636f1d4ad43",
-        "date_evenement": "2024-12-15",
-        "lieu": "place de l'unif"
-      }
-    ],
-    "enquetes_liees": []
-  },
-  {
-    "id": "def473d2-8b0a-4f93-84e4-3143ea1c40b8",
-    "nom": "Zizi prout",
-    "date_de_debut": "21/09/2003",
-    "date_de_fin": "22/09/2003",
-    "liste_preuves": [
-      {
-        "id": "e9c4ff52-a8fd-4296-af58-10ccd4da5dfe",
-        "nom": "couteau de cuisine",
-        "enquete_liee": "def473d2-8b0a-4f93-84e4-3143ea1c40b8",
-        "type": "arme blanche",
-        "lieu": "chambre d'alexis",
-        "date_preuve": "15/12/2024",
-        "heure": "Heure non spécifée"
-      }
-    ],
-    "personne_impliquee": [
-      {
-        "nom": "Goffart",
-        "prenom": "Ralph",
-        "classe": "Employe",
-        "sexe": "Homme",
-        "date_de_naissance": "2003-09-21",
-        "metier": "'Pas de métier actuellement'",
-        "mail": "ralphgoffar@gmail.com",
-        "interrogatoires": {},
-        "grade": "mage noir",
-        "division": "2",
-        "matricule": 1
-      }
-    ],
-    "liste_evenement": [
-      {
-        "id": "e6181494-1fac-4360-8b7d-e36571ce06cb",
-        "nom": "travail à l'usine",
-        "enquete_liee": "def473d2-8b0a-4f93-84e4-3143ea1c40b8",
-        "date_evenement": "2003-09-21",
-        "lieu": "au kot de ralph"
-      }
-    ],
-    "enquetes_liees": [
-      {
+    {
         "id": "f0043918-317f-44f9-9bf3-c7e73b8b53a2",
         "nom": "meurtre",
         "date_de_debut": "28/06/2005",
         "date_de_fin": "28/06/2025",
         "liste_preuves": [],
         "personne_impliquee": [
-          {
-            "nom": "Demarcq",
-            "prenom": "Alexis",
-            "classe": "Suspect",
-            "sexe": "Homme",
-            "date_de_naissance": "2003-08-04",
-            "metier": "'Pas de métier actuellement'",
-            "mail": "",
-            "interrogatoires": {},
-            "innocent": false,
-            "statut_legal": false,
-            "suspection": "",
-            "alibi": ""
-          },
-          {
-            "nom": "Mertens",
-            "prenom": "Corentin",
-            "classe": "Temoin",
-            "sexe": "Homme",
-            "date_de_naissance": "2003-09-20",
-            "metier": "'Pas de métier actuellement'",
-            "mail": "",
-            "interrogatoires": {},
-            "temoignage": {
-              "2024-12-14": [
-                "J'étais en train de travailler sur mon projet d'OS2"
-              ]
+            {
+                "nom": "Demarcq",
+                "prenom": "Alexis",
+                "classe": "Suspect",
+                "sexe": "Homme",
+                "date_de_naissance": "2003-08-04",
+                "metier": "'Pas de métier actuellement'",
+                "mail": "",
+                "interrogatoires": {},
+                "innocent": false,
+                "statut_legal": false,
+                "suspection": "",
+                "alibi": ""
             },
-            "fiabilite": 0,
-            "protection": false,
-            "disponibilite": false
-          }
+            {
+                "nom": "Mertens",
+                "prenom": "Corentin",
+                "classe": "Temoin",
+                "sexe": "Homme",
+                "date_de_naissance": "2003-09-20",
+                "metier": "'Pas de métier actuellement'",
+                "mail": "",
+                "interrogatoires": {},
+                "temoignage": {
+                    "2024-12-14": [
+                        "J'étais en train de travailler sur mon projet d'OS2"
+                    ]
+                },
+                "fiabilite": 0,
+                "protection": false,
+                "disponibilite": false
+            },
+            {
+                "nom": "Demarcq",
+                "prenom": "Alexis",
+                "classe": "Suspect",
+                "sexe": "Homme",
+                "date_de_naissance": "2003-08-04",
+                "metier": "'Pas de métier actuellement'",
+                "mail": "a.demarcq@students.ephec.be",
+                "interrogatoires": {},
+                "innocent": false,
+                "statut_legal": false,
+                "suspection": "",
+                "alibi": ""
+            }
         ],
         "liste_evenement": [],
         "enquetes_liees": []
-      }
-    ]
-  }
+    },
+    {
+        "id": "fddc9710-62c2-442a-839c-f29c0cdab8e6",
+        "nom": "trolley",
+        "date_de_debut": "13/04/1546",
+        "date_de_fin": "31/12/9999",
+        "liste_preuves": [],
+        "personne_impliquee": [],
+        "liste_evenement": [],
+        "enquetes_liees": [
+            "6ed1d9dd-2682-4d54-afb4-4636f1d4ad43"
+        ]
+    },
+    {
+        "id": "6ed1d9dd-2682-4d54-afb4-4636f1d4ad43",
+        "nom": "Vol au marché",
+        "date_de_debut": "30/03/1654",
+        "date_de_fin": "31/12/9999",
+        "liste_preuves": [],
+        "personne_impliquee": [
+            {
+                "nom": "Lemaire",
+                "prenom": "Nathan",
+                "classe": "Employe",
+                "sexe": "Homme",
+                "date_de_naissance": "2003-01-01",
+                "metier": "'Pas de métier actuellement'",
+                "mail": "",
+                "interrogatoires": {},
+                "matricule": 1,
+                "grade": "gardien de la paix",
+                "division": "pas de division"
+            }
+        ],
+        "liste_evenement": [
+            {
+                "id": "9ed732b0-ee57-4485-a4aa-17aca35072db",
+                "nom": "vin chaud volé",
+                "enquete_liee": "6ed1d9dd-2682-4d54-afb4-4636f1d4ad43",
+                "date_evenement": "2024-12-15",
+                "lieu": "place de l'unif"
+            }
+        ],
+        "enquetes_liees": []
+    },
+    {
+        "id": "def473d2-8b0a-4f93-84e4-3143ea1c40b8",
+        "nom": "Zizi prout",
+        "date_de_debut": "21/09/2003",
+        "date_de_fin": "22/09/2003",
+        "liste_preuves": [
+            {
+                "id": "e9c4ff52-a8fd-4296-af58-10ccd4da5dfe",
+                "nom": "couteau de cuisine",
+                "enquete_liee": "def473d2-8b0a-4f93-84e4-3143ea1c40b8",
+                "type": "arme blanche",
+                "lieu": "chambre d'alexis",
+                "date_preuve": "15/12/2024",
+                "heure": "Heure non spécifée"
+            }
+        ],
+        "personne_impliquee": [
+            {
+                "nom": "Goffart",
+                "prenom": "Ralph",
+                "classe": "Employe",
+                "sexe": "Homme",
+                "date_de_naissance": "2003-09-21",
+                "metier": "'Pas de métier actuellement'",
+                "mail": "ralphgoffar@gmail.com",
+                "interrogatoires": {},
+                "grade": "mage noir",
+                "division": "2",
+                "matricule": 1
+            }
+        ],
+        "liste_evenement": [
+            {
+                "id": "e6181494-1fac-4360-8b7d-e36571ce06cb",
+                "nom": "travail à l'usine",
+                "enquete_liee": "def473d2-8b0a-4f93-84e4-3143ea1c40b8",
+                "date_evenement": "2003-09-21",
+                "lieu": "au kot de ralph"
+            }
+        ],
+        "enquetes_liees": [
+            {
+                "id": "f0043918-317f-44f9-9bf3-c7e73b8b53a2",
+                "nom": "meurtre",
+                "date_de_debut": "28/06/2005",
+                "date_de_fin": "28/06/2025",
+                "liste_preuves": [],
+                "personne_impliquee": [
+                    {
+                        "nom": "Demarcq",
+                        "prenom": "Alexis",
+                        "classe": "Suspect",
+                        "sexe": "Homme",
+                        "date_de_naissance": "2003-08-04",
+                        "metier": "'Pas de métier actuellement'",
+                        "mail": "",
+                        "interrogatoires": {},
+                        "innocent": false,
+                        "statut_legal": false,
+                        "suspection": "",
+                        "alibi": ""
+                    },
+                    {
+                        "nom": "Mertens",
+                        "prenom": "Corentin",
+                        "classe": "Temoin",
+                        "sexe": "Homme",
+                        "date_de_naissance": "2003-09-20",
+                        "metier": "'Pas de métier actuellement'",
+                        "mail": "",
+                        "interrogatoires": {},
+                        "temoignage": {
+                            "2024-12-14": [
+                                "J'étais en train de travailler sur mon projet d'OS2"
+                            ]
+                        },
+                        "fiabilite": 0,
+                        "protection": false,
+                        "disponibilite": false
+                    }
+                ],
+                "liste_evenement": [],
+                "enquetes_liees": []
+            }
+        ]
+    }
 ]

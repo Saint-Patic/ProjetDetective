@@ -1,19 +1,6 @@
-from utilitaire import utils
-import json
-import datetime
-from colorama import Fore, Style, init
-from classes import (
-    Personne,
-    Temoin,
-    Suspect,
-    Employe,
-    Criminel,
-    Evenement,
-    Preuve,
-    Enquete,
-)
+from colorama import Fore, init
 import GUI
-from commandes_terminale import *
+from utilitaire.commandes_terminale import *
 
 init(autoreset=True)
 

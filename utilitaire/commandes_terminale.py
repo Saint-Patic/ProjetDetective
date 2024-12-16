@@ -1,4 +1,4 @@
-from utilitaire import utils
+import utilitaire.utils as utils
 import json
 import datetime
 from classes import (
@@ -314,7 +314,7 @@ def dict_vers_evenement(dict_evenement):
 
 def creer_evenement(enquete_liee):
     """Crée un nouvel événement et sauvegarde dans evenements.json."""
-    id = str(uuid.uuid4())
+    nouveau_id = str(uuid.uuid4())
     nom = input("        Entrez le nom de l'événement : ")
     id_enquete = enquete_liee.id
     date_evenement = input("Entrez le date_evenement (YYYY-MM-DD) : ")
@@ -325,15 +325,15 @@ def creer_evenement(enquete_liee):
     except ValueError:
         raise ValueError("La date doit être au format YYYY-MM-DD.")
 
-    return Evenement(id, nom, id_enquete, date_evenement, lieu)
+    return Evenement(nouveau_id, nom, id_enquete, date_evenement, lieu)
 
 
 def creer_preuve(enquete_liee):
-    """Crée une nouvelle preuve et sauvegarde dans preuves.json."""
-    id = str(uuid.uuid4())
+    """Crée une nouvelle preuve et sauvegarde dans le fichier preuves.json."""
+    nouveau_id = str(uuid.uuid4())
     nom = input("        Entrez le nom de la preuve : ")
     type_preuve = input("Entrez le type de preuve (ex: photo, document, etc.) : ")
     id_enquete = enquete_liee.id
     lieu_preuve = input("Entrez le lieu où la preuve a été trouvée : ")
 
-    return Preuve(id, nom, id_enquete, type_preuve, lieu_preuve)
+    return Preuve(nouveau_id, nom, id_enquete, type_preuve, lieu_preuve)
