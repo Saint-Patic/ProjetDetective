@@ -75,6 +75,16 @@
                 "personne_impliquee": [],
                 "liste_evenement": [],
                 "enquetes_liees": []
+            },
+            {
+                "id": "daefaeeb-4db5-48e2-8229-a0a36a5f80cd",
+                "nom": "Trolley problem",
+                "date_de_debut": "25/12/1234",
+                "date_de_fin": "31/12/1234",
+                "liste_preuves": [],
+                "personne_impliquee": [],
+                "liste_evenement": [],
+                "enquetes_liees": []
             }
         ]
     },

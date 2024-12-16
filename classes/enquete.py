@@ -192,7 +192,9 @@ class Enquete:
     def ajouter_enquetes_liees(self, enquete):
         """Ajoute une enquête liée et met à jour le fichier enquetes.json."""
         # Vérifier si l'ID de l'enquête est déjà présent dans les enquêtes liées
-        if any(enquete_liee.id == enquete.id for enquete_liee in self.enquetes_liees):
+        if any(
+            enquete_liee["id"] == enquete.id for enquete_liee in self.enquetes_liees
+        ):
             raise ValueError(f"L'enquête {enquete.nom} est déjà liée à {self.nom}.")
 
         # Vérifier que l'ID de l'enquête à ajouter n'est pas celui de l'enquête de base
