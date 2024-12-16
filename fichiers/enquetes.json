@@ -181,7 +181,18 @@
                 "lieu": "place de l'unif"
             }
         ],
-        "enquetes_liees": []
+        "enquetes_liees": [
+            {
+                "id": "fddc9710-62c2-442a-839c-f29c0cdab8e6",
+                "nom": "trolley",
+                "date_de_debut": "13/04/1546",
+                "date_de_fin": "31/12/9999",
+                "liste_preuves": [],
+                "personne_impliquee": [],
+                "liste_evenement": [],
+                "enquetes_liees": []
+            }
+        ]
     },
     {
         "id": "def473d2-8b0a-4f93-84e4-3143ea1c40b8",
