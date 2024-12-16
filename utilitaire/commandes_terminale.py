@@ -239,7 +239,7 @@ def creer_enquete(nom, date_de_debut, date_de_fin):
 
     if date_de_debut > date_de_fin:
         raise ValueError("La date de début doit être inférieure à la date de fin.")
-    if date_de_debut < utils.convertir_date(datetime.datetime.now()):
+    if date_de_debut > utils.convertir_date(datetime.datetime.now()):
         raise ValueError("La date de début ne peut pas être dans le futur.")
 
     nouvelle_enquete = Enquete(nom, date_de_debut, date_de_fin)
@@ -337,3 +337,13 @@ def creer_preuve(enquete_liee):
     lieu_preuve = input("Entrez le lieu où la preuve a été trouvée : ")
 
     return Preuve(nouveau_id, nom, id_enquete, type_preuve, lieu_preuve)
+
+
+def chargement_donnees():
+    nom_dossier = "fichiers/"
+    evenement_brut = charger_donnees(f"{nom_dossier}evenement.json")
+    interro_brut = charger_donnees(f"{nom_dossier}interrogatoires.json")
+    enquete_brut = charger_donnees(f"{nom_dossier}enquetes.json")
+    pers_brut = charger_donnees(f"{nom_dossier}personnes.json")
+    preuve_brut = charger_donnees(f"{nom_dossier}preuves.json")
+    return evenement_brut, interro_brut, enquete_brut, pers_brut, preuve_brut
