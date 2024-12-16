@@ -277,8 +277,9 @@ class Enquete:
         with open("fichiers/preuves.json", "w", encoding="utf-8") as json_file:
             json.dump(donnees_existantes, json_file, indent=4, ensure_ascii=False)
 
-        # Ajouter la personne à la liste des personnes impliquées
+        # Ajouter la preuve à la liste des preuves
         self.liste_preuves.append(preuve)
+        self.sauvegarder_enquete()
 
     def afficher_preuves(self, indentation=4):
         if self.liste_preuves == []:
@@ -306,7 +307,7 @@ class Enquete:
         Enquete.enquetes.remove(self)
         print(f"L'enquête '{self.nom}' a été clôturée et supprimée.\n")
 
-    def afficher_enquetes():
+    def afficher_enquetes(self):
         for enquete in Enquete.enquetes:
             print(enquete)
 
