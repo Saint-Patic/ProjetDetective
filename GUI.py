@@ -135,7 +135,6 @@ class EnqueteScreen(BaseScreen):
         self.enquete = None
 
     def set_enquete(self, enquete):
-        """Affiche les détails de l'enquête sélectionnée avec un ScrollView si nécessaire."""
         self.enquete = enquete
 
         # Réinitialisation de la mise en page
@@ -297,6 +296,7 @@ class EnqueteScreen(BaseScreen):
     def show_section(self, instance):
         self.content_label.text = f"Section {instance.text} de l'enquête sélectionnée."
 
+
     def afficher_preuves(self, instance):
         """Affiche les preuves dans un Popup."""
         if not self.enquete.get("liste_preuves"):
@@ -349,51 +349,39 @@ class EnqueteScreen(BaseScreen):
         pass
 
     def afficher_personnes(self, instance):
-        """Affiche les personnes impliquées dans un Popup."""
         if not self.enquete.get("personne_impliquee"):
             self.afficher_popup("Personnes impliquées", "Aucune personne impliquée.")
             return
 
-        # Conteneur principal pour le contenu du Popup
         content = BoxLayout(orientation="vertical", spacing=10, padding=10)
-
-        # ScrollView pour afficher les personnes impliquées
         scroll = ScrollView(size_hint=(1, 0.8))
         layout = BoxLayout(orientation="vertical", size_hint_y=None, spacing=10)
         layout.bind(minimum_height=layout.setter("height"))
 
-        # Ajouter un bouton pour chaque personne impliquée
         for personne in self.enquete["personne_impliquee"]:
-            nom_complet = f"{personne['prenom']} {personne['nom']}"
             btn = Button(
-                text=nom_complet,
+                text=f"{personne['prenom']} {personne['nom']}",
                 size_hint_y=None,
-                height=50,
-                background_normal="",
-                background_color=(0.2, 0.6, 0.8, 1),
+                height=40,
             )
-            btn.bind(on_release=lambda instance, p=personne: self.afficher_details_item(p))
+            btn.bind(
+                on_release=lambda instance, p=personne: self.afficher_details_item(p)
+            )
             layout.add_widget(btn)
 
         scroll.add_widget(layout)
         content.add_widget(scroll)
 
-        # Bouton pour fermer le Popup
-        close_button = Button(
-            text="Fermer",
-            size_hint=(1, 0.2),
-            background_normal="",
-            background_color=(0.9, 0.2, 0.2, 1),
+        content.add_widget(
+            Button(
+                text="Fermer",
+                size_hint=(1, 0.2),
+                on_release=lambda instance: popup.dismiss(),
+            )
         )
-        close_button.bind(on_release=lambda instance: popup.dismiss())
-        content.add_widget(close_button)
 
-        # Création et affichage du Popup
         popup = Popup(
-            title="Personnes impliquées",
-            content=content,
-            size_hint=(0.8, 0.8),
-            auto_dismiss=True,
+            title="Personnes impliquées", content=content, size_hint=(0.8, 0.8)
         )
         popup.open()
 
@@ -413,23 +401,17 @@ class EnqueteScreen(BaseScreen):
             size=lambda instance, value: setattr(instance, "height", value[1])
         )
 
-        # ScrollView pour gérer les textes longs
+        content = BoxLayout(orientation="vertical", spacing=10, padding=10)
         scroll = ScrollView(size_hint=(1, 0.8))
-        scroll.add_widget(content)
+        layout = BoxLayout(orientation="vertical", size_hint_y=None, spacing=10)
+        layout.bind(minimum_height=layout.setter("height"))
 
-        # Bouton pour fermer le Popup
-        close_button = Button(
-            text="Fermer",
-            size_hint=(1, 0.2),
-            background_normal="",
-            background_color=(0.9, 0.2, 0.2, 1),
-        )
-        close_button.bind(on_release=lambda instance: popup.dismiss())
-
-        # Conteneur principal
-        layout = BoxLayout(orientation="vertical", spacing=10, padding=10)
-        layout.add_widget(scroll)
-        layout.add_widget(close_button)
+        for preuve in self.enquete["liste_preuves"]:
+            btn = Button(text=f"Preuve ID: {preuve}", size_hint_y=None, height=40)
+            btn.bind(
+                on_release=lambda instance, p=preuve: self.afficher_details_item(p)
+            )
+            layout.add_widget(btn)
 
         if "date_de_naissance" in item:
             popup = Popup(
@@ -456,6 +438,10 @@ class EnqueteScreen(BaseScreen):
             )
             popup.open()
 
+    def afficher_details_item(self, item):
+        details = "\n".join([f"{k}: {v}" for k, v in item.items()])
+        self.afficher_popup("Détails", details)
+
     def afficher_popup(self, titre, contenu):
         popup = Popup(
             title=titre,
@@ -464,7 +450,6 @@ class EnqueteScreen(BaseScreen):
             auto_dismiss=True,
         )
         popup.open()
-
 
 
 class GlobalScreen(BaseScreen):

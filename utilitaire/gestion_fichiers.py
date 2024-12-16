@@ -1,5 +1,4 @@
 import json
-from datetime import datetime
 from classes import Personne, Temoin, Suspect, Employe, Criminel
 
 
@@ -54,7 +53,7 @@ def create_person(personne: dict):
 def liste_personne(fichier):
     data = lecture_json(fichier)
     if data:
-        return [create_person(person) for person in data]
+        return [create_person(personne) for personne in data]
     else:
         return None
 
