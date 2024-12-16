@@ -44,6 +44,7 @@ if __name__ == "__main__":
     Vol.ajouter_enquetes_liees(Fraude)
     Meurtre.afficher_enquetes_liees()
     Meurtre.ajouter_enquetes_liees(Cambriolage)
+    Meurtre.ajouter_enquetes_liees(Vol)
     Meurtre.afficher_enquetes_liees()
     Vol.afficher_enquetes_liees()
 

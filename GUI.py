@@ -121,6 +121,7 @@ class EnqueteScreen(BaseScreen):
         self.enquete_label = Label(text="Enquête : ", size_hint=(1, 0.1))
         layout.add_widget(self.enquete_label)
 
+        # TODO créer des boutons globaux
         self.details_label = Label(
             text="Détails de l'enquête",
             size_hint=(1, 0.5),
@@ -208,9 +209,17 @@ class EnqueteScreen(BaseScreen):
         ))
 
         # Nombre d'enquêtes liées
-        linked_enquete_ids = ", ".join(str(id_) for id_ in enquete.get('enquetes_liees', []))
+
+        linked_ids = enquete.get('enquetes_liees', [])
+
+        # Créer une liste pour stocker les IDs des enquêtes liées
+        liste_ids_enquetes_liees = []
+
+        # Boucle sur chaque ID lié pour l'ajouter à la liste
+        for id_ in linked_ids:
+            liste_ids_enquetes_liees.append(id_)
         content_layout.add_widget(Label(
-            text=f"[b]Enquêtes liées :[/b] {linked_enquete_ids}",
+            text=f"[b]Enquêtes liées :[/b] {self.recup_nom_via_id(liste_ids_enquetes_liees)}",
             markup=True,
             font_size=18,
             size_hint_y=None,
@@ -262,50 +271,57 @@ class EnqueteScreen(BaseScreen):
             on_release=self.go_back_to_menu
         )
         layout.add_widget(retour_btn)
-
         self.add_widget(layout)
+
+    def recup_nom_via_id(self, id_enquete):
+        """Récupère le nom de l'enquête à partir de son ID ou une liste de noms pour plusieurs IDs."""
+        try:
+            with open("fichiers/enquetes.json", "r", encoding="utf-8") as file:
+                enquetes_data = json.load(file)
+
+            # Construire le dictionnaire {id: nom}
+            id_to_nom = {str(enquete["id"]): enquete["nom"] for enquete in enquetes_data}
+            # Si l'ID demandé est une liste, retourner tous les noms correspondants
+            if isinstance(id_enquete, list):
+                noms_lies = [id_to_nom.get(str(id_)) for id_ in id_enquete]
+                noms_lies = [nom for nom in noms_lies if nom != "Pas d'enquêtes liées"]
+                return noms_lies
+            # else:
+            #     # Retourner le nom correspondant à l'ID donné
+            #     return id_to_nom.get(id_enquete, "Pas d'enquêtes liées")
+        except FileNotFoundError:
+            return "Erreur : Le fichier enquetes.json est introuvable."
+        except json.JSONDecodeError:
+            return "Erreur : Les données du fichier JSON sont invalides."
 
     def show_section(self, instance):
         self.content_label.text = f"Section {instance.text} de l'enquête sélectionnée."
 
     def afficher_preuves(self, instance):
+        """Affiche les preuves dans un Popup."""
         if not self.enquete.get("liste_preuves"):
             self.afficher_popup("Preuves", "Aucune preuve disponible.")
-            return
-
-    def afficher_enquete_liee(self, instance):
-        """Affiche les enquêtes liées sous forme de boutons."""
-        if not self.enquete or not self.enquete.get("enquetes_liees"):
-            self.afficher_popup("Enquêtes Liées", "Aucune enquête liée disponible.")
             return
 
         # Conteneur principal pour le contenu du Popup
         content = BoxLayout(orientation="vertical", spacing=10, padding=10)
 
-        # ScrollView pour afficher les enquêtes liées
+        # ScrollView pour afficher les personnes impliquées
         scroll = ScrollView(size_hint=(1, 0.8))
         layout = BoxLayout(orientation="vertical", size_hint_y=None, spacing=10)
         layout.bind(minimum_height=layout.setter("height"))
 
-        # Ajouter un bouton pour chaque enquête liée
-        for lien_id in self.enquete["enquetes_liees"]:
-            # Chercher l'enquête liée par son ID
-            enquete = self.trouver_enquete_par_id(lien_id) if hasattr(self,
-                                                                      'trouver_enquete_par_id') else self.enquete.get(
-                lien_id)
-            if enquete and 'nom' in enquete:
-                # Capture de l'enquête liée dans une variable locale pour éviter la fermeture du programme
-                lien_copie = enquete
-                btn = Button(
-                    text=lien_copie.get("nom", "Inconnu"),
-                    size_hint_y=None,
-                    height=50,
-                    background_normal="",
-                    background_color=(0.2, 0.6, 0.8, 1),
-                )
-                # Utilisation de functools.partial pour lier les arguments correctement
-                btn.bind(on_release=functools.partial(self.afficher_details_enquete_liee, lien=lien_copie))
-                layout.add_widget(btn)
+        # Ajouter un bouton pour chaque personne impliquée
+        for preuve in self.enquete["liste_preuves"]:
+            btn = Button(
+                text=preuve['nom'],
+                size_hint_y=None,
+                height=50,
+                background_normal="",
+                background_color=(0.2, 0.6, 0.8, 1),
+            )
+            btn.bind(on_release=lambda instance, p=preuve: self.afficher_details_item(p))
+            layout.add_widget(btn)
 
         scroll.add_widget(layout)
         content.add_widget(scroll)
@@ -322,12 +338,15 @@ class EnqueteScreen(BaseScreen):
 
         # Création et affichage du Popup
         popup = Popup(
-            title="Enquêtes Liées",
+            title="Preuves",
             content=content,
             size_hint=(0.8, 0.8),
             auto_dismiss=True,
         )
         popup.open()
+
+    def afficher_enquete_liee(self, instance):
+        pass
 
     def afficher_personnes(self, instance):
         """Affiche les personnes impliquées dans un Popup."""
@@ -379,7 +398,7 @@ class EnqueteScreen(BaseScreen):
         popup.open()
 
     def afficher_details_item(self, item):
-        """Affiche les détails d'une personne impliquée dans un Popup."""
+        """Affiche les détails dans un Popup."""
         # Formater les détails
         details = "\n".join([f"[b]{k}:[/b] {v}" for k, v in item.items()])
         content = Label(
@@ -412,14 +431,30 @@ class EnqueteScreen(BaseScreen):
         layout.add_widget(scroll)
         layout.add_widget(close_button)
 
-        # Affichage du Popup
-        popup = Popup(
-            title=f"Détails de {item.get('prenom', 'Personne')} {item.get('nom', '')}",
-            content=layout,
-            size_hint=(0.8, 0.8),
-            auto_dismiss=True,
-        )
-        popup.open()
+        if "date_de_naissance" in item:
+            popup = Popup(
+                title=f"Détails de {item.get('prenom', 'Personne')} {item.get('nom', '')}",
+                content=layout,
+                size_hint=(0.8, 0.8),
+                auto_dismiss=True,
+            )
+            popup.open()
+        elif "date_preuve" in item:
+            popup = Popup(
+                title=f"Détails de la preuve '{item.get('nom')}'",
+                content=layout,
+                size_hint=(0.8, 0.8),
+                auto_dismiss=True,
+            )
+            popup.open()
+        else:
+            popup = Popup(
+                title=f"Détails de l'enquête liée'{item.get('nom')}'",
+                content=layout,
+                size_hint=(0.8, 0.8),
+                auto_dismiss=True,
+            )
+            popup.open()
 
     def afficher_popup(self, titre, contenu):
         popup = Popup(
