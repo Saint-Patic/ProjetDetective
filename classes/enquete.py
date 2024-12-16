@@ -180,6 +180,7 @@ class Enquete:
         else:
             # Si aucun nom et date de début ne correspondent, ajouter la nouvelle enquête
             print(f"Ajout d'une nouvelle enquête avec le nom '{self.nom}'.")
+            print(enquete_dict)
             donnees.append(enquete_dict)
 
         # Sauvegarder les données mises à jour dans le fichier

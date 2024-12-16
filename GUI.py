@@ -311,7 +311,7 @@ class EnqueteScreen(BaseScreen):
         layout = BoxLayout(orientation="vertical", size_hint_y=None, spacing=10)
         layout.bind(minimum_height=layout.setter("height"))
 
-        # Ajouter un bouton pour chaque personne impliquée
+        # Ajouter un bouton pour chaque preuve
         for preuve in self.enquete["liste_preuves"]:
             btn = Button(
                 text=preuve['nom'],
@@ -362,7 +362,9 @@ class EnqueteScreen(BaseScreen):
             btn = Button(
                 text=f"{personne['prenom']} {personne['nom']}",
                 size_hint_y=None,
-                height=40,
+                height=50,
+                background_normal="",
+                background_color=(0.2, 0.6, 0.8, 1),
             )
             btn.bind(
                 on_release=lambda instance, p=personne: self.afficher_details_item(p)
@@ -376,7 +378,8 @@ class EnqueteScreen(BaseScreen):
             Button(
                 text="Fermer",
                 size_hint=(1, 0.2),
-                on_release=lambda instance: popup.dismiss(),
+                background_normal="",
+                background_color=(0.9, 0.2, 0.2, 1),
             )
         )
 
