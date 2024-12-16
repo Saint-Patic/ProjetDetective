@@ -1,20 +1,11 @@
 [
-    {
-        "id": "e9c4ff52-a8fd-4296-af58-10ccd4da5dfe",
-        "nom": "couteau de cuisine",
-        "enquete_liee": "def473d2-8b0a-4f93-84e4-3143ea1c40b8",
-        "type": "arme blanche",
-        "lieu": "chambre d'alexis",
-        "date_preuve": "15/12/2024",
-        "heure": "Heure non spécifée"
-    },
-    {
-        "id": "453afa57-7f77-4ace-a12d-22032b239a48",
-        "nom": "Couteau",
-        "enquete_liee": "948c7dc5-38cd-4c19-b428-f355febf71e9",
-        "type": "arme blanche",
-        "lieu": "Open lab",
-        "date_preuve": "16/12/2024",
-        "heure": "Heure non spécifée"
-    }
+  {
+    "id": "e9c4ff52-a8fd-4296-af58-10ccd4da5dfe",
+    "nom": "couteau de cuisine",
+    "enquete_liee": "def473d2-8b0a-4f93-84e4-3143ea1c40b8",
+    "type": "arme blanche",
+    "lieu": "chambre d'alexis",
+    "date_preuve": "15/12/2024",
+    "heure": "Heure non spécifée"
+  }
 ]
