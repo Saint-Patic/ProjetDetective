@@ -180,6 +180,7 @@ class Enquete:
         else:
             # Si aucun nom et date de début ne correspondent, ajouter la nouvelle enquête
             print(f"Ajout d'une nouvelle enquête avec le nom '{self.nom}'.")
+            print(enquete_dict)
             donnees.append(enquete_dict)
 
         # Sauvegarder les données mises à jour dans le fichier
@@ -191,7 +192,7 @@ class Enquete:
     def ajouter_enquetes_liees(self, enquete):
         """Ajoute une enquête liée et met à jour le fichier enquetes.json."""
         # Vérifier si l'ID de l'enquête est déjà présent dans les enquêtes liées
-        if any(enquete_liee.id == enquete.id for enquete_liee in self.enquetes_liees):
+        if any(enquete_liee == enquete.id for enquete_liee in self.enquetes_liees):
             raise ValueError(f"L'enquête {enquete.nom} est déjà liée à {self.nom}.")
 
         # Vérifier que l'ID de l'enquête à ajouter n'est pas celui de l'enquête de base
@@ -277,8 +278,9 @@ class Enquete:
         with open("fichiers/preuves.json", "w", encoding="utf-8") as json_file:
             json.dump(donnees_existantes, json_file, indent=4, ensure_ascii=False)
 
-        # Ajouter la personne à la liste des personnes impliquées
+        # Ajouter la preuve à la liste des preuves
         self.liste_preuves.append(preuve)
+        self.sauvegarder_enquete()
 
     def afficher_preuves(self, indentation=4):
         if self.liste_preuves == []:
@@ -306,7 +308,7 @@ class Enquete:
         Enquete.enquetes.remove(self)
         print(f"L'enquête '{self.nom}' a été clôturée et supprimée.\n")
 
-    def afficher_enquetes():
+    def afficher_enquetes(self):
         for enquete in Enquete.enquetes:
             print(enquete)
 
