@@ -72,8 +72,8 @@
         "metier": "'Pas de métier actuellement'",
         "mail": "ralphgoffar@gmail.com",
         "interrogatoires": {},
+        "matricule": 1,
         "grade": "mage noir",
-        "division": "2",
-        "matricule": 1
+        "division": "2"
     }
 ]

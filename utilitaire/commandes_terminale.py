@@ -542,3 +542,13 @@ def afficher_menu_enquete(enquete_choisie):
             ajout = False
 
         enquete_choisie.sauvegarder_enquete()
+
+
+def chargement_donnees():
+    nom_dossier = "fichiers/"
+    enquete_brut = charger_donnees(f"{nom_dossier}enquetes.json")
+    pers_brut = charger_donnees(f"{nom_dossier}personnes.json")
+    preuve_brut = charger_donnees(f"{nom_dossier}preuves.json")
+    evenement_brut = charger_donnees(f"{nom_dossier}evenement.json")
+    interro_brut = charger_donnees(f"{nom_dossier}interrogatoires.json")
+    return evenement_brut, interro_brut, enquete_brut, pers_brut, preuve_brut
