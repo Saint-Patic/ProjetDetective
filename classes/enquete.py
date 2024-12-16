@@ -199,8 +199,9 @@ class Enquete:
         if enquete.id == self.id:
             raise ValueError("Impossible de lier une enquête à elle-même.")
 
-        # Ajouter l'enquête liée
+        # Ajouter l'enquête liée si elle n'existe pas encore
         self.enquetes_liees.append(enquete.to_dict())
+        print(f"L'enquête '{enquete.nom}' a été ajoutée comme liée.")
 
     def afficher_enquetes_liees(self, indentation=4):
         if not self.enquetes_liees:
@@ -311,6 +312,24 @@ class Enquete:
     def afficher_enquetes(self):
         for enquete in Enquete.enquetes:
             print(enquete)
+
+    def supprimer_enquete_liee(self, enquete_id):
+        """
+        Supprime une enquête liée à partir de son ID.
+
+        Args:
+            enquete_id (str): ID de l'enquête à supprimer.
+
+        Raises:
+            ValueError: Si l'enquête liée avec l'ID spécifié n'existe pas.
+        """
+        for index, enquete in enumerate(self.enquetes_liees):
+            if enquete["id"] == enquete_id:
+                del self.enquetes_liees[index]
+                print(f"L'enquête liée avec l'ID '{enquete_id}' a été supprimée.")
+                return
+
+        raise ValueError(f"Aucune enquête liée trouvée avec l'ID '{enquete_id}'.")
 
     def to_dict(self) -> dict:
         """
