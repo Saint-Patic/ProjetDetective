@@ -121,7 +121,14 @@ class EnqueteScreen(BaseScreen):
         self.enquete_label = Label(text="Enquête : ", size_hint=(1, 0.1))
         layout.add_widget(self.enquete_label)
 
-        # TODO créer des boutons globaux
+        self.close_button = Button(
+            text="Fermer",
+            size_hint=(1, None),
+            background_normal="",
+            background_color=(0.9, 0.2, 0.2, 1),
+            height=50,
+        )
+
         self.details_label = Label(
             text="Détails de l'enquête",
             size_hint=(1, 0.5),
@@ -170,16 +177,6 @@ class EnqueteScreen(BaseScreen):
             height=40
         ))
 
-        # Description si disponible
-        if 'description' in enquete:
-            content_layout.add_widget(Label(
-                text=f"[b]Description :[/b] {enquete['description']}",
-                markup=True,
-                font_size=16,
-                size_hint_y=None,
-                height=60
-            ))
-
         # Nombre de preuves
         content_layout.add_widget(Label(
             text=f"[b]Preuves :[/b] {len(enquete.get('liste_preuves', []))}",
@@ -207,23 +204,36 @@ class EnqueteScreen(BaseScreen):
             height=40
         ))
 
-        # Nombre d'enquêtes liées
+        # Affichage des enquêtes liées
+        enquetes_liees = enquete.get('enquetes_liees', [])
+        print(enquetes_liees)
+        if enquetes_liees:
+            content_layout.add_widget(Label(
+                text="[b]Enquêtes liées :[/b]",
+                markup=True,
+                font_size=18,
+                size_hint_y=None,
+                height=40
+            ))
+            for enquete_liee in enquetes_liees:
+                # On suppose que chaque enquete_liee est un dictionnaire
+                nom_enquete = enquete_liee.get('nom', 'Nom non spécifié')
 
-        linked_ids = enquete.get('enquetes_liees', [])
-
-        # Créer une liste pour stocker les IDs des enquêtes liées
-        liste_ids_enquetes_liees = []
-
-        # Boucle sur chaque ID lié pour l'ajouter à la liste
-        for id_ in linked_ids:
-            liste_ids_enquetes_liees.append(id_)
-        content_layout.add_widget(Label(
-            text=f"[b]Enquêtes liées :[/b] {self.recup_nom_via_id(liste_ids_enquetes_liees)}",
-            markup=True,
-            font_size=18,
-            size_hint_y=None,
-            height=40
-        ))
+                # Ajoute le nom de l'enquête au contenu
+                content_layout.add_widget(Label(
+                    text=f" - {nom_enquete}",
+                    font_size=16,
+                    size_hint_y=None,
+                    height=30
+                ))
+        else:
+            content_layout.add_widget(Label(
+                text="[b]Enquêtes liées :[/b] Aucune enquête liée",
+                markup=True,
+                font_size=18,
+                size_hint_y=None,
+                height=40
+            ))
 
         # Création d'une ScrollView, uniquement si nécessaire
         if content_layout.height > self.height * 0.7:  # Vérifie si le contenu dépasse
@@ -260,6 +270,14 @@ class EnqueteScreen(BaseScreen):
         )
         buttons_layout.add_widget(enquete_liee_btn)
 
+        evennement_btn = Button(
+            text="Voir Liste Des Evennements",
+            size_hint=(1, None),
+            height=45,
+            on_release=self.afficher_liste_evennement
+        )
+        buttons_layout.add_widget(evennement_btn)
+
         layout.add_widget(buttons_layout)
 
         # Bouton pour retourner au menu principal
@@ -272,30 +290,8 @@ class EnqueteScreen(BaseScreen):
         layout.add_widget(retour_btn)
         self.add_widget(layout)
 
-    def recup_nom_via_id(self, id_enquete):
-        """Récupère le nom de l'enquête à partir de son ID ou une liste de noms pour plusieurs IDs."""
-        try:
-            with open("fichiers/enquetes.json", "r", encoding="utf-8") as file:
-                enquetes_data = json.load(file)
-
-            # Construire le dictionnaire {id: nom}
-            id_to_nom = {str(enquete["id"]): enquete["nom"] for enquete in enquetes_data}
-            # Si l'ID demandé est une liste, retourner tous les noms correspondants
-            if isinstance(id_enquete, list):
-                noms_lies = [id_to_nom.get(str(id_)) for id_ in id_enquete]
-                noms_lies = [nom for nom in noms_lies if nom != "Pas d'enquêtes liées"]
-                return noms_lies
-            # else:
-            #     # Retourner le nom correspondant à l'ID donné
-            #     return id_to_nom.get(id_enquete, "Pas d'enquêtes liées")
-        except FileNotFoundError:
-            return "Erreur : Le fichier enquetes.json est introuvable."
-        except json.JSONDecodeError:
-            return "Erreur : Les données du fichier JSON sont invalides."
-
     def show_section(self, instance):
         self.content_label.text = f"Section {instance.text} de l'enquête sélectionnée."
-
 
     def afficher_preuves(self, instance):
         """Affiche les preuves dans un Popup."""
@@ -326,15 +322,12 @@ class EnqueteScreen(BaseScreen):
         scroll.add_widget(layout)
         content.add_widget(scroll)
 
+        if self.close_button.parent:
+            self.close_button.parent.remove_widget(self.close_button)
+
         # Bouton pour fermer le Popup
-        close_button = Button(
-            text="Fermer",
-            size_hint=(1, 0.2),
-            background_normal="",
-            background_color=(0.9, 0.2, 0.2, 1),
-        )
-        close_button.bind(on_release=lambda instance: popup.dismiss())
-        content.add_widget(close_button)
+        self.close_button.bind(on_release=lambda instance: popup.dismiss())
+        content.add_widget(self.close_button)
 
         # Création et affichage du Popup
         popup = Popup(
@@ -346,7 +339,80 @@ class EnqueteScreen(BaseScreen):
         popup.open()
 
     def afficher_enquete_liee(self, instance):
-        pass
+        if not self.enquete.get("enquetes_liees"):
+            self.afficher_popup("Enquêtes liées", "Aucune enquête liée.")
+            return
+
+        content = BoxLayout(orientation="vertical", spacing=10, padding=10)
+        scroll = ScrollView(size_hint=(1, 0.8))
+        layout = BoxLayout(orientation="vertical", size_hint_y=None, spacing=10)
+        layout.bind(minimum_height=layout.setter("height"))
+
+        for enquete in self.enquete["enquetes_liees"]:
+            btn = Button(
+                text=f"{enquete['nom']}",
+                size_hint_y=None,
+                height=50,
+                background_normal="",
+                background_color=(0.2, 0.6, 0.8, 1),
+            )
+            btn.bind(
+                on_release=lambda instance, e=enquete: self.afficher_details_item(e)
+            )
+            layout.add_widget(btn)
+
+        scroll.add_widget(layout)
+        content.add_widget(scroll)
+
+        if self.close_button.parent:
+            self.close_button.parent.remove_widget(self.close_button)
+
+        # Bouton pour fermer le Popup
+        self.close_button.bind(on_release=lambda instance: popup.dismiss())
+        content.add_widget(self.close_button)
+
+        popup = Popup(
+            title="Enquêtes liées", content=content, size_hint=(0.8, 0.8)
+        )
+        popup.open()
+
+    def afficher_liste_evennement(self, instance):
+        if not self.enquete.get("liste_evenement"):
+            self.afficher_popup("Enquêtes liées", "Aucun évennement trouvé.")
+            return
+
+        content = BoxLayout(orientation="vertical", spacing=10, padding=10)
+        scroll = ScrollView(size_hint=(1, 0.8))
+        layout = BoxLayout(orientation="vertical", size_hint_y=None, spacing=10)
+        layout.bind(minimum_height=layout.setter("height"))
+
+        for evennement in self.enquete["liste_evenement"]:
+            btn = Button(
+                text=f"{evennement['nom']}",
+                size_hint_y=None,
+                height=50,
+                background_normal="",
+                background_color=(0.2, 0.6, 0.8, 1),
+            )
+            btn.bind(
+                on_release=lambda instance, e=evennement: self.afficher_details_item(e)
+            )
+            layout.add_widget(btn)
+
+        scroll.add_widget(layout)
+        content.add_widget(scroll)
+
+        if self.close_button.parent:
+            self.close_button.parent.remove_widget(self.close_button)
+
+        # Bouton pour fermer le Popup
+        self.close_button.bind(on_release=lambda instance: popup.dismiss())
+        content.add_widget(self.close_button)
+
+        popup = Popup(
+            title="Listes des évennements", content=content, size_hint=(0.8, 0.8)
+        )
+        popup.open()
 
     def afficher_personnes(self, instance):
         if not self.enquete.get("personne_impliquee"):
@@ -374,14 +440,12 @@ class EnqueteScreen(BaseScreen):
         scroll.add_widget(layout)
         content.add_widget(scroll)
 
-        content.add_widget(
-            Button(
-                text="Fermer",
-                size_hint=(1, 0.2),
-                background_normal="",
-                background_color=(0.9, 0.2, 0.2, 1),
-            )
-        )
+        if self.close_button.parent:
+            self.close_button.parent.remove_widget(self.close_button)
+
+        # Bouton pour fermer le Popup
+        self.close_button.bind(on_release=lambda instance: popup.dismiss())
+        content.add_widget(self.close_button)
 
         popup = Popup(
             title="Personnes impliquées", content=content, size_hint=(0.8, 0.8)
@@ -494,9 +558,8 @@ class GlobalScreen(BaseScreen):
         scroll.add_widget(details_label)
         content.add_widget(scroll)
 
-        close_button = Button(text="Fermer", size_hint=(1, 0.2))
-        close_button.bind(on_release=lambda instance: popup.dismiss())
-        content.add_widget(close_button)
+        self.close_button.bind(on_release=lambda instance: popup.dismiss())
+        content.add_widget(self.close_button)
 
         popup = Popup(
             title=f"Détails de {item.get('nom', 'élément')}",

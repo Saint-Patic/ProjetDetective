@@ -40,7 +40,18 @@
             }
         ],
         "liste_evenement": [],
-        "enquetes_liees": []
+        "enquetes_liees": [
+            {
+                "id": "fddc9710-62c2-442a-839c-f29c0cdab8e6",
+                "nom": "trolley",
+                "date_de_debut": "13/04/1546",
+                "date_de_fin": "31/12/9999",
+                "liste_preuves": [],
+                "personne_impliquee": [],
+                "liste_evenement": [],
+                "enquetes_liees": []
+            }
+        ]
     },
     {
         "id": "fddc9710-62c2-442a-839c-f29c0cdab8e6",
@@ -50,9 +61,7 @@
         "liste_preuves": [],
         "personne_impliquee": [],
         "liste_evenement": [],
-        "enquetes_liees": [
-            "6ed1d9dd-2682-4d54-afb4-4636f1d4ad43"
-        ]
+        "enquetes_liees": []
     },
     {
         "id": "6ed1d9dd-2682-4d54-afb4-4636f1d4ad43",
@@ -84,7 +93,18 @@
                 "lieu": "place de l'unif"
             }
         ],
-        "enquetes_liees": []
+        "enquetes_liees": [
+            {
+                "id": "fddc9710-62c2-442a-839c-f29c0cdab8e6",
+                "nom": "trolley",
+                "date_de_debut": "13/04/1546",
+                "date_de_fin": "31/12/9999",
+                "liste_preuves": [],
+                "personne_impliquee": [],
+                "liste_evenement": [],
+                "enquetes_liees": []
+            }
+        ]
     },
     {
         "id": "def473d2-8b0a-4f93-84e4-3143ea1c40b8",
@@ -127,6 +147,49 @@
             }
         ],
         "enquetes_liees": [
+            {
+                "id": "f0043918-317f-44f9-9bf3-c7e73b8b53a2",
+                "nom": "meurtre",
+                "date_de_debut": "28/06/2005",
+                "date_de_fin": "28/06/2025",
+                "liste_preuves": [],
+                "personne_impliquee": [
+                    {
+                        "nom": "Demarcq",
+                        "prenom": "Alexis",
+                        "classe": "Suspect",
+                        "sexe": "Homme",
+                        "date_de_naissance": "2003-08-04",
+                        "metier": "'Pas de métier actuellement'",
+                        "mail": "",
+                        "interrogatoires": {},
+                        "innocent": false,
+                        "statut_legal": false,
+                        "suspection": "",
+                        "alibi": ""
+                    },
+                    {
+                        "nom": "Mertens",
+                        "prenom": "Corentin",
+                        "classe": "Temoin",
+                        "sexe": "Homme",
+                        "date_de_naissance": "2003-09-20",
+                        "metier": "'Pas de métier actuellement'",
+                        "mail": "",
+                        "interrogatoires": {},
+                        "temoignage": {
+                            "2024-12-14": [
+                                "J'étais en train de travailler sur mon projet d'OS2"
+                            ]
+                        },
+                        "fiabilite": 0,
+                        "protection": false,
+                        "disponibilite": false
+                    }
+                ],
+                "liste_evenement": [],
+                "enquetes_liees": []
+            },
             {
                 "id": "f0043918-317f-44f9-9bf3-c7e73b8b53a2",
                 "nom": "meurtre",
