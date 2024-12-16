@@ -1,17 +1,4 @@
-from utilitaire import utils
-import json
-import datetime
-from colorama import Fore, Style, init
-from classes import (
-    Personne,
-    Temoin,
-    Suspect,
-    Employe,
-    Criminel,
-    Evenement,
-    Preuve,
-    Enquete,
-)
+from colorama import Fore, init
 import GUI
 from utilitaire.commandes_terminale import *
 
@@ -20,12 +7,9 @@ init(autoreset=True)
 
 if __name__ == "__main__":
     sortie = False
-    nom_dossier = "fichiers/"
-    evenement_brut = charger_donnees(f"{nom_dossier}evenement.json")
-    interro_brut = charger_donnees(f"{nom_dossier}interrogatoires.json")
-    enquete_brut = charger_donnees(f"{nom_dossier}enquetes.json")
-    pers_brut = charger_donnees(f"{nom_dossier}personnes.json")
-    preuve_brut = charger_donnees(f"{nom_dossier}preuves.json")
+    evenement_brut, interro_brut, enquete_brut, pers_brut, preuve_brut = (
+        chargement_donnees()
+    )
 
     while not sortie:
         print(Fore.CYAN + "\nMenu Principal:")
