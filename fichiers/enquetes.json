@@ -38,7 +38,18 @@
       }
     ],
     "liste_evenement": [],
-    "enquetes_liees": []
+    "enquetes_liees": [
+      {
+        "id": "fddc9710-62c2-442a-839c-f29c0cdab8e6",
+        "nom": "trolley",
+        "date_de_debut": "13/04/1546",
+        "date_de_fin": "31/12/9999",
+        "liste_preuves": [],
+        "personne_impliquee": [],
+        "liste_evenement": [],
+        "enquetes_liees": []
+      }
+    ]
   },
   {
     "id": "fddc9710-62c2-442a-839c-f29c0cdab8e6",
@@ -48,7 +59,7 @@
     "liste_preuves": [],
     "personne_impliquee": [],
     "liste_evenement": [],
-    "enquetes_liees": ["6ed1d9dd-2682-4d54-afb4-4636f1d4ad43"]
+    "enquetes_liees": []
   },
   {
     "id": "6ed1d9dd-2682-4d54-afb4-4636f1d4ad43",
@@ -83,89 +94,46 @@
     "enquetes_liees": []
   },
   {
-    "id": "def473d2-8b0a-4f93-84e4-3143ea1c40b8",
-    "nom": "Zizi prout",
-    "date_de_debut": "21/09/2003",
-    "date_de_fin": "22/09/2003",
+    "id": "46d93027-b696-47dd-8518-5f40973e6727",
+    "nom": "encore une enquete",
+    "date_de_debut": "24/12/2003",
+    "date_de_fin": "29/12/2003",
     "liste_preuves": [
       {
-        "id": "e9c4ff52-a8fd-4296-af58-10ccd4da5dfe",
-        "nom": "couteau de cuisine",
-        "enquete_liee": "def473d2-8b0a-4f93-84e4-3143ea1c40b8",
-        "type": "arme blanche",
-        "lieu": "chambre d'alexis",
-        "date_preuve": "15/12/2024",
+        "id": "955eb411-2595-490f-b15c-89d5cd6dbae2",
+        "nom": "pc",
+        "enquete_liee": "46d93027-b696-47dd-8518-5f40973e6727",
+        "type": "ordinateur",
+        "lieu": "kot nathan",
+        "date_preuve": "16/12/2024",
         "heure": "Heure non spécifée"
       }
     ],
     "personne_impliquee": [
       {
-        "nom": "Goffart",
-        "prenom": "Ralph",
-        "classe": "Employe",
+        "nom": "Demarcq",
+        "prenom": "Alexis",
+        "classe": "Suspect",
         "sexe": "Homme",
-        "date_de_naissance": "2003-09-21",
+        "date_de_naissance": "2003-08-04",
         "metier": "'Pas de métier actuellement'",
-        "mail": "ralphgoffar@gmail.com",
+        "mail": "a.demarcq@students.ephec.be",
         "interrogatoires": {},
-        "grade": "mage noir",
-        "division": "2",
-        "matricule": 1
+        "innocent": false,
+        "statut_legal": false,
+        "suspection": "",
+        "alibi": "travaille sur le projet"
       }
     ],
     "liste_evenement": [
       {
-        "id": "e6181494-1fac-4360-8b7d-e36571ce06cb",
-        "nom": "travail à l'usine",
-        "enquete_liee": "def473d2-8b0a-4f93-84e4-3143ea1c40b8",
-        "date_evenement": "2003-09-21",
-        "lieu": "au kot de ralph"
+        "id": "023375e0-0eab-4b1f-9654-9429b8f61001",
+        "nom": "travail sur le projet",
+        "enquete_liee": "46d93027-b696-47dd-8518-5f40973e6727",
+        "date_evenement": "2003-12-28",
+        "lieu": "kot nathan"
       }
     ],
-    "enquetes_liees": [
-      {
-        "id": "f0043918-317f-44f9-9bf3-c7e73b8b53a2",
-        "nom": "meurtre",
-        "date_de_debut": "28/06/2005",
-        "date_de_fin": "28/06/2025",
-        "liste_preuves": [],
-        "personne_impliquee": [
-          {
-            "nom": "Demarcq",
-            "prenom": "Alexis",
-            "classe": "Suspect",
-            "sexe": "Homme",
-            "date_de_naissance": "2003-08-04",
-            "metier": "'Pas de métier actuellement'",
-            "mail": "",
-            "interrogatoires": {},
-            "innocent": false,
-            "statut_legal": false,
-            "suspection": "",
-            "alibi": ""
-          },
-          {
-            "nom": "Mertens",
-            "prenom": "Corentin",
-            "classe": "Temoin",
-            "sexe": "Homme",
-            "date_de_naissance": "2003-09-20",
-            "metier": "'Pas de métier actuellement'",
-            "mail": "",
-            "interrogatoires": {},
-            "temoignage": {
-              "2024-12-14": [
-                "J'étais en train de travailler sur mon projet d'OS2"
-              ]
-            },
-            "fiabilite": 0,
-            "protection": false,
-            "disponibilite": false
-          }
-        ],
-        "liste_evenement": [],
-        "enquetes_liees": []
-      }
-    ]
+    "enquetes_liees": []
   }
 ]

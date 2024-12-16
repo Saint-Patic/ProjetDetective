@@ -12,6 +12,7 @@ from classes import (
     Enquete,
 )
 import uuid
+from colorama import Fore, Style, init
 
 
 def charger_donnees(chemin_fichier):
@@ -337,3 +338,207 @@ def creer_preuve(enquete_liee):
     lieu_preuve = input("Entrez le lieu où la preuve a été trouvée : ")
 
     return Preuve(id, nom, id_enquete, type_preuve, lieu_preuve)
+
+
+def supprimer_enquete():
+    """Supprime une enquête du fichier enquetes.json."""
+    nom_dossier = "fichiers/"
+    fichier_enquetes = f"{nom_dossier}enquetes.json"
+
+    try:
+        # Charger les enquêtes existantes
+        with open(fichier_enquetes, "r", encoding="utf-8") as fichier:
+            enquetes = json.load(fichier)
+
+        if not enquetes:
+            print(Fore.YELLOW + "Aucune enquête à supprimer.")
+            return
+
+        # Afficher les enquêtes disponibles
+        print(Fore.CYAN + "\nEnquêtes disponibles :")
+        for index, enquete in enumerate(enquetes, start=1):
+            print(f"{index}. {enquete['nom']} (Début: {enquete['date_de_debut']})")
+
+        # Demander à l'utilisateur de choisir une enquête
+        choix = int(input(Fore.GREEN + f"\nVotre choix (1 - {len(enquetes)}): "))
+        if 1 <= choix <= len(enquetes):
+            enquete_supprimee = enquetes.pop(choix - 1)
+
+            # Sauvegarder les modifications
+            with open(fichier_enquetes, "w", encoding="utf-8") as fichier:
+                json.dump(enquetes, fichier, indent=4, ensure_ascii=False)
+
+            print(
+                Fore.BLUE
+                + f"L'enquête '{enquete_supprimee['nom']}' a été supprimée avec succès."
+            )
+        else:
+            print(Fore.RED + "Choix invalide.")
+    except (FileNotFoundError, ValueError, json.JSONDecodeError) as e:
+        print(Fore.RED + f"Erreur lors de la suppression : {e}")
+
+
+def afficher_menu():
+    print(Fore.CYAN + "\nMenu:")
+    print(Fore.YELLOW + f"{4 * ' '}1. Créer une nouvelle enquête")
+    print(Fore.YELLOW + f"{4 * ' '}2. Choisir une enquête")
+    print(Fore.YELLOW + f"{4 * ' '}3. Afficher les enquêtes existantes")
+    print(Fore.YELLOW + f"{4 * ' '}4. Supprimer une enquête")
+    print(Fore.YELLOW + f"{4 * ' '}5. Quitter")
+
+
+def afficher_menu_enquete(enquete_choisie):
+    nom_dossier = "fichiers/"
+    evenement_brut = charger_donnees(f"{nom_dossier}evenement.json")
+    interro_brut = charger_donnees(f"{nom_dossier}interrogatoires.json")
+    enquete_brut = charger_donnees(f"{nom_dossier}enquetes.json")
+    pers_brut = charger_donnees(f"{nom_dossier}personnes.json")
+    preuve_brut = charger_donnees(f"{nom_dossier}preuves.json")
+    ajout = True
+    while ajout:
+        print(Fore.CYAN + f"{12 * ' '}Menu Enquête: ")
+        print(Fore.YELLOW + f"{12 * ' '}1. Ajouter une personne")
+        print(Fore.YELLOW + f"{12 * ' '}2. Lier une enquête")
+        print(Fore.YELLOW + f"{12 * ' '}3. Supprimer une enquête liée")
+        print(Fore.YELLOW + f"{12 * ' '}4. Créer un événement")
+        print(Fore.YELLOW + f"{12 * ' '}5. Ajouter une preuve")
+        print(Fore.YELLOW + f"{12 * ' '}6. Modifier l'enquête")
+        print(Fore.YELLOW + f"{12 * ' '}7. Retour au menu principal")
+
+        choix_ajout = input(Fore.GREEN + f"{12 * ' '}Votre choix: ")
+
+        if choix_ajout == "1":
+            # Ajouter une personne
+            taille_pers_brut = len(pers_brut)
+            for i in range(taille_pers_brut):
+                print(
+                    Fore.BLUE
+                    + f"{16 * ' '}{i + 1}. {pers_brut[i]['nom']} {pers_brut[i]['prenom']}"
+                )
+            print(
+                Fore.YELLOW
+                + f"{16 * ' '}{taille_pers_brut + 1}. Créer une nouvelle personne"
+            )
+
+            try:
+                choix_personne = int(
+                    input(
+                        Fore.GREEN
+                        + f"{16 * ' '}Votre choix (1 - {taille_pers_brut + 1}): "
+                    )
+                )
+
+                if 1 <= choix_personne <= taille_pers_brut:
+                    personne_ajoutee = pers_brut[choix_personne - 1]
+                    personne_ajoutee = modifier_personne(personne_ajoutee)
+                elif choix_personne == taille_pers_brut + 1:
+                    personne_ajoutee = creer_personne()
+                else:
+                    raise ValueError("Choix invalide.")
+
+                enquete_choisie.ajouter_personne(personne_ajoutee)
+                print(Fore.BLUE + f"{16 * ' '}Personne ajoutée avec succès.")
+
+            except (ValueError, IndexError) as e:
+                print(Fore.RED + f"{16 * ' '}Erreur: {e}")
+
+        elif choix_ajout == "2":
+            # Lier une enquête
+            taille_enquete_brut = len(enquete_brut)
+            for i in range(taille_enquete_brut):
+                print(Fore.BLUE + f"{16 * ' '}{i + 1}. {enquete_brut[i]['nom']}")
+
+            try:
+                choix_enquete = int(
+                    input(
+                        Fore.GREEN
+                        + f"{16 * ' '}Votre choix (1 - {taille_enquete_brut}): "
+                    )
+                )
+                if 1 <= choix_enquete <= taille_enquete_brut:
+                    enquete_a_lier = dict_vers_enquete(enquete_brut[choix_enquete - 1])
+                    enquete_choisie.ajouter_enquetes_liees(enquete_a_lier)
+                    print(Fore.BLUE + f"{16 * ' '}Enquête liée avec succès.")
+                else:
+                    raise ValueError("Choix invalide.")
+
+            except (ValueError, IndexError) as e:
+                print(Fore.RED + f"{16 * ' '}Erreur: {e}")
+
+        elif choix_ajout == "3":
+            # Supprimer une enquête liée
+            if not enquete_choisie.enquetes_liees:
+                print(Fore.RED + f"{16 * ' '}Aucune enquête liée à supprimer.")
+            else:
+                for i, enquete in enumerate(enquete_choisie.enquetes_liees, 1):
+                    print(
+                        Fore.BLUE
+                        + f"{16 * ' '}{i}. {enquete['nom']} (ID: {enquete['id']})"
+                    )
+
+                try:
+                    choix_suppression = int(
+                        input(
+                            Fore.GREEN
+                            + f"{16 * ' '}Choisissez une enquête à supprimer (1 - {len(enquete_choisie.enquetes_liees)}): "
+                        )
+                    )
+
+                    if 1 <= choix_suppression <= len(enquete_choisie.enquetes_liees):
+                        enquete_id = enquete_choisie.enquetes_liees[
+                            choix_suppression - 1
+                        ]["id"]
+                        enquete_choisie.supprimer_enquete_liee(enquete_id)
+                        print(
+                            Fore.BLUE + f"{16 * ' '}Enquête liée supprimée avec succès."
+                        )
+                    else:
+                        raise ValueError("Choix invalide.")
+
+                except (ValueError, IndexError) as e:
+                    print(Fore.RED + f"{16 * ' '}Erreur: {e}")
+
+        elif choix_ajout == "4":
+            # Créer un événement
+            evenement_a_lier = creer_evenement(enquete_choisie)
+            enquete_choisie.ajouter_evenement(evenement_a_lier)
+            print(Fore.BLUE + f"{16 * ' '}Événement ajouté avec succès.")
+
+        elif choix_ajout == "5":
+            # Ajouter une preuve
+            preuve_a_lier = creer_preuve(enquete_choisie)
+            enquete_choisie.ajouter_preuves(preuve_a_lier)
+            print(Fore.BLUE + f"{16 * ' '}Preuve ajoutée avec succès.")
+
+        elif choix_ajout == "6":
+            # Modifier l'enquête
+            print(
+                Fore.GREEN
+                + f"{16 * ' '}Modification de l'enquête '{enquete_choisie.nom}'"
+            )
+            nom = input(
+                Fore.GREEN
+                + f"{8 * ' '}Nom de l'enquête (actuel: {enquete_choisie.nom}): "
+            )
+            date_de_debut = input(
+                Fore.GREEN
+                + f"{8 * ' '}Date de début (actuelle: {enquete_choisie.date_de_debut}): "
+            )
+            date_de_fin = input(
+                Fore.GREEN
+                + f"{8 * ' '}Date de fin (actuelle: {enquete_choisie.date_de_fin}): "
+            )
+
+            try:
+                enquete_choisie.nom = nom
+                enquete_choisie.date_de_debut = date_de_debut
+                enquete_choisie.date_de_fin = date_de_fin
+                print(Fore.BLUE + f"{16 * ' '}Enquête modifiée avec succès.")
+            except ValueError as e:
+                print(Fore.RED + f"{16 * ' '}Erreur: {e}")
+
+        elif choix_ajout == "7":
+            # Retour au menu principal
+            ajout = False
+
+        enquete_choisie.sauvegarder_enquete()
