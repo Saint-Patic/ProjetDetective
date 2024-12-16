@@ -37,20 +37,6 @@
                 "fiabilite": 0,
                 "protection": false,
                 "disponibilite": false
-            },
-            {
-                "nom": "Demarcq",
-                "prenom": "Alexis",
-                "classe": "Suspect",
-                "sexe": "Homme",
-                "date_de_naissance": "2003-08-04",
-                "metier": "'Pas de métier actuellement'",
-                "mail": "a.demarcq@students.ephec.be",
-                "interrogatoires": {},
-                "innocent": false,
-                "statut_legal": false,
-                "suspection": "",
-                "alibi": ""
             }
         ],
         "liste_evenement": [],
