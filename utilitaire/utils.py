@@ -1,9 +1,8 @@
-from datetime import datetime
 from utilitaire.commandes_terminale import *
 from datetime import datetime
 
 
-def convertir_date(date: str | datetime) -> str:
+def convertir_date(date) -> str:
     if isinstance(date, str):
         if "/" in date:
             # La date utilise déjà le format avec des /
