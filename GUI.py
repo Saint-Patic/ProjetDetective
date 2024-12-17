@@ -5,16 +5,44 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.popup import Popup
-import json
 from utilitaire.commandes_terminale import *
+
+
+def go_back_to_menu():
+    app = App.get_running_app()
+    app.root.current = "menu_principal"
 
 
 class BaseScreen(Screen):
     """Classe de base pour les écrans."""
 
-    def go_back_to_menu(self, instance):
-        app = App.get_running_app()
-        app.root.current = "menu_principal"
+
+def switch_to_enquete_screen(enquete):
+    app = App.get_running_app()
+    app.enquete_screen.set_enquete(enquete)
+    app.root.current = "enquete"
+
+
+def switch_to_global_section(instance):
+    app = App.get_running_app()
+    app.global_screen.set_section(instance.text)
+    app.root.current = "global"
+
+
+def afficher_toutes_infos():
+    toutes_les_enquetes = charger_donnees("fichiers/enquetes.json")
+    details = "\n\n".join(
+        [
+            f"Nom: {e['nom']}\nDates: {e['date_de_debut']} - {e['date_de_fin']}\nPersonnes impliquées: {len(e.get('personne_impliquee', []))}\nPreuves: {len(e.get('liste_preuves', []))}"
+            for e in toutes_les_enquetes
+        ]
+    )
+    popup = Popup(
+        title="Toutes les informations",
+        content=Label(text=details, halign="left", valign="top"),
+        size_hint=(0.8, 0.8),
+    )
+    popup.open()
 
 
 class MenuPrincipalScreen(BaseScreen):
@@ -36,7 +64,7 @@ class MenuPrincipalScreen(BaseScreen):
                 height=40,
             )
             btn.bind(
-                on_release=lambda instance, e=enquete: self.switch_to_enquete_screen(e)
+                on_release=lambda instance, e=enquete: switch_to_enquete_screen(e)
             )
             scroll_content.add_widget(btn)
 
@@ -45,7 +73,7 @@ class MenuPrincipalScreen(BaseScreen):
 
         buttons_layout = BoxLayout(size_hint=(1, 0.1), spacing=10)
         toutes_infos_btn = Button(text="Afficher toutes les infos")
-        toutes_infos_btn.bind(on_release=self.afficher_toutes_infos)
+        toutes_infos_btn.bind(on_release=afficher_toutes_infos)
         buttons_layout.add_widget(toutes_infos_btn)
         layout.add_widget(buttons_layout)
 
@@ -59,30 +87,15 @@ class MenuPrincipalScreen(BaseScreen):
 
         self.add_widget(layout)
 
-    def switch_to_enquete_screen(self, enquete):
-        app = App.get_running_app()
-        app.enquete_screen.set_enquete(enquete)
-        app.root.current = "enquete"
 
-    def switch_to_global_section(self, instance):
-        app = App.get_running_app()
-        app.global_screen.set_section(instance.text)
-        app.root.current = "global"
-
-    def afficher_toutes_infos(self, instance):
-        toutes_les_enquetes = charger_donnees("fichiers/enquetes.json")
-        details = "\n\n".join(
-            [
-                f"Nom: {e['nom']}\nDates: {e['date_de_debut']} - {e['date_de_fin']}\nPersonnes impliquées: {len(e.get('personne_impliquee', []))}\nPreuves: {len(e.get('liste_preuves', []))}"
-                for e in toutes_les_enquetes
-            ]
-        )
-        popup = Popup(
-            title="Toutes les informations",
-            content=Label(text=details, halign="left", valign="top"),
-            size_hint=(0.8, 0.8),
-        )
-        popup.open()
+def afficher_popup(titre, contenu):
+    popup = Popup(
+        title=titre,
+        content=Label(text=contenu),
+        size_hint=(0.8, 0.8),
+        auto_dismiss=True,
+    )
+    popup.open()
 
 
 class EnqueteScreen(BaseScreen):
@@ -274,7 +287,7 @@ class EnqueteScreen(BaseScreen):
             text="Retour au menu principal",
             size_hint=(1, None),
             height=75,
-            on_release=self.go_back_to_menu,
+            on_release=go_back_to_menu,
         )
         layout.add_widget(retour_btn)
         self.add_widget(layout)
@@ -282,10 +295,10 @@ class EnqueteScreen(BaseScreen):
     def show_section(self, instance):
         self.content_label.text = f"Section {instance.text} de l'enquête sélectionnée."
 
-    def afficher_preuves(self, instance):
+    def afficher_preuves(self):
         """Affiche les preuves dans un Popup."""
         if not self.enquete.get("liste_preuves"):
-            self.afficher_popup("Preuves", "Aucune preuve disponible.")
+            afficher_popup("Preuves", "Aucune preuve disponible.")
             return
 
         # Conteneur principal pour le contenu du Popup
@@ -329,9 +342,9 @@ class EnqueteScreen(BaseScreen):
         )
         popup.open()
 
-    def afficher_enquete_liee(self, instance):
+    def afficher_enquete_liee(self):
         if not self.enquete.get("enquetes_liees"):
-            self.afficher_popup("Enquêtes liées", "Aucune enquête liée.")
+            afficher_popup("Enquêtes liées", "Aucune enquête liée.")
             return
 
         content = BoxLayout(orientation="vertical", spacing=10, padding=10)
@@ -365,9 +378,9 @@ class EnqueteScreen(BaseScreen):
         popup = Popup(title="Enquêtes liées", content=content, size_hint=(0.8, 0.8))
         popup.open()
 
-    def afficher_liste_evennement(self, instance):
+    def afficher_liste_evennement(self):
         if not self.enquete.get("liste_evenement"):
-            self.afficher_popup("Enquêtes liées", "Aucun évennement trouvé.")
+            afficher_popup("Enquêtes liées", "Aucun évennement trouvé.")
             return
 
         content = BoxLayout(orientation="vertical", spacing=10, padding=10)
@@ -403,9 +416,9 @@ class EnqueteScreen(BaseScreen):
         )
         popup.open()
 
-    def afficher_personnes(self, instance):
+    def afficher_personnes(self):
         if not self.enquete.get("personne_impliquee"):
-            self.afficher_popup("Personnes impliquées", "Aucune personne impliquée.")
+            afficher_popup("Personnes impliquées", "Aucune personne impliquée.")
             return
 
         content = BoxLayout(orientation="vertical", spacing=10, padding=10)
@@ -455,8 +468,6 @@ class EnqueteScreen(BaseScreen):
         )
         content.bind(size=lambda instance, value: setattr(instance, "height", value[1]))
 
-        content = BoxLayout(orientation="vertical", spacing=10, padding=10)
-        scroll = ScrollView(size_hint=(1, 0.8))
         layout = BoxLayout(orientation="vertical", size_hint_y=None, spacing=10)
         layout.bind(minimum_height=layout.setter("height"))
 
@@ -492,20 +503,6 @@ class EnqueteScreen(BaseScreen):
             )
             popup.open()
 
-    def afficher_details_item(self, item):
-        details = "\n".join([f"{k}: {v}" for k, v in item.items()])
-        self.afficher_popup("Détails", details)
-
-    def afficher_popup(self, titre, contenu):
-        popup = Popup(
-            title=titre,
-            content=Label(text=contenu),
-            size_hint=(0.8, 0.8),
-            auto_dismiss=True,
-        )
-        popup.open()
-
-
 class GlobalScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -523,7 +520,7 @@ class GlobalScreen(BaseScreen):
         layout.add_widget(self.scroll_view)
 
         retour_btn = Button(text="Retour au menu principal", size_hint=(1, 0.1))
-        retour_btn.bind(on_release=self.go_back_to_menu)
+        retour_btn.bind(on_release=go_back_to_menu)
         layout.add_widget(retour_btn)
 
         self.add_widget(layout)
@@ -580,12 +577,14 @@ class GlobalScreen(BaseScreen):
 
 
 class PoliceManagementApp(App):
-    def build(self):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.screen_manager = ScreenManager()
         self.menu_principal_screen = MenuPrincipalScreen(name="menu_principal")
         self.enquete_screen = EnqueteScreen(name="enquete")
         self.global_screen = GlobalScreen(name="global")
 
+    def build(self):
         self.screen_manager.add_widget(self.menu_principal_screen)
         self.screen_manager.add_widget(self.enquete_screen)
         self.screen_manager.add_widget(self.global_screen)
