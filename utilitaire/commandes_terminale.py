@@ -1,8 +1,7 @@
 from utilitaire import utils
 import json
-import datetime
+from datetime import datetime, date
 from classes import (
-    Personne,
     Temoin,
     Suspect,
     Employe,
@@ -23,6 +22,7 @@ def charger_donnees(chemin_fichier):
     except FileNotFoundError:
         return []
 
+
 def organiser_par_section(donnees, chemin_preuves=None):
     """Organise les personnes et preuves par sections."""
     sections = {
@@ -39,6 +39,7 @@ def organiser_par_section(donnees, chemin_preuves=None):
     if chemin_preuves:
         sections["Preuves"].extend(charger_donnees(chemin_preuves))
     return sections
+
 
 def creer_personne():
     """
@@ -248,18 +249,20 @@ def modifier_personne(personne):
 
 def creer_enquete(nom, date_de_debut, date_de_fin):
     """Crée une nouvelle enquête et la sauvegarde dans enquetes.json."""
-    try:
-        utils.convertir_date(date_de_debut)
-        utils.convertir_date(date_de_fin)
-    except ValueError:
-        raise ValueError("Les dates doivent être au format YYYY-MM-DD.")
+    # Validation et conversion des dates
+    date_debut = utils.convertir_date(date_de_debut)
+    date_fin = utils.convertir_date(date_de_fin)
 
-    if date_de_debut > date_de_fin:
-        raise ValueError("La date de début doit être inférieure à la date de fin.")
-    if date_de_debut < utils.convertir_date(datetime.datetime.now()):
+    if date_debut > date_fin:
+        raise ValueError(
+            "La date de début doit être antérieure ou égale à la date de fin."
+        )
+
+    if datetime.strptime(date_debut, "%d/%m/%Y") > datetime.now():
         raise ValueError("La date de début ne peut pas être dans le futur.")
 
-    nouvelle_enquete = Enquete(nom, date_de_debut, date_de_fin)
+    # Créer l'enquête
+    nouvelle_enquete = Enquete(nom, date_debut, date_fin)
     nouvelle_enquete.sauvegarder_enquete()
     return nouvelle_enquete
 
@@ -280,7 +283,7 @@ def choisir_enquete(enquetes):
     try:
         num_enquete = int(input("        Choisir un numéro d'enquête: "))
         if num_enquete < 1 or num_enquete > len(enquetes):
-            print(f"Numéro invalide.")
+            print("Numéro invalide.")
             return None
         # Convertir l'enquête en une instance de la classe Enquete
         enquete_choisie = enquetes[num_enquete - 1]
@@ -288,7 +291,7 @@ def choisir_enquete(enquetes):
         return dict_vers_enquete(enquete_choisie)
 
     except ValueError:
-        print(f"Veuillez entrer un numéro valide.")
+        print("Veuillez entrer un numéro valide.")
         return None
 
 
@@ -321,7 +324,7 @@ def dict_vers_evenement(dict_evenement):
         nom=dict_evenement["nom"],
         enquete_liee=dict_evenement["enquete_liee"],
         date_evenement=utils.convertir_date(
-            dict_evenement.get("date_evenement", datetime.date.today())
+            dict_evenement.get("date_evenement", date.today())
         ),
         lieu=dict_evenement.get("lieu", "Lieu pas précisé"),
     )
@@ -332,15 +335,19 @@ def dict_vers_evenement(dict_evenement):
 def creer_evenement(enquete_liee):
     """Crée un nouvel événement et sauvegarde dans evenements.json."""
     new_id = str(uuid.uuid4())
-    nom = input("        Entrez le nom de l'événement : ")
+    nom = input("        Entrez le nom de l'événement : ").strip()
     id_enquete = enquete_liee.id
-    date_evenement = input("Entrez le date_evenement (YYYY-MM-DD) : ")
-    lieu = input("Entrez le lieu : ")
 
-    try:
-        utils.convertir_date(date_evenement)
-    except ValueError:
-        raise ValueError("La date doit être au format YYYY-MM-DD.")
+    # Validation de la date
+    while True:
+        date_evenement = input("Entrez la date de l'événement (YYYY-MM-DD) : ").strip()
+        try:
+            date_evenement = utils.convertir_date(date_evenement)
+            break
+        except ValueError:
+            print("Format de date invalide. Veuillez réessayer.")
+
+    lieu = input("Entrez le lieu : ").strip()
 
     return Evenement(new_id, nom, id_enquete, date_evenement, lieu)
 

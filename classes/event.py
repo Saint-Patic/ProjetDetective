@@ -5,7 +5,7 @@ class Evenement:
 
     def __init__(
         self,
-        id: int,
+        id_evenement: int,
         nom: str,
         enquete_liee: int,
         date_evenement=date.today(),
@@ -16,7 +16,7 @@ class Evenement:
         date_de_naissance (str) au format "YYYY-MM-DD"
         Post : Crée une instance de la classe Evenement avec les attributs spécifiés
         """
-        self.id = id
+        self.id = id_evenement
         self.nom = nom
         self.enquete_liee = enquete_liee
         self.date_evenement = date_evenement

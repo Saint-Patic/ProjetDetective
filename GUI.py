@@ -11,7 +11,7 @@ from utilitaire.commandes_terminale import *
 class BaseScreen(Screen):
     """Classe de base pour les écrans."""
 
-    def go_back_to_menu(self, instance):
+    def go_back_to_menu(self, _):
         app = App.get_running_app()
         app.root.current = "menu_principal"
 
@@ -68,7 +68,7 @@ class MenuPrincipalScreen(BaseScreen):
         app.global_screen.set_section(instance.text)
         app.root.current = "global"
 
-    def afficher_toutes_infos(self, instance):
+    def afficher_toutes_infos(self, _):
         toutes_les_enquetes = charger_donnees("fichiers/enquetes.json")
         details = "\n\n".join(
             [
@@ -281,7 +281,7 @@ class EnqueteScreen(BaseScreen):
     def show_section(self, instance):
         self.content_label.text = f"Section {instance.text} de l'enquête sélectionnée."
 
-    def afficher_preuves(self, instance):
+    def afficher_preuves(self, _):
         """Affiche les preuves dans un Popup."""
         if not self.enquete.get("liste_preuves"):
             self.afficher_popup("Preuves", "Aucune preuve disponible.")
@@ -328,7 +328,7 @@ class EnqueteScreen(BaseScreen):
         )
         popup.open()
 
-    def afficher_enquete_liee(self, instance):
+    def afficher_enquete_liee(self, _):
         if not self.enquete.get("enquetes_liees"):
             self.afficher_popup("Enquêtes liées", "Aucune enquête liée.")
             return
@@ -364,7 +364,7 @@ class EnqueteScreen(BaseScreen):
         popup = Popup(title="Enquêtes liées", content=content, size_hint=(0.8, 0.8))
         popup.open()
 
-    def afficher_liste_evennement(self, instance):
+    def afficher_liste_evennement(self, _):
         if not self.enquete.get("liste_evenement"):
             self.afficher_popup("Enquêtes liées", "Aucun évennement trouvé.")
             return
@@ -402,7 +402,7 @@ class EnqueteScreen(BaseScreen):
         )
         popup.open()
 
-    def afficher_personnes(self, instance):
+    def afficher_personnes(self, _):
         if not self.enquete.get("personne_impliquee"):
             self.afficher_popup("Personnes impliquées", "Aucune personne impliquée.")
             return
@@ -441,7 +441,7 @@ class EnqueteScreen(BaseScreen):
         popup.open()
 
     def afficher_details_item(self, item):
-        """Affiche les détails dans un Popup."""
+        """Affiche les détails d'un item dans un Popup."""
         # Formater les détails
         details = "\n".join([f"[b]{k}:[/b] {v}" for k, v in item.items()])
         content = Label(
@@ -454,46 +454,34 @@ class EnqueteScreen(BaseScreen):
         )
         content.bind(size=lambda instance, value: setattr(instance, "height", value[1]))
 
-        content = BoxLayout(orientation="vertical", spacing=10, padding=10)
-        scroll = ScrollView(size_hint=(1, 0.8))
-        layout = BoxLayout(orientation="vertical", size_hint_y=None, spacing=10)
-        layout.bind(minimum_height=layout.setter("height"))
+        # Ajouter des boutons pour les preuves si elles existent
+        layout = BoxLayout(orientation="vertical", spacing=10, padding=10)
+        layout.add_widget(content)
 
-        for preuve in self.enquete["liste_preuves"]:
-            btn = Button(text=f"Preuve ID: {preuve}", size_hint_y=None, height=40)
-            btn.bind(
-                on_release=lambda instance, p=preuve: self.afficher_details_item(p)
-            )
-            layout.add_widget(btn)
+        if "liste_preuves" in self.enquete:
+            for preuve in self.enquete["liste_preuves"]:
+                btn = Button(text=f"Preuve ID: {preuve}", size_hint_y=None, height=40)
+                btn.bind(
+                    on_release=lambda instance, p=preuve: self.afficher_details_item(p)
+                )
+                layout.add_widget(btn)
 
+        # Déterminer le titre de la popup
         if "date_de_naissance" in item:
-            popup = Popup(
-                title=f"Détails de {item.get('prenom', 'Personne')} {item.get('nom', '')}",
-                content=layout,
-                size_hint=(0.8, 0.8),
-                auto_dismiss=True,
-            )
-            popup.open()
+            titre = f"Détails de {item.get('prenom', 'Personne')} {item.get('nom', '')}"
         elif "date_preuve" in item:
-            popup = Popup(
-                title=f"Détails de la preuve '{item.get('nom')}'",
-                content=layout,
-                size_hint=(0.8, 0.8),
-                auto_dismiss=True,
-            )
-            popup.open()
+            titre = f"Détails de la preuve '{item.get('nom')}'"
         else:
-            popup = Popup(
-                title=f"Détails de l'enquête liée'{item.get('nom')}'",
-                content=layout,
-                size_hint=(0.8, 0.8),
-                auto_dismiss=True,
-            )
-            popup.open()
+            titre = f"Détails de l'enquête liée '{item.get('nom')}'"
 
-    def afficher_details_item(self, item):
-        details = "\n".join([f"{k}: {v}" for k, v in item.items()])
-        self.afficher_popup("Détails", details)
+        # Créer et ouvrir la popup
+        popup = Popup(
+            title=titre,
+            content=layout,
+            size_hint=(0.8, 0.8),
+            auto_dismiss=True,
+        )
+        popup.open()
 
     def afficher_popup(self, titre, contenu):
         popup = Popup(

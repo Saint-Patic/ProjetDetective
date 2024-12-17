@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import datetime
 from utilitaire import utils
 
 
@@ -6,10 +6,10 @@ class Preuve:
 
     def __init__(
         self,
-        id: int,
+        new_id: int,
         nom: str,
         enquete_liee: int,
-        type=" Type non spécifié",
+        new_type=" Type non spécifié",
         lieu="Lieu non spécifié",
         date_preuve=utils.convertir_date(datetime.today()),
         heure="Heure non spécifée",
@@ -19,20 +19,20 @@ class Preuve:
         date_de_naissance (str) au format "YYYY-MM-DD", heure (str) (optionnelle)
         Post : Crée une instance de la classe Preuve avec les attributs spécifiés
         """
-        self.id = id
+        self.id = new_id
         self.nom = nom
         self.enquete_liee = enquete_liee
-        self.type = type
+        self.type = new_type
         self.lieu = lieu
         self.date_preuve = date_preuve
         self.heure = heure
 
-    def ajouter_type(self, type):
+    def ajouter_type(self, new_type):
         """
         Pré : type(str)
         Post : Definit l'attribut type de la preuve
         """
-        self.type = type
+        self.type = new_type
 
     def ajouter_lieu(self, lieu):
         """

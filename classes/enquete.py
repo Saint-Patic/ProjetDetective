@@ -1,7 +1,5 @@
 import json
 from utilitaire import utils
-from .preuves import Preuve
-from .event import Evenement
 import uuid
 
 
@@ -21,22 +19,21 @@ class Enquete:
         """
         Initialise une nouvelle enquête.
 
-        PRE: `date_de_debut` doit être une chaîne au format YYYY-MM-DD.
+        PRE: `date_de_debut` et `date_de_fin` doivent être des chaînes au format YYYY-MM-DD.
         """
-        if liste_preuves is None:
-            liste_preuves = []
-        if personne_impliquee is None:
-            personne_impliquee = []
-
         self.id = str(uuid.uuid4())
         self.nom = nom
-        try:
-            self.date_de_debut = utils.convertir_date(date_de_debut)
-            self.date_de_fin = utils.convertir_date(date_de_fin)
-        except ValueError as e:
-            raise ValueError(f"Erreur dans le format de date: {e}")
-        self.liste_preuves = liste_preuves
-        self.personne_impliquee = personne_impliquee
+
+        # Convertir les dates directement sans gestion redondante des erreurs
+        self.date_de_debut = utils.convertir_date(date_de_debut)
+        self.date_de_fin = (
+            utils.convertir_date(date_de_fin)
+            if date_de_fin != "Enquête non clôturée"
+            else date_de_fin
+        )
+
+        self.liste_preuves = liste_preuves or []
+        self.personne_impliquee = personne_impliquee or []
         self.liste_evenement = []
         self.enquetes_liees = []
         self.id_preuve = 0
@@ -63,7 +60,7 @@ class Enquete:
             f"Preuves: {preuves} \nPersonnes impliquées: {personnes}\n"
         )
 
-    def afficher_personne(self, indentation=4):
+    def afficher_personne(self):
         if not self.personne_impliquee:
             print("Aucune personne impliquée dans cette enquête.")
             return
@@ -203,7 +200,7 @@ class Enquete:
         self.enquetes_liees.append(enquete.to_dict())
         print(f"L'enquête '{enquete.nom}' a été ajoutée comme liée.")
 
-    def afficher_enquetes_liees(self, indentation=4):
+    def afficher_enquetes_liees(self):
         if not self.enquetes_liees:
             print(f"Aucune enquête liée à l'enquête {self.nom}.\n")
             return
@@ -293,13 +290,13 @@ class Enquete:
 
         print("\n")
 
-    def generer_rapport(self, id):
+    def generer_rapport(self, new_id):
         for enquete in Enquete.enquetes:
-            if enquete.id == id:
+            if enquete.id == new_id:
                 print(enquete)
                 return
         # Si aucune enquête avec cet ID n'est trouvée
-        print(f"Aucune enquête trouvée avec l'ID {id}.")
+        print(f"Aucune enquête trouvée avec l'ID {new_id}.")
 
     def cloturer_enquete(self) -> None:
         if self not in Enquete.enquetes:
