@@ -181,7 +181,18 @@
                 "lieu": "place de l'unif"
             }
         ],
-        "enquetes_liees": []
+        "enquetes_liees": [
+            {
+                "id": "fddc9710-62c2-442a-839c-f29c0cdab8e6",
+                "nom": "trolley",
+                "date_de_debut": "13/04/1546",
+                "date_de_fin": "31/12/9999",
+                "liste_preuves": [],
+                "personne_impliquee": [],
+                "liste_evenement": [],
+                "enquetes_liees": []
+            }
+        ]
     },
     {
         "id": "def473d2-8b0a-4f93-84e4-3143ea1c40b8",
@@ -403,6 +414,180 @@
                                 ],
                                 "liste_evenement": [],
                                 "enquetes_liees": []
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "2d357b53-2e16-42f1-a153-d8dcf6e9597d",
+        "nom": "Réunion département",
+        "date_de_debut": "17/12/2024",
+        "date_de_fin": "18/12/2024",
+        "liste_preuves": [
+            {
+                "id": "1905a9e6-7995-457f-b4a4-68b6d73dbde3",
+                "nom": "Haut-parleur",
+                "enquete_liee": "2d357b53-2e16-42f1-a153-d8dcf6e9597d",
+                "type": "moyen de comm",
+                "lieu": "L101",
+                "date_preuve": "17/12/2024",
+                "heure": "Heure non spécifée"
+            }
+        ],
+        "personne_impliquee": [
+            {
+                "nom": "Goffart",
+                "prenom": "Ralph",
+                "classe": "Employe",
+                "sexe": "Homme",
+                "date_de_naissance": "2003-09-21",
+                "metier": "Chomeur",
+                "mail": "ralphgoffar@gmail.com",
+                "interrogatoires": {},
+                "matricule": 1,
+                "grade": "mage noir",
+                "division": "2"
+            }
+        ],
+        "liste_evenement": [
+            {
+                "id": "173aed24-7d7d-4f29-a0b4-ae1476082763",
+                "nom": "discussion comm",
+                "enquete_liee": "2d357b53-2e16-42f1-a153-d8dcf6e9597d",
+                "date_evenement": "2024-12-17",
+                "lieu": "L101"
+            }
+        ],
+        "enquetes_liees": [
+            {
+                "id": "00152ba7-a32e-44e8-8552-96c7bd534326",
+                "nom": "Toujours plus d'enquêtes",
+                "date_de_debut": "16/12/2024",
+                "date_de_fin": "19/12/2024",
+                "liste_preuves": [],
+                "personne_impliquee": [
+                    {
+                        "nom": "Goffart",
+                        "prenom": "Ralph",
+                        "classe": "Employe",
+                        "sexe": "Homme",
+                        "date_de_naissance": "2003-09-21",
+                        "metier": "'Pas de métier actuellement'",
+                        "mail": "ralphgoffar@gmail.com",
+                        "interrogatoires": {},
+                        "matricule": 1,
+                        "grade": "mage noir",
+                        "division": "2"
+                    }
+                ],
+                "liste_evenement": [
+                    {
+                        "id": "f5041b73-be96-4173-af98-e6eeb02a9b02",
+                        "nom": "ça fait beaucoup là",
+                        "enquete_liee": "00152ba7-a32e-44e8-8552-96c7bd534326",
+                        "date_evenement": "2024-12-17",
+                        "lieu": "kot nathan"
+                    }
+                ],
+                "enquetes_liees": [
+                    {
+                        "id": "f0043918-317f-44f9-9bf3-c7e73b8b53a2",
+                        "nom": "meurtre",
+                        "date_de_debut": "28/06/2005",
+                        "date_de_fin": "28/06/2025",
+                        "liste_preuves": [],
+                        "personne_impliquee": [
+                            {
+                                "nom": "Demarcq",
+                                "prenom": "Alexis",
+                                "classe": "Suspect",
+                                "sexe": "Homme",
+                                "date_de_naissance": "2003-08-04",
+                                "metier": "'Pas de métier actuellement'",
+                                "mail": "",
+                                "interrogatoires": {},
+                                "innocent": false,
+                                "statut_legal": false,
+                                "suspection": "",
+                                "alibi": ""
+                            },
+                            {
+                                "nom": "Mertens",
+                                "prenom": "Corentin",
+                                "classe": "Temoin",
+                                "sexe": "Homme",
+                                "date_de_naissance": "2003-09-20",
+                                "metier": "'Pas de métier actuellement'",
+                                "mail": "",
+                                "interrogatoires": {},
+                                "temoignage": {
+                                    "2024-12-14": [
+                                        "J'étais en train de travailler sur mon projet d'OS2"
+                                    ]
+                                },
+                                "fiabilite": 0,
+                                "protection": false,
+                                "disponibilite": false
+                            }
+                        ],
+                        "liste_evenement": [],
+                        "enquetes_liees": [
+                            {
+                                "id": "fddc9710-62c2-442a-839c-f29c0cdab8e6",
+                                "nom": "trolley",
+                                "date_de_debut": "13/04/1546",
+                                "date_de_fin": "31/12/9999",
+                                "liste_preuves": [],
+                                "personne_impliquee": [],
+                                "liste_evenement": [],
+                                "enquetes_liees": [
+                                    {
+                                        "id": "f0043918-317f-44f9-9bf3-c7e73b8b53a2",
+                                        "nom": "meurtre",
+                                        "date_de_debut": "28/06/2005",
+                                        "date_de_fin": "28/06/2025",
+                                        "liste_preuves": [],
+                                        "personne_impliquee": [
+                                            {
+                                                "nom": "Demarcq",
+                                                "prenom": "Alexis",
+                                                "classe": "Suspect",
+                                                "sexe": "Homme",
+                                                "date_de_naissance": "2003-08-04",
+                                                "metier": "'Pas de métier actuellement'",
+                                                "mail": "",
+                                                "interrogatoires": {},
+                                                "innocent": false,
+                                                "statut_legal": false,
+                                                "suspection": "",
+                                                "alibi": ""
+                                            },
+                                            {
+                                                "nom": "Mertens",
+                                                "prenom": "Corentin",
+                                                "classe": "Temoin",
+                                                "sexe": "Homme",
+                                                "date_de_naissance": "2003-09-20",
+                                                "metier": "'Pas de métier actuellement'",
+                                                "mail": "",
+                                                "interrogatoires": {},
+                                                "temoignage": {
+                                                    "2024-12-14": [
+                                                        "J'étais en train de travailler sur mon projet d'OS2"
+                                                    ]
+                                                },
+                                                "fiabilite": 0,
+                                                "protection": false,
+                                                "disponibilite": false
+                                            }
+                                        ],
+                                        "liste_evenement": [],
+                                        "enquetes_liees": []
+                                    }
+                                ]
                             }
                         ]
                     }

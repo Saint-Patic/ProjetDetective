@@ -16,5 +16,14 @@
         "lieu": "kot nathan",
         "date_preuve": "16/12/2024",
         "heure": "Heure non spécifée"
+    },
+    {
+        "id": "1905a9e6-7995-457f-b4a4-68b6d73dbde3",
+        "nom": "Haut-parleur",
+        "enquete_liee": "2d357b53-2e16-42f1-a153-d8dcf6e9597d",
+        "type": "moyen de comm",
+        "lieu": "L101",
+        "date_preuve": "17/12/2024",
+        "heure": "Heure non spécifée"
     }
 ]

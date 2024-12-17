@@ -1,6 +1,5 @@
 from datetime import datetime
-
-
+from utilitaire.commandes_terminale import *
 from datetime import datetime
 
 
@@ -29,3 +28,23 @@ def ajouter_indentation(texte, indentation=4):
     espaces_indent = " " * indentation
     lignes_indentees = [espaces_indent + ligne for ligne in texte.splitlines()]
     return "\n".join(lignes_indentees)
+
+
+def organiser_par_section(donnees, chemin_preuves=None):
+    """Organise les personnes et preuves par sections."""
+    sections = {
+        "Employes": [],
+        "Criminels": [],
+        "Suspects": [],
+        "Témoins": [],
+        "Preuves": [],
+    }
+    for personne in donnees:
+        classe = personne.get("classe", "Inconnu")
+        if classe in ["Employe", "Suspect", "Criminel"]:
+            sections[classe + "s"].append(personne)
+
+    if chemin_preuves:
+        sections["Preuves"].extend(charger_donnees(chemin_preuves))
+
+    return sections
