@@ -6,35 +6,7 @@ from kivy.uix.button import Button
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.popup import Popup
 import json
-
-
-def charger_donnees(chemin_fichier):
-    """Charge les données JSON depuis un fichier."""
-    try:
-        with open(chemin_fichier, "r", encoding="utf-8") as fichier:
-            return json.load(fichier)
-    except FileNotFoundError:
-        return []
-
-
-def organiser_par_section(donnees, chemin_preuves=None):
-    """Organise les personnes et preuves par sections."""
-    sections = {
-        "Employes": [],
-        "Criminels": [],
-        "Suspects": [],
-        "Témoins": [],
-        "Preuves": [],
-    }
-    for personne in donnees:
-        classe = personne.get("classe", "Inconnu")
-        if classe in ["Employe", "Suspect", "Criminel"]:
-            sections[classe + "s"].append(personne)
-
-    if chemin_preuves:
-        sections["Preuves"].extend(charger_donnees(chemin_preuves))
-
-    return sections
+from utilitaire.commandes_terminale import *
 
 
 class BaseScreen(Screen):
@@ -149,91 +121,108 @@ class EnqueteScreen(BaseScreen):
         layout = BoxLayout(orientation="vertical", spacing=10, padding=10)
 
         # Titre de l'enquête
-        layout.add_widget(Label(
-            text=f"Enquête : {enquete['nom']}",
-            font_size=24,
-            size_hint=(1, 0.1),
-            halign="center",
-            valign="middle"
-        ))
+        layout.add_widget(
+            Label(
+                text=f"Enquête : {enquete['nom']}",
+                font_size=24,
+                size_hint=(1, 0.1),
+                halign="center",
+                valign="middle",
+            )
+        )
 
         # Création d'un conteneur pour les détails
         content_layout = BoxLayout(orientation="vertical", size_hint_y=None, spacing=10)
         content_layout.bind(minimum_height=content_layout.setter("height"))
 
         # Ajouter les informations principales
-        content_layout.add_widget(Label(
-            text=f"[b]ID :[/b] {enquete['id']}",
-            markup=True,
-            font_size=18,
-            size_hint_y=None,
-            height=40
-        ))
-        content_layout.add_widget(Label(
-            text=f"[b]Dates :[/b] {enquete['date_de_debut']} - {enquete['date_de_fin']}",
-            markup=True,
-            font_size=18,
-            size_hint_y=None,
-            height=40
-        ))
+        content_layout.add_widget(
+            Label(
+                text=f"[b]ID :[/b] {enquete['id']}",
+                markup=True,
+                font_size=18,
+                size_hint_y=None,
+                height=40,
+            )
+        )
+        content_layout.add_widget(
+            Label(
+                text=f"[b]Dates :[/b] {enquete['date_de_debut']} - {enquete['date_de_fin']}",
+                markup=True,
+                font_size=18,
+                size_hint_y=None,
+                height=40,
+            )
+        )
 
         # Nombre de preuves
-        content_layout.add_widget(Label(
-            text=f"[b]Preuves :[/b] {len(enquete.get('liste_preuves', []))}",
-            markup=True,
-            font_size=18,
-            size_hint_y=None,
-            height=40
-        ))
+        content_layout.add_widget(
+            Label(
+                text=f"[b]Preuves :[/b] {len(enquete.get('liste_preuves', []))}",
+                markup=True,
+                font_size=18,
+                size_hint_y=None,
+                height=40,
+            )
+        )
 
         # Nombre de personnes impliquées
-        content_layout.add_widget(Label(
-            text=f"[b]Personnes impliquées :[/b] {len(enquete.get('personne_impliquee', []))}",
-            markup=True,
-            font_size=18,
-            size_hint_y=None,
-            height=40
-        ))
+        content_layout.add_widget(
+            Label(
+                text=f"[b]Personnes impliquées :[/b] {len(enquete.get('personne_impliquee', []))}",
+                markup=True,
+                font_size=18,
+                size_hint_y=None,
+                height=40,
+            )
+        )
 
         # Nombre d'évènnement
-        content_layout.add_widget(Label(
-            text=f"[b]Liste d'évènnement :[/b] {len(enquete.get('liste_evenement', []))}",
-            markup=True,
-            font_size=18,
-            size_hint_y=None,
-            height=40
-        ))
+        content_layout.add_widget(
+            Label(
+                text=f"[b]Liste d'évènnement :[/b] {len(enquete.get('liste_evenement', []))}",
+                markup=True,
+                font_size=18,
+                size_hint_y=None,
+                height=40,
+            )
+        )
 
         # Affichage des enquêtes liées
-        enquetes_liees = enquete.get('enquetes_liees', [])
-        print(enquetes_liees)
+        enquetes_liees = enquete.get("enquetes_liees", [])
         if enquetes_liees:
-            content_layout.add_widget(Label(
-                text="[b]Enquêtes liées :[/b]",
-                markup=True,
-                font_size=18,
-                size_hint_y=None,
-                height=40
-            ))
+            content_layout.add_widget(
+                Label(
+                    text="[b]Enquêtes liées :[/b]",
+                    markup=True,
+                    font_size=18,
+                    size_hint_y=None,
+                    height=40,
+                )
+            )
             for enquete_liee in enquetes_liees:
                 # On suppose que chaque enquete_liee est un dictionnaire
-                nom_enquete = enquete_liee.get('nom', 'Nom non spécifié')
+                nom_enquete = enquete_liee.get("nom", "Nom non spécifié")
 
                 # Ajoute le nom de l'enquête au contenu
-                content_layout.add_widget(Label(
-                    text=f" - {nom_enquete}",
-                    font_size=16,
-                    size_hint_y=None,
-                    height=30
-                ))
+                content_layout.add_widget(
+                    Label(
+                        text=f" - {nom_enquete}",
+                        font_size=16,
+                        size_hint_y=None,
+                        height=30,
+                    )
+                )
         else:
-            content_layout.add_widget(Label(
-                text="[b]Enquêtes liées :[/b] Aucune enquête liée",
-                markup=True,
-                font_size=18,
-                size_hint_y=None,
-                height=40
-            ))
+            content_layout.add_widget(
+                Label(
+                    text="[b]Enquêtes liées :[/b] Aucune enquête liée",
+                    markup=True,
+                    font_size=18,
+                    size_hint_y=None,
+                    height=40,
+                )
+            )
 
         # Création d'une ScrollView, uniquement si nécessaire
         if content_layout.height > self.height * 0.7:  # Vérifie si le contenu dépasse
@@ -250,7 +239,7 @@ class EnqueteScreen(BaseScreen):
             text="Voir Personnes Impliquées",
             size_hint=(1, None),
             height=45,
-            on_release=self.afficher_personnes
+            on_release=self.afficher_personnes,
         )
         buttons_layout.add_widget(personnes_btn)
 
@@ -258,7 +247,7 @@ class EnqueteScreen(BaseScreen):
             text="Voir Preuves",
             size_hint=(1, None),
             height=45,
-            on_release=self.afficher_preuves
+            on_release=self.afficher_preuves,
         )
         buttons_layout.add_widget(preuves_btn)
 
@@ -266,7 +255,7 @@ class EnqueteScreen(BaseScreen):
             text="Voir Enquêtes Liées",
             size_hint=(1, None),
             height=45,
-            on_release=self.afficher_enquete_liee
+            on_release=self.afficher_enquete_liee,
         )
         buttons_layout.add_widget(enquete_liee_btn)
 
@@ -274,7 +263,7 @@ class EnqueteScreen(BaseScreen):
             text="Voir Liste Des Evennements",
             size_hint=(1, None),
             height=45,
-            on_release=self.afficher_liste_evennement
+            on_release=self.afficher_liste_evennement,
         )
         buttons_layout.add_widget(evennement_btn)
 
@@ -285,7 +274,7 @@ class EnqueteScreen(BaseScreen):
             text="Retour au menu principal",
             size_hint=(1, None),
             height=75,
-            on_release=self.go_back_to_menu
+            on_release=self.go_back_to_menu,
         )
         layout.add_widget(retour_btn)
         self.add_widget(layout)
@@ -310,13 +299,15 @@ class EnqueteScreen(BaseScreen):
         # Ajouter un bouton pour chaque preuve
         for preuve in self.enquete["liste_preuves"]:
             btn = Button(
-                text=preuve['nom'],
+                text=preuve["nom"],
                 size_hint_y=None,
                 height=50,
                 background_normal="",
                 background_color=(0.2, 0.6, 0.8, 1),
             )
-            btn.bind(on_release=lambda instance, p=preuve: self.afficher_details_item(p))
+            btn.bind(
+                on_release=lambda instance, p=preuve: self.afficher_details_item(p)
+            )
             layout.add_widget(btn)
 
         scroll.add_widget(layout)
@@ -371,9 +362,7 @@ class EnqueteScreen(BaseScreen):
         self.close_button.bind(on_release=lambda instance: popup.dismiss())
         content.add_widget(self.close_button)
 
-        popup = Popup(
-            title="Enquêtes liées", content=content, size_hint=(0.8, 0.8)
-        )
+        popup = Popup(title="Enquêtes liées", content=content, size_hint=(0.8, 0.8))
         popup.open()
 
     def afficher_liste_evennement(self, instance):
@@ -464,9 +453,7 @@ class EnqueteScreen(BaseScreen):
             size_hint_y=None,
             text_size=(400, None),
         )
-        content.bind(
-            size=lambda instance, value: setattr(instance, "height", value[1])
-        )
+        content.bind(size=lambda instance, value: setattr(instance, "height", value[1]))
 
         content = BoxLayout(orientation="vertical", spacing=10, padding=10)
         scroll = ScrollView(size_hint=(1, 0.8))
