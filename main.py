@@ -72,7 +72,8 @@ if __name__ == "__main__":
             if choix_donnees == "1":
                 # Afficher les personnes
                 for i in pers_brut:
-                    print(Fore.BLUE + f"{i["nom"]} {i["prenom"]}")
+                    print(i)
+                    print(Fore.BLUE + f"{i['nom']} {i['prenom']}")
 
             elif choix_donnees == "2":
                 # Afficher les preuves

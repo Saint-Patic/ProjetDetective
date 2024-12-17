@@ -23,6 +23,22 @@ def charger_donnees(chemin_fichier):
     except FileNotFoundError:
         return []
 
+def organiser_par_section(donnees, chemin_preuves=None):
+    """Organise les personnes et preuves par sections."""
+    sections = {
+        "Employes": [],
+        "Criminels": [],
+        "Suspects": [],
+        "Témoins": [],
+        "Preuves": [],
+    }
+    for personne in donnees:
+        classe = personne.get("classe", "Inconnu")
+        if classe in ["Employe", "Suspect", "Criminel"]:
+            sections[classe + "s"].append(personne)
+    if chemin_preuves:
+        sections["Preuves"].extend(charger_donnees(chemin_preuves))
+    return sections
 
 def creer_personne():
     """
